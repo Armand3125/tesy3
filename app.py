@@ -10,24 +10,23 @@ st.markdown("""
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
+            border: none;
         }
-        
-        .stButton>button:nth-child(1) {
+
+        /* Styliser chaque bouton en fonction de sa classe */
+        #button-red {
             background-color: #e74c3c; /* Rouge */
             color: white;
-            border: 2px solid #d63031;
         }
 
-        .stButton>button:nth-child(2) {
+        #button-green {
             background-color: #2ecc71; /* Vert */
             color: white;
-            border: 2px solid #27ae60;
         }
 
-        .stButton>button:nth-child(3) {
+        #button-blue {
             background-color: #3498db; /* Bleu */
             color: white;
-            border: 2px solid #2980b9;
         }
 
         /* Effet au survol des boutons */
@@ -44,19 +43,19 @@ st.title("Application avec Boutons Colorés")
 if 'selected_button' not in st.session_state:
     st.session_state.selected_button = None
 
-# Création de trois boutons
+# Création de trois boutons avec des IDs distincts
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("Bouton Rouge"):
+    if st.button("Bouton Rouge", key="red"):
         st.session_state.selected_button = "Rouge"
 
 with col2:
-    if st.button("Bouton Vert"):
+    if st.button("Bouton Vert", key="green"):
         st.session_state.selected_button = "Vert"
 
 with col3:
-    if st.button("Bouton Bleu"):
+    if st.button("Bouton Bleu", key="blue"):
         st.session_state.selected_button = "Bleu"
 
 # Affichage de la couleur sélectionnée
