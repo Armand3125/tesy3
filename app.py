@@ -65,10 +65,10 @@ def traiter_img(img, Nc, Nd, dim_max):
                 rgb = pal[color]
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
                 
-                # Utiliser un bouton Streamlit et placer le bouton avant le rectangle de couleur
+                # Utiliser un bouton Streamlit sans texte
                 button_key = f'button_{idx}_{j}_{color}'
                 with cols[j]:
-                    if st.button(f"Choisir {color}", key=button_key, help=color):
+                    if st.button("", key=button_key, help=color):  # Le bouton est sans texte
                         st.session_state.selected_colors[cl] = j
                         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                         st.session_state.modified_image = new_img_arr.astype('uint8')
