@@ -16,6 +16,8 @@ div.stButton > button:first-child {{
     height: 3em;  /* hauteur du bouton */
     width: 15em;  /* largeur du bouton */
     border-radius: 10px;  /* arrondir les coins du bouton */
+    border: none;  /* Enlever la bordure par défaut */
+    box-shadow: none;  /* Enlever l'ombre portée par défaut */
 }}
 
 /* Deuxième bouton (Couleur secondaire) */
@@ -26,6 +28,8 @@ div.stButton > button:nth-of-type(2) {{
     height: 3em;  /* hauteur du bouton */
     width: 15em;  /* largeur du bouton */
     border-radius: 10px;  /* arrondir les coins du bouton */
+    border: none;  /* Enlever la bordure par défaut */
+    box-shadow: none;  /* Enlever l'ombre portée par défaut */
 }}
 
 /* Troisième bouton (Couleur tertiaire) */
@@ -36,12 +40,14 @@ div.stButton > button:nth-of-type(3) {{
     height: 3em;  /* hauteur du bouton */
     width: 15em;  /* largeur du bouton */
     border-radius: 10px;  /* arrondir les coins du bouton */
+    border: none;  /* Enlever la bordure par défaut */
+    box-shadow: none;  /* Enlever l'ombre portée par défaut */
 }}
 
 /* Effet de survol sur tous les boutons */
 div.stButton > button:hover {{
-    background-color: #00ff00;  /* couleur de fond lorsque l'on survole le bouton */
-    color: #ff0000;  /* couleur du texte lorsqu'on survole */
+    opacity: 0.8;  /* Rendre les boutons légèrement transparents lorsqu'on les survole */
+    color: #ffffff;  /* Changer la couleur du texte */
 }}
 </style>
 """, unsafe_allow_html=True)
