@@ -80,8 +80,8 @@ def traiter_img(img, Nc, Nd, dim_max):
                         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                         st.session_state.modified_image = new_img_arr.astype('uint8')
 
-                    # Afficher un rectangle coloré comme fond de bouton avec taille intervertie
-                    st.markdown(f"<div style='background-color: {rgb_str}; width: 20px; height: 40px; border-radius: 5px; display: inline-block;'></div>", unsafe_allow_html=True)
+                    # Afficher le bouton avec une forme différente (largeur et hauteur inversées)
+                    st.markdown(f"<div style='background-color: {rgb_str}; width: 40px; height: 20px; border-radius: 5px; display: inline-block;'></div>", unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"Une erreur est survenue : {e}")
