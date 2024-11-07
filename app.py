@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # URL du fichier CSS sur GitHub
-css_url = "https://raw.githubusercontent.com/votre-compte/votre-repo/main/style.css"
+css_url = "https://raw.githubusercontent.com/Armand3125/tesy3/main/style.css"
 
 # Fonction pour charger le CSS
 def load_css(url):
