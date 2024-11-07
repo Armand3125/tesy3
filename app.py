@@ -13,7 +13,7 @@ div.stButton > button:first-child {{
     height: 3em;  /* hauteur du bouton */
     width: 15em;  /* largeur du bouton */
     border-radius: 10px;  /* arrondir les coins du bouton */
-}
+}}
 
 div.stButton > button:hover {{
     background-color: #00ff00;  /* couleur de fond lorsque l'on survole le bouton */
