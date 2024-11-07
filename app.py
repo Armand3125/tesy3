@@ -4,33 +4,38 @@ import streamlit as st
 st.markdown("""
     <style>
         /* Personnalisation des boutons */
-        .stButton>button {
-            font-size: 16px;
+        .button-red {
+            background-color: #e74c3c; /* Rouge */
+            color: white;
             padding: 12px 24px;
             border-radius: 8px;
             cursor: pointer;
-            width: 100%;
             border: none;
+            width: 100%;
         }
 
-        /* Styliser chaque bouton en fonction de sa classe */
-        #button-red {
-            background-color: #e74c3c; /* Rouge */
-            color: white;
-        }
-
-        #button-green {
+        .button-green {
             background-color: #2ecc71; /* Vert */
             color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
         }
 
-        #button-blue {
+        .button-blue {
             background-color: #3498db; /* Bleu */
             color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
         }
 
         /* Effet au survol des boutons */
-        .stButton>button:hover {
+        .button-red:hover, .button-green:hover, .button-blue:hover {
             opacity: 0.8;
         }
     </style>
@@ -43,7 +48,7 @@ st.title("Application avec Boutons Colorés")
 if 'selected_button' not in st.session_state:
     st.session_state.selected_button = None
 
-# Création de trois boutons avec des IDs distincts
+# Création des boutons avec des classes CSS distinctes
 col1, col2, col3 = st.columns(3)
 
 with col1:
