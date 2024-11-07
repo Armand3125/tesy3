@@ -55,6 +55,7 @@ def traiter_img(img, Nc, Nd, dim_max):
         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
         st.session_state.modified_image = new_img_arr.astype('uint8')
 
+        # Afficher les informations des clusters et les options de couleurs
         for idx, (cl, count) in enumerate(sorted_cls):
             percentage = (count / total_px) * 100
             selected_color = cl_proches[cl][st.session_state.selected_colors[cl]]
