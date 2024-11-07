@@ -1,6 +1,6 @@
 /* style.css */
 
-.stButton > button.red-button {
+button.red-button {
     background-color: #e74c3c;
     color: white;
     font-size: 16px;
@@ -10,7 +10,7 @@
     cursor: pointer;
 }
 
-.stButton > button.green-button {
+button.green-button {
     background-color: #2ecc71;
     color: white;
     font-size: 16px;
@@ -20,7 +20,7 @@
     cursor: pointer;
 }
 
-.stButton > button.blue-button {
+button.blue-button {
     background-color: #3498db;
     color: white;
     font-size: 16px;
@@ -30,6 +30,6 @@
     cursor: pointer;
 }
 
-.stButton > button:hover {
+button:hover {
     opacity: 0.9;
 }
