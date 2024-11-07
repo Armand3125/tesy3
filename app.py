@@ -1,68 +1,121 @@
 import streamlit as st
+import plotly.express as px
+from streamlit_extras.stylable_container import stylable_container
 
-# CSS pour styliser les boutons
-button_red_style = """
-<style>
-    .stButton>button:first-child {
-        background-color: #e74c3c; /* Rouge */
-        color: white;
-        padding: 16px 20px;
-        border: none;
-        cursor: pointer;
-        border-radius: 8px;
-        width: 100%;
-    }
-    .stButton>button:first-child:hover {
-        opacity: 0.8;
-    }
-</style>
-"""
+st.title("Hello :balloon:")
 
-button_green_style = """
-<style>
-    .stButton>button:nth-child(2) {
-        background-color: #2ecc71; /* Vert */
-        color: white;
-        padding: 16px 20px;
-        border: none;
-        cursor: pointer;
-        border-radius: 8px;
-        width: 100%;
-    }
-    .stButton>button:nth-child(2):hover {
-        opacity: 0.8;
-    }
-</style>
-"""
+c1, c2 = st.columns(2)
+with c1:
+    with stylable_container(
+        key="cat_container",
+        css_styles=[
+            """
+        {
+            background-color: coral;
+            padding: 0.5em;
+            border-radius: 1em;
+        }
+        """,
+            """
+        .stMarkdown {
+            padding-right: 1.5em;
+        }
+        """,
+        ],
+    ):
+        st.markdown(
+            "The cat (Felis catus) is a domestic species of small carnivorous mammal. It is the only domesticated species in the family Felidae and is commonly referred to as the domestic cat or house cat to distinguish it from the wild members of the family. Cats are commonly kept as house pets but can also be farm cats or feral cats; the feral cat ranges freely and avoids human contact."
+        )
 
-button_blue_style = """
-<style>
-    .stButton>button:nth-child(3) {
-        background-color: #3498db; /* Bleu */
-        color: white;
-        padding: 16px 20px;
-        border: none;
-        cursor: pointer;
-        border-radius: 8px;
-        width: 100%;
-    }
-    .stButton>button:nth-child(3):hover {
-        opacity: 0.8;
-    }
-</style>
-"""
+with c2:
+    with stylable_container(
+        key="cat_image",
+        css_styles="""
+        img {
+            border-radius: 2em;
+        }
+        """,
+    ):
+        st.image("./cat.jpg")
 
-# Injection des styles dans l'application Streamlit
-st.markdown(button_red_style, unsafe_allow_html=True)
-st.markdown(button_green_style, unsafe_allow_html=True)
-st.markdown(button_blue_style, unsafe_allow_html=True)
+st.divider()
 
-# Boutons Streamlit avec des textes différents
-if st.button("Bouton Rouge"):
-    st.write("Le bouton rouge a été cliqué!")
+c1, c2, _ = st.columns([1, 1, 2])
 
-if st.button("Bouton Vert"):
-    st.write("Le bouton vert a été cliqué!")
+with c1:
+    with stylable_container(
+        key="green_button",
+        css_styles="""
+            button {
+                background-color: green;
+                color: white;
+                border-radius: 20px;
+            }
+            """,
+    ):
+        st.button("Green button")
 
-if st.button("Bouton Bleu"):
-    st.write("Le bouton bleu a été cliqué!")
+with c2:
+    with stylable_container(
+        key="black_button",
+        css_styles=[
+            """
+            button {
+                border: solid .3em #292746;
+                border-radius: 20px;
+                color: #fff;
+                background-color: #292746;
+            }
+            """,
+            """
+            button:hover {
+                background-color: red;
+            }
+            """,
+        ],
+    ):
+        st.button("Hover in Red")
+
+with stylable_container(
+    key="st_selectbox",
+    css_styles=[
+        """
+        div[data-baseweb="select"] > div {
+            background-color: red;
+        }
+        """,
+        """
+        div[role="listbox"] ul {
+            background-color: green;
+        }
+        """,
+    ],
+):
+    st.selectbox("Hello", ("Streamlit", "is", "fun"))
+
+
+with stylable_container(
+    key="container_with_border",
+    css_styles=[
+        """
+        {
+            background-color: green;
+            border: 8px double rgba(49, 51, 63, 0.2);
+            border-radius: 0.5rem;
+            padding: 1em;
+        }
+        """,
+        """
+        .stDataFrame {
+
+        }
+        """,
+    ],
+):
+    st.markdown("This is a container with a border.")
+    df = px.data.gapminder().query("country=='Canada'")
+    st.dataframe(df, use_container_width=True)
+    st.plotly_chart(
+        px.line(df, x="year", y="lifeExp", title="Life expectancy in Canada"),
+        use_container_width=True,
+    )
