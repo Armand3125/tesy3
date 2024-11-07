@@ -78,6 +78,9 @@ def traiter_img(img, Nc, Nd, dim_max):
                     if st.button("", key=button_key, help=color):  # Le bouton est sans texte
                         st.session_state.selected_colors[cl] = j
                         # Rafraîchir l'image avec la nouvelle couleur sélectionnée
+
+                        st.write(f"{selected_color} - {percentage:.2f}%")
+                        
                         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                         st.session_state.modified_image = new_img_arr.astype('uint8')
 
