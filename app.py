@@ -1,47 +1,64 @@
 import streamlit as st
-import requests
 
-# URL du fichier CSS hébergé sur GitHub
-css_url = "https://raw.githubusercontent.com/Armand3125/tesy3/main/style.css"
+# Appliquer le CSS pour personnaliser l'apparence des boutons
+st.markdown("""
+    <style>
+        /* Personnalisation des boutons */
+        .stButton>button {
+            font-size: 16px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .stButton>button:nth-child(1) {
+            background-color: #e74c3c; /* Rouge */
+            color: white;
+            border: 2px solid #d63031;
+        }
 
-# Fonction pour charger le CSS
-def load_css(url):
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  # Vérifie si la requête est réussie
-        return response.text
-    except requests.exceptions.RequestException as e:
-        st.error(f"Erreur lors du chargement du fichier CSS : {e}")
-        return ""
+        .stButton>button:nth-child(2) {
+            background-color: #2ecc71; /* Vert */
+            color: white;
+            border: 2px solid #27ae60;
+        }
 
-# Charger et appliquer le CSS
-css = load_css(css_url)
-if css:
-    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+        .stButton>button:nth-child(3) {
+            background-color: #3498db; /* Bleu */
+            color: white;
+            border: 2px solid #2980b9;
+        }
+
+        /* Effet au survol des boutons */
+        .stButton>button:hover {
+            opacity: 0.8;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Application Streamlit
 st.title("Application avec Boutons Colorés")
 
-# Utilisation de session_state pour savoir quel bouton a été cliqué
+# Variables de session pour suivre l'état du bouton sélectionné
 if 'selected_button' not in st.session_state:
     st.session_state.selected_button = None
 
-# Boutons HTML dans les colonnes
+# Création de trois boutons
 col1, col2, col3 = st.columns(3)
 
-# HTML pour les boutons avec gestion des clics
 with col1:
-    if st.markdown('<button class="red-button">Bouton Rouge</button>', unsafe_allow_html=True):
+    if st.button("Bouton Rouge"):
         st.session_state.selected_button = "Rouge"
 
 with col2:
-    if st.markdown('<button class="green-button">Bouton Vert</button>', unsafe_allow_html=True):
+    if st.button("Bouton Vert"):
         st.session_state.selected_button = "Vert"
 
 with col3:
-    if st.markdown('<button class="blue-button">Bouton Bleu</button>', unsafe_allow_html=True):
+    if st.button("Bouton Bleu"):
         st.session_state.selected_button = "Bleu"
 
-# Affichage du bouton sélectionné
+# Affichage de la couleur sélectionnée
 if st.session_state.selected_button:
     st.write(f"Vous avez sélectionné le bouton {st.session_state.selected_button} !")
