@@ -6,13 +6,13 @@ import numpy as np
 
 # Palette de couleurs définie
 pal = {
-    "Noir_Charbon": (0, 0, 0), "Blanc_Jade": (255, 255, 255),
-    "Jaune_Or": (228, 189, 104), "Bleu_Cyan": (0, 134, 214),
-    "Violet_Lila": (174, 150, 212), "Vert_Gui": (63, 142, 67),
-    "Rouge_Ecarlate": (222, 67, 67), "Bleu_Marine": (0, 120, 191),
-    "Orange_Mandarine": (249, 153, 99), "Vert_Galaxie": (59, 102, 94),
-    "Bleu_Glacier": (163, 216, 225), "Violet_Magenta": (236, 0, 140),
-    "Gris_Argent": (166, 169, 170), "Violet_Basic": (94, 67, 183),
+    "Noir Charbon": (0, 0, 0), "Blanc Jade": (255, 255, 255),
+    "Jaune Or": (228, 189, 104), "Bleu Cyan": (0, 134, 214),
+    "Violet Lila": (174, 150, 212), "Vert Gui": (63, 142, 67),
+    "Rouge Ecarlate": (222, 67, 67), "Bleu Marine": (0, 120, 191),
+    "Orange Mandarine": (249, 153, 99), "Vert Galaxie": (59, 102, 94),
+    "Bleu Glacier": (163, 216, 225), "Violet Magenta": (236, 0, 140),
+    "Gris Argent": (166, 169, 170), "Violet Basic": (94, 67, 183),
 }
 
 # Calculer les couleurs les plus proches
