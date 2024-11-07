@@ -55,14 +55,14 @@ def traiter_img(img, Nc, Nd, dim_max):
         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
         st.session_state.modified_image = new_img_arr.astype('uint8')
 
-        # Afficher les informations des clusters et les options de couleurs
+        # Afficher les informations des clusters avec couleur sélectionnée et pourcentage
         for idx, (cl, count) in enumerate(sorted_cls):
             percentage = (count / total_px) * 100
             selected_color = cl_proches[cl][st.session_state.selected_colors[cl]]
             rgb = pal[selected_color]
             rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
-            
-            # Afficher la couleur sélectionnée et le pourcentage
+
+            # Afficher la couleur sélectionnée et le pourcentage AVANT les boutons
             st.write(f"{selected_color} - {percentage:.2f}%")
             
             col_options = cl_proches[cl]
@@ -77,14 +77,9 @@ def traiter_img(img, Nc, Nd, dim_max):
                 with cols[j]:
                     if st.button("", key=button_key, help=color):  # Le bouton est sans texte
                         st.session_state.selected_colors[cl] = j
-                        # Mettre à jour immédiatement la couleur sélectionnée et rafraîchir l'image
+                        # Rafraîchir l'image avec la nouvelle couleur sélectionnée
                         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                         st.session_state.modified_image = new_img_arr.astype('uint8')
-                        
-                        # Afficher la couleur sélectionnée avec le pourcentage actualisé
-                        selected_color = cl_proches[cl][st.session_state.selected_colors[cl]]
-                        percentage = (count / total_px) * 100
-                        st.write(f"{selected_color} - {percentage:.2f}%")
 
                     # Afficher un rectangle coloré comme fond de bouton
                     st.markdown(f"<div style='background-color: {rgb_str}; width: 40px; height: 20px; border-radius: 5px; display: inline-block;'></div>", unsafe_allow_html=True)
