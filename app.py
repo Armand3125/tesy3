@@ -1,29 +1,38 @@
 import streamlit as st
 import requests
 
-# URL du fichier CSS sur GitHub
+# URL du fichier CSS hébergé sur GitHub
 css_url = "https://raw.githubusercontent.com/Armand3125/tesy3/main/style.css"
 
 # Fonction pour charger le CSS
 def load_css(url):
-    response = requests.get(url)
-    if response.status_code == 200:
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Vérifie si la requête est réussie
         return response.text
-    else:
-        st.error("Le fichier CSS n'a pas pu être chargé.")
+    except requests.exceptions.RequestException as e:
+        st.error(f"Erreur lors du chargement du fichier CSS : {e}")
         return ""
 
 # Charger et appliquer le CSS
 css = load_css(css_url)
-st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+if css:
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 # Application Streamlit
-st.title("Mon Application avec CSS depuis GitHub")
+st.title("Application avec Boutons Colorés")
 
-st.write('<p class="custom-text">Bienvenue sur mon application stylisée !</p>', unsafe_allow_html=True)
+# Afficher trois boutons avec des classes CSS pour les couleurs
+col1, col2, col3 = st.columns(3)
 
-# Bouton stylisé
-if st.button("Cliquez-moi !"):
-    st.write("Vous avez cliqué sur un bouton stylisé.")
+with col1:
+    if st.button("Bouton Rouge", key="red", use_container_width=True, css_class="red-button"):
+        st.write("Vous avez cliqué sur le bouton rouge.")
 
-st.write("Ceci est un exemple de texte sans style particulier.")
+with col2:
+    if st.button("Bouton Vert", key="green", use_container_width=True, css_class="green-button"):
+        st.write("Vous avez cliqué sur le bouton vert.")
+
+with col3:
+    if st.button("Bouton Bleu", key="blue", use_container_width=True, css_class="blue-button"):
+        st.write("Vous avez cliqué sur le bouton bleu.")
