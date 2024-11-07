@@ -14,19 +14,19 @@ with col1:
     if st.button('Bouton 1'):
         selected_color = 'red'
     st.markdown('<div style="height:100px; background-color:red; border: 2px solid {}; display: flex; justify-content: center; align-items: center; margin-top: 10px;">'
-                '<button style="background-color:transparent; border:none; color:white;">Bouton 1</button>'
+                '<button style="background-color:transparent; border:none; color:white; font-size:18px;">Bouton 1</button>'
                 '</div>'.format('black' if selected_color == 'red' else 'transparent'), unsafe_allow_html=True)
 
 with col2:
     if st.button('Bouton 2'):
         selected_color = 'blue'
     st.markdown('<div style="height:100px; background-color:blue; border: 2px solid {}; display: flex; justify-content: center; align-items: center; margin-top: 10px;">'
-                '<button style="background-color:transparent; border:none; color:white;">Bouton 2</button>'
+                '<button style="background-color:transparent; border:none; color:white; font-size:18px;">Bouton 2</button>'
                 '</div>'.format('black' if selected_color == 'blue' else 'transparent'), unsafe_allow_html=True)
 
 with col3:
     if st.button('Bouton 3'):
         selected_color = 'green'
     st.markdown('<div style="height:100px; background-color:green; border: 2px solid {}; display: flex; justify-content: center; align-items: center; margin-top: 10px;">'
-                '<button style="background-color:transparent; border:none; color:white;">Bouton 3</button>'
+                '<button style="background-color:transparent; border:none; color:white; font-size:18px;">Bouton 3</button>'
                 '</div>'.format('black' if selected_color == 'green' else 'transparent'), unsafe_allow_html=True)
