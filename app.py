@@ -77,8 +77,14 @@ def traiter_img(img, Nc, Nd, dim_max):
                 with cols[j]:
                     if st.button("", key=button_key, help=color):  # Le bouton est sans texte
                         st.session_state.selected_colors[cl] = j
+                        # Mettre à jour immédiatement la couleur sélectionnée et rafraîchir l'image
                         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                         st.session_state.modified_image = new_img_arr.astype('uint8')
+                        
+                        # Afficher la couleur sélectionnée avec le pourcentage actualisé
+                        selected_color = cl_proches[cl][st.session_state.selected_colors[cl]]
+                        percentage = (count / total_px) * 100
+                        st.write(f"{selected_color} - {percentage:.2f}%")
 
                     # Afficher un rectangle coloré comme fond de bouton
                     st.markdown(f"<div style='background-color: {rgb_str}; width: 40px; height: 20px; border-radius: 5px; display: inline-block;'></div>", unsafe_allow_html=True)
