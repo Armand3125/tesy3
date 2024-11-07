@@ -26,7 +26,7 @@ with col2:
         selected_color = 'blue'
     st.markdown(
         f'<div style="height:100px; background-color:blue; border: 2px solid { "black" if selected_color == "blue" else "transparent" }; display: flex; justify-content: center; align-items: center; margin-top: 10px;">'
-        '<button style="background-color:transparent; border:none; color:white; font-size:18px; cursor:pointer;">Bouton 2</button>'
+        '<button style="background-color:black; border:none; color:white; font-size:18px; cursor:pointer;">Bouton 2</button>'
         '</div>',
         unsafe_allow_html=True)
 
