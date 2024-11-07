@@ -1,11 +1,10 @@
 import streamlit as st
 
-# Ajouter du CSS pour personnaliser l'apparence des boutons
+# CSS pour personnaliser l'apparence des boutons
 st.markdown("""
     <style>
-        /* Style personnalisé pour le bouton rouge */
         .button-red {
-            background-color: #e74c3c; /* Rouge */
+            background-color: #e74c3c;
             color: white;
             padding: 12px 24px;
             border-radius: 8px;
@@ -14,9 +13,8 @@ st.markdown("""
             width: 100%;
         }
 
-        /* Style personnalisé pour le bouton vert */
         .button-green {
-            background-color: #2ecc71; /* Vert */
+            background-color: #2ecc71;
             color: white;
             padding: 12px 24px;
             border-radius: 8px;
@@ -25,9 +23,8 @@ st.markdown("""
             width: 100%;
         }
 
-        /* Style personnalisé pour le bouton bleu */
         .button-blue {
-            background-color: #3498db; /* Bleu */
+            background-color: #3498db;
             color: white;
             padding: 12px 24px;
             border-radius: 8px;
@@ -36,21 +33,15 @@ st.markdown("""
             width: 100%;
         }
 
-        /* Effet de survol pour chaque bouton */
         .button-red:hover, .button-green:hover, .button-blue:hover {
             opacity: 0.8;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Variables pour suivre l'état du bouton sélectionné
-if 'selected_button' not in st.session_state:
-    st.session_state.selected_button = None
-
-# Créer trois boutons avec des styles personnalisés
+# Créer trois boutons avec des couleurs différentes
 col1, col2, col3 = st.columns(3)
 
-# Gestion de l'état du bouton cliqué
 with col1:
     if st.button("Rouge", key="red"):
         st.session_state.selected_button = "Rouge"
@@ -64,5 +55,5 @@ with col3:
         st.session_state.selected_button = "Bleu"
 
 # Afficher la couleur du bouton sélectionné
-if st.session_state.selected_button:
+if 'selected_button' in st.session_state:
     st.write(f"Vous avez sélectionné le bouton {st.session_state.selected_button} !")
