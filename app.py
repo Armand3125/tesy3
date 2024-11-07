@@ -1,43 +1,14 @@
-import streamlit as st
+from flask import Flask, render_template
+import random
 
-# Titre de l'application
-st.title("Trois Boutons et Trois Rectangles")
+app = Flask(__name__)
 
-# Créer trois boutons
-if st.button("Bouton Rouge"):
-    st.write("Vous avez cliqué sur le bouton rouge.")
+@app.route('/')
+def home():
+    # Générer des couleurs aléatoires pour les boutons
+    colors = ['#FF6347', '#4682B4', '#32CD32']  # Rouge, Bleu, Vert
+    random.shuffle(colors)  # Mélanger les couleurs
+    return render_template('index.html', colors=colors)
 
-if st.button("Bouton Vert"):
-    st.write("Vous avez cliqué sur le bouton vert.")
-
-if st.button("Bouton Bleu"):
-    st.write("Vous avez cliqué sur le bouton bleu.")
-
-# Créer trois rectangles de différentes couleurs
-st.markdown("""
-<style>
-.rectangle {
-    width: 300px;
-    height: 100px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-}
-
-.red {
-    background-color: red;
-}
-
-.green {
-    background-color: green;
-}
-
-.blue {
-    background-color: blue;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# Affichage des rectangles avec des couleurs différentes
-st.markdown('<div class="rectangle red"></div>', unsafe_allow_html=True)
-st.markdown('<div class="rectangle green"></div>', unsafe_allow_html=True)
-st.markdown('<div class="rectangle blue"></div>', unsafe_allow_html=True)
+if __name__ == '__main__':
+    app.run(debug=True)
