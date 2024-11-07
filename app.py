@@ -3,8 +3,7 @@ import streamlit as st
 # CSS pour styliser les boutons
 button_red_style = """
 <style>
-    /* Ciblage précis du bouton rouge */
-    .stButton[id="red_button"]>button {
+    .stButton>button:first-child {
         background-color: #e74c3c; /* Rouge */
         color: white;
         padding: 16px 20px;
@@ -13,7 +12,7 @@ button_red_style = """
         border-radius: 8px;
         width: 100%;
     }
-    .stButton[id="red_button"]>button:hover {
+    .stButton>button:first-child:hover {
         opacity: 0.8;
     }
 </style>
@@ -21,8 +20,7 @@ button_red_style = """
 
 button_green_style = """
 <style>
-    /* Ciblage précis du bouton vert */
-    .stButton[id="green_button"]>button {
+    .stButton>button:nth-child(2) {
         background-color: #2ecc71; /* Vert */
         color: white;
         padding: 16px 20px;
@@ -31,7 +29,7 @@ button_green_style = """
         border-radius: 8px;
         width: 100%;
     }
-    .stButton[id="green_button"]>button:hover {
+    .stButton>button:nth-child(2):hover {
         opacity: 0.8;
     }
 </style>
@@ -39,8 +37,7 @@ button_green_style = """
 
 button_blue_style = """
 <style>
-    /* Ciblage précis du bouton bleu */
-    .stButton[id="blue_button"]>button {
+    .stButton>button:nth-child(3) {
         background-color: #3498db; /* Bleu */
         color: white;
         padding: 16px 20px;
@@ -49,7 +46,7 @@ button_blue_style = """
         border-radius: 8px;
         width: 100%;
     }
-    .stButton[id="blue_button"]>button:hover {
+    .stButton>button:nth-child(3):hover {
         opacity: 0.8;
     }
 </style>
@@ -60,12 +57,12 @@ st.markdown(button_red_style, unsafe_allow_html=True)
 st.markdown(button_green_style, unsafe_allow_html=True)
 st.markdown(button_blue_style, unsafe_allow_html=True)
 
-# Boutons Streamlit avec des IDs uniques et des styles spécifiques
-if st.button("Bouton Rouge", key="red_button"):
+# Boutons Streamlit avec des textes différents
+if st.button("Bouton Rouge"):
     st.write("Le bouton rouge a été cliqué!")
 
-if st.button("Bouton Vert", key="green_button"):
+if st.button("Bouton Vert"):
     st.write("Le bouton vert a été cliqué!")
 
-if st.button("Bouton Bleu", key="blue_button"):
+if st.button("Bouton Bleu"):
     st.write("Le bouton bleu a été cliqué!")
