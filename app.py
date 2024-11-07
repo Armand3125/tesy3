@@ -1,7 +1,7 @@
 import streamlit as st
 
 # CSS pour styliser les boutons
-button_style = """
+button_red_style = """
 <style>
     .button-red {
         background-color: #e74c3c; /* Rouge */
@@ -12,7 +12,14 @@ button_style = """
         border-radius: 8px;
         width: 100%;
     }
+    .button-red:hover {
+        opacity: 0.8;
+    }
+</style>
+"""
 
+button_green_style = """
+<style>
     .button-green {
         background-color: #2ecc71; /* Vert */
         color: white;
@@ -22,7 +29,14 @@ button_style = """
         border-radius: 8px;
         width: 100%;
     }
+    .button-green:hover {
+        opacity: 0.8;
+    }
+</style>
+"""
 
+button_blue_style = """
+<style>
     .button-blue {
         background-color: #3498db; /* Bleu */
         color: white;
@@ -32,27 +46,23 @@ button_style = """
         border-radius: 8px;
         width: 100%;
     }
-
-    .button-red:hover, .button-green:hover, .button-blue:hover {
+    .button-blue:hover {
         opacity: 0.8;
     }
 </style>
 """
 
-# Injecter le CSS
-st.markdown(button_style, unsafe_allow_html=True)
+# Injecter les styles
+st.markdown(button_red_style, unsafe_allow_html=True)
+st.markdown(button_green_style, unsafe_allow_html=True)
+st.markdown(button_blue_style, unsafe_allow_html=True)
 
-# Créer les boutons
-col1, col2, col3 = st.columns(3)
+# Afficher les boutons avec leur style
+if st.markdown('<button class="button-red">Bouton Rouge</button>', unsafe_allow_html=True):
+    st.write("Le bouton rouge a été cliqué!")
 
-with col1:
-    if st.button('Bouton Rouge', key='red'):
-        st.write("Le bouton rouge a été cliqué!")
+if st.markdown('<button class="button-green">Bouton Vert</button>', unsafe_allow_html=True):
+    st.write("Le bouton vert a été cliqué!")
 
-with col2:
-    if st.button('Bouton Vert', key='green'):
-        st.write("Le bouton vert a été cliqué!")
-
-with col3:
-    if st.button('Bouton Bleu', key='blue'):
-        st.write("Le bouton bleu a été cliqué!")
+if st.markdown('<button class="button-blue">Bouton Bleu</button>', unsafe_allow_html=True):
+    st.write("Le bouton bleu a été cliqué!")
