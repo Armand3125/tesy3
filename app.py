@@ -25,12 +25,21 @@ st.title("Application avec Boutons Colorés")
 # Afficher trois boutons avec HTML pour styliser chaque bouton différemment
 col1, col2, col3 = st.columns(3)
 
-# Utiliser Markdown pour injecter du HTML et appliquer des styles CSS
+# Boutons et gestion des clics
+color = None
+
 with col1:
-    st.markdown('<button class="red-button">Bouton Rouge</button>', unsafe_allow_html=True)
+    if st.button("Bouton Rouge", key="red"):
+        color = "Rouge"
 
 with col2:
-    st.markdown('<button class="green-button">Bouton Vert</button>', unsafe_allow_html=True)
+    if st.button("Bouton Vert", key="green"):
+        color = "Vert"
 
 with col3:
-    st.markdown('<button class="blue-button">Bouton Bleu</button>', unsafe_allow_html=True)
+    if st.button("Bouton Bleu", key="blue"):
+        color = "Bleu"
+
+# Affichage de la couleur sélectionnée
+if color:
+    st.write(f"Vous avez sélectionné le bouton {color} !")
