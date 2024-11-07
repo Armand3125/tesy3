@@ -62,7 +62,7 @@ def traiter_img(img, Nc, Nd, dim_max):
             rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
             
             # Afficher la couleur sélectionnée et le pourcentage
-            st.write(f"Couleur sélectionnée: {selected_color} - {percentage:.2f}%")
+            st.write(f"{selected_color} - {percentage:.2f}%")
             
             col_options = cl_proches[cl]
             cols = st.columns(len(col_options))
