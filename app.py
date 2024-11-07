@@ -57,7 +57,13 @@ def traiter_img(img, Nc, Nd, dim_max):
 
         for idx, (cl, count) in enumerate(sorted_cls):
             percentage = (count / total_px) * 100
-            st.write(f"Cluster {idx + 1} - {percentage:.2f}%")
+            selected_color = cl_proches[cl][st.session_state.selected_colors[cl]]
+            rgb = pal[selected_color]
+            rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
+            
+            # Afficher la couleur sélectionnée et le pourcentage
+            st.write(f"Couleur sélectionnée: {selected_color} - {percentage:.2f}%")
+            
             col_options = cl_proches[cl]
             cols = st.columns(len(col_options))
 
