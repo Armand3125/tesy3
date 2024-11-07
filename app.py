@@ -22,24 +22,26 @@ if css:
 # Application Streamlit
 st.title("Application avec Boutons Colorés")
 
+# Initialisation de session_state pour suivre le bouton sélectionné
+if 'selected_button' not in st.session_state:
+    st.session_state.selected_button = None
+
 # Afficher trois boutons avec HTML pour styliser chaque bouton différemment
 col1, col2, col3 = st.columns(3)
 
-# Boutons et gestion des clics
-color = None
-
+# Boutons HTML dans les colonnes avec gestion des clics
 with col1:
-    if st.button("Bouton Rouge", key="red"):
-        color = "Rouge"
+    if st.markdown('<button class="red-button" onclick="window.location.reload()">Bouton Rouge</button>', unsafe_allow_html=True):
+        st.session_state.selected_button = "Rouge"
 
 with col2:
-    if st.button("Bouton Vert", key="green"):
-        color = "Vert"
+    if st.markdown('<button class="green-button" onclick="window.location.reload()">Bouton Vert</button>', unsafe_allow_html=True):
+        st.session_state.selected_button = "Vert"
 
 with col3:
-    if st.button("Bouton Bleu", key="blue"):
-        color = "Bleu"
+    if st.markdown('<button class="blue-button" onclick="window.location.reload()">Bouton Bleu</button>', unsafe_allow_html=True):
+        st.session_state.selected_button = "Bleu"
 
 # Affichage de la couleur sélectionnée
-if color:
-    st.write(f"Vous avez sélectionné le bouton {color} !")
+if st.session_state.selected_button:
+    st.write(f"Vous avez sélectionné le bouton {st.session_state.selected_button} !")
