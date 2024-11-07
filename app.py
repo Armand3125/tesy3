@@ -22,17 +22,15 @@ if css:
 # Application Streamlit
 st.title("Application avec Boutons Colorés")
 
-# Afficher trois boutons avec des classes CSS pour les couleurs
+# Afficher trois boutons avec HTML pour styliser chaque bouton différemment
 col1, col2, col3 = st.columns(3)
 
+# Utiliser Markdown pour injecter du HTML et appliquer des styles CSS
 with col1:
-    if st.button("Bouton Rouge", key="red", use_container_width=True, css_class="red-button"):
-        st.write("Vous avez cliqué sur le bouton rouge.")
+    st.markdown('<button class="red-button">Bouton Rouge</button>', unsafe_allow_html=True)
 
 with col2:
-    if st.button("Bouton Vert", key="green", use_container_width=True, css_class="green-button"):
-        st.write("Vous avez cliqué sur le bouton vert.")
+    st.markdown('<button class="green-button">Bouton Vert</button>', unsafe_allow_html=True)
 
 with col3:
-    if st.button("Bouton Bleu", key="blue", use_container_width=True, css_class="blue-button"):
-        st.write("Vous avez cliqué sur le bouton bleu.")
+    st.markdown('<button class="blue-button">Bouton Bleu</button>', unsafe_allow_html=True)
