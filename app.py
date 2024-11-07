@@ -1,29 +1,26 @@
 import streamlit as st
 
 # Titre de l'application
-st.title('Exemple avec trois boutons et trois zones de couleur')
+st.title('Exemple avec trois boutons et trois zones de couleur encadrées')
 
 # Créer 3 colonnes pour aligner les boutons
 col1, col2, col3 = st.columns(3)
 
+# Initialiser une variable de sélection
+selected_color = None
+
 # Boutons et zones de couleur dans chaque colonne
 with col1:
     if st.button('Bouton 1'):
-        st.write('Vous avez cliqué sur le Bouton 1')
-        st.markdown('<div style="height:100px;background-color:red;"></div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div style="height:100px;"></div>', unsafe_allow_html=True)
+        selected_color = 'red'
+    st.markdown('<div style="height:100px; background-color:red; border: 2px solid {}; margin-top: 10px;"></div>'.format('black' if selected_color == 'red' else 'transparent'), unsafe_allow_html=True)
 
 with col2:
     if st.button('Bouton 2'):
-        st.write('Vous avez cliqué sur le Bouton 2')
-        st.markdown('<div style="height:100px;background-color:blue;"></div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div style="height:100px;"></div>', unsafe_allow_html=True)
+        selected_color = 'blue'
+    st.markdown('<div style="height:100px; background-color:blue; border: 2px solid {}; margin-top: 10px;"></div>'.format('black' if selected_color == 'blue' else 'transparent'), unsafe_allow_html=True)
 
 with col3:
     if st.button('Bouton 3'):
-        st.write('Vous avez cliqué sur le Bouton 3')
-        st.markdown('<div style="height:100px;background-color:green;"></div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div style="height:100px;"></div>', unsafe_allow_html=True)
+        selected_color = 'green'
+    st.markdown('<div style="height:100px; background-color:green; border: 2px solid {}; margin-top: 10px;"></div>'.format('black' if selected_color == 'green' else 'transparent'), unsafe_allow_html=True)
