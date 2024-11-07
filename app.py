@@ -72,17 +72,36 @@ def traiter_img(img, Nc, Nd, dim_max):
                 rgb = pal[color]
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
                 
-                # Utiliser un bouton Streamlit sans texte
+                # Utiliser un bouton Streamlit sans texte mais avec un style CSS pour correspondre à la forme des rectangles
                 button_key = f'button_{idx}_{j}_{color}'
                 with cols[j]:
-                    if st.button("", key=button_key, help=color):  # Le bouton est sans texte
+                    button_clicked = st.button("", key=button_key, help=color)  # Le bouton est sans texte
+                    
+                    # Si le bouton est cliqué, on change la couleur sélectionnée et l'image
+                    if button_clicked:
                         st.session_state.selected_colors[cl] = j
-                        # Rafraîchir l'image avec la nouvelle couleur sélectionné
-                        
                         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                         st.session_state.modified_image = new_img_arr.astype('uint8')
 
-                    # Afficher un rectangle coloré comme fond de bouton
+                    # Style CSS pour les boutons : même forme que les rectangles en dessous
+                    st.markdown(f"""
+                    <style>
+                    .button-{button_key} {{
+                        background-color: {rgb_str};
+                        width: 40px;
+                        height: 20px;
+                        border-radius: 5px;
+                        border: none;
+                        cursor: pointer;
+                        display: inline-block;
+                    }}
+                    </style>
+                    """, unsafe_allow_html=True)
+
+                    # Ajouter le bouton avec le style CSS
+                    st.markdown(f'<button class="button-{button_key}" onclick="window.location.href=\'#{button_key}\'"></button>', unsafe_allow_html=True)
+
+                    # Afficher un rectangle coloré sous le bouton pour plus de visibilité
                     st.markdown(f"<div style='background-color: {rgb_str}; width: 40px; height: 20px; border-radius: 5px; display: inline-block;'></div>", unsafe_allow_html=True)
 
     except Exception as e:
