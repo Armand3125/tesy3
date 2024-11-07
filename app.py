@@ -2,12 +2,32 @@ import streamlit as st
 
 # Récupérer la couleur primaire définie dans le fichier config.toml
 primaryColor = st.get_option("theme.primaryColor")
+secondaryColor = "#ff6347"  # Exemple de couleur secondaire (Tomato)
+tertiaryColor = "#32cd32"    # Exemple de couleur tertiaire (LimeGreen)
 
 # Appliquer la couleur du thème au bouton via CSS
 st.markdown(f"""
 <style>
 div.stButton > button:first-child {{
-    background-color: {primaryColor};  /* couleur de fond du bouton */
+    background-color: {primaryColor};  /* couleur de fond du bouton principal */
+    color: white;  /* couleur du texte */
+    font-size: 20px;  /* taille de la police */
+    height: 3em;  /* hauteur du bouton */
+    width: 15em;  /* largeur du bouton */
+    border-radius: 10px;  /* arrondir les coins du bouton */
+}}
+
+div.stButton > button:nth-child(2) {{
+    background-color: {secondaryColor};  /* couleur de fond du bouton secondaire */
+    color: white;  /* couleur du texte */
+    font-size: 20px;  /* taille de la police */
+    height: 3em;  /* hauteur du bouton */
+    width: 15em;  /* largeur du bouton */
+    border-radius: 10px;  /* arrondir les coins du bouton */
+}}
+
+div.stButton > button:nth-child(3) {{
+    background-color: {tertiaryColor};  /* couleur de fond du bouton tertiaire */
     color: white;  /* couleur du texte */
     font-size: 20px;  /* taille de la police */
     height: 3em;  /* hauteur du bouton */
@@ -22,6 +42,12 @@ div.stButton > button:hover {{
 </style>
 """, unsafe_allow_html=True)
 
-# Créer un bouton
-if st.button("Cliquez ici"):
-    st.write("Bouton cliqué !")
+# Créer trois boutons avec trois couleurs différentes
+if st.button("Bouton Bleu"):
+    st.write("Bouton bleu cliqué !")
+
+if st.button("Bouton Rouge"):
+    st.write("Bouton rouge cliqué !")
+
+if st.button("Bouton Vert"):
+    st.write("Bouton vert cliqué !")
