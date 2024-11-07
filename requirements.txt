@@ -1,5 +1,1 @@
-streamlit==1.24.0
-plotly==5.8.0
-pandas==1.5.3
-numpy==1.23.5
-streamlit-extras
+streamlit==1.19.0  # ou la dernière version disponible
