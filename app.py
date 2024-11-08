@@ -4,15 +4,15 @@ from scipy.spatial import distance
 from PIL import Image
 import numpy as np
 
-# Palette de couleurs définie
+# Palette de couleurs
 pal = {
-    "Noir_Charbon": (0, 0, 0), "Blanc_Jade": (255, 255, 255),
-    "Jaune_Or": (228, 189, 104), "Bleu_Cyan": (0, 134, 214),
-    "Violet_Lila": (174, 150, 212), "Vert_Gui": (63, 142, 67),
-    "Rouge_Ecarlate": (222, 67, 67), "Bleu_Marine": (0, 120, 191),
-    "Orange_Mandarine": (249, 153, 99), "Vert_Galaxie": (59, 102, 94),
-    "Bleu_Glacier": (163, 216, 225), "Violet_Magenta": (236, 0, 140),
-    "Gris_Argent": (166, 169, 170), "Violet_Basic": (94, 67, 183),
+    "NC": (0, 0, 0), "BJ": (255, 255, 255),
+    "JO": (228, 189, 104), "BC": (0, 134, 214),
+    "VL": (174, 150, 212), "VG": (63, 142, 67),
+    "RE": (222, 67, 67), "BM": (0, 120, 191),
+    "OM": (249, 153, 99), "VGa": (59, 102, 94),
+    "BG": (163, 216, 225), "VM": (236, 0, 140),
+    "GA": (166, 169, 170), "VB": (94, 67, 183),
 }
 
 # Calculer les couleurs les plus proches
@@ -129,3 +129,4 @@ if uploaded_file is not None:
 
 if 'modified_image' in st.session_state:
     st.image(st.session_state.modified_image, caption="Image Modifiée", width=int(1.5 * dim_max))
+
