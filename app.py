@@ -55,6 +55,7 @@ def traiter_img(img, Nc, Nd, dim_max):
         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
         st.session_state.modified_image = new_img_arr.astype('uint8')
 
+        # Afficher les couleurs sous forme de cases et rectangles
         for idx, (cl, count) in enumerate(sorted_cls):
             percentage = (count / total_px) * 100
             st.write(f"Cluster {idx + 1} - {percentage:.2f}%")
@@ -65,12 +66,12 @@ def traiter_img(img, Nc, Nd, dim_max):
                 rgb = pal[color]
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
 
-                # Afficher un rectangle coloré dans chaque colonne
-                cols[j].markdown(f"<div style='background-color: {rgb_str}; width: 50px; height: 25px; border-radius: 5px; display: inline-block;'></div>", unsafe_allow_html=True)
+                # Afficher un rectangle coloré comme fond de bouton
+                cols[j].markdown(f"<div style='background-color: {rgb_str}; width: 40px; height: 20px; border-radius: 5px; display: inline-block;'></div>", unsafe_allow_html=True)
 
-                # Utiliser un bouton Streamlit, avec des cases pour sélectionner la couleur
+                # Utiliser un bouton Streamlit avec un label vide
                 button_key = f'button_{idx}_{j}_{color}'
-                if cols[j].checkbox(f"Select {color}", key=button_key):
+                if cols[j].button(label="", key=button_key, help=color):
                     st.session_state.selected_colors[cl] = j
                     new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                     st.session_state.modified_image = new_img_arr.astype('uint8')
@@ -82,13 +83,12 @@ def traiter_img(img, Nc, Nd, dim_max):
 st.title("Tylice")
 uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "png"])
 Nc = st.slider("Nombre de Clusters", 2, 7, 4)
-Nd = st.slider("Nombre de Couleurs dans la Palette", 2, len(pal), 6)
 
 # Fixer la dimension maximale de l'image à 400
 dim_max = 400  
 
 if uploaded_file is not None:
-    traiter_img(uploaded_file, Nc, Nd, dim_max)
+    traiter_img(uploaded_file, Nc, 14, dim_max)  # Affiche toujours 14 couleurs
 
 if 'modified_image' in st.session_state:
     st.image(st.session_state.modified_image, caption="Image Modifiée", width=int(1.5 * dim_max))
