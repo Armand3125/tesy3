@@ -1,8 +1,8 @@
 import streamlit as st
-import numpy as np
 from sklearn.cluster import KMeans
 from scipy.spatial import distance
 from PIL import Image
+import numpy as np
 
 # Palette de couleurs définie
 pal = {
@@ -62,15 +62,17 @@ def traiter_img(img, Nc, Nd, dim_max):
             st.write(f"Cluster {idx + 1} - {percentage:.2f}%")
             col_options = cl_proches[cl]
 
+            # Pour chaque couleur possible dans ce cluster, afficher une case à cocher
+            selected_colors = st.session_state.selected_colors
             for j, color in enumerate(col_options):
                 rgb = pal[color]
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
-
-                # Affichage des cases à cocher pour sélectionner une couleur
+                
+                # Affichage de la case à cocher pour chaque couleur du cluster
                 color_label = f"Cluster {idx+1} - Couleur {j+1}: {color}"
                 if st.checkbox(color_label, key=f"checkbox_{idx}_{j}"):
-                    st.session_state.selected_colors[cl] = j
-                    new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
+                    selected_colors[idx] = j  # L'utilisateur choisit la couleur à appliquer
+                    new_img_arr = nouvelle_img(img_arr, labels, cl_proches, selected_colors, pal)
                     st.session_state.modified_image = new_img_arr.astype('uint8')
 
     except Exception as e:
@@ -105,7 +107,7 @@ css = """
 """
 st.markdown(css, unsafe_allow_html=True)
 
-# Affichage des cases à cocher pour les couleurs de la palette
+# Affichage des couleurs sous forme de cases à cocher
 num_selections = st.slider("Nombre de sélections de couleur", min_value=2, max_value=7, value=4)
 cols = st.columns(num_selections)
 
