@@ -56,23 +56,19 @@ def traiter_img(img, Nc, Nd, dim_max):
         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
         st.session_state.modified_image = new_img_arr.astype('uint8')
 
-        # Affichage des clusters et des options de sélection de couleur
+        # Affichage des clusters et des cases à cocher pour la sélection de couleur
         for idx, (cl, count) in enumerate(sorted_cls):
             percentage = (count / total_px) * 100
             st.write(f"Cluster {idx + 1} - {percentage:.2f}%")
             col_options = cl_proches[cl]
-            cols = st.columns(len(col_options))
 
             for j, color in enumerate(col_options):
                 rgb = pal[color]
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
 
-                # Afficher un rectangle coloré comme fond de bouton
-                cols[j].markdown(f"<div style='background-color: {rgb_str}; width: 40px; height: 20px; border-radius: 5px; display: inline-block; border: 3px solid black;'></div>", unsafe_allow_html=True)
-
-                # Utiliser un bouton Streamlit
-                button_key = f'button_{idx}_{j}_{color}'
-                if cols[j].button(label="", key=button_key, help=color):
+                # Affichage des cases à cocher pour sélectionner une couleur
+                color_label = f"Cluster {idx+1} - Couleur {j+1}: {color}"
+                if st.checkbox(color_label, key=f"checkbox_{idx}_{j}"):
                     st.session_state.selected_colors[cl] = j
                     new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                     st.session_state.modified_image = new_img_arr.astype('uint8')
@@ -92,73 +88,38 @@ dim_max = 400
 if uploaded_file is not None:
     traiter_img(uploaded_file, Nc, Nd, dim_max)
 
-# Affichage des couleurs sous forme de rectangles
+# Affichage des couleurs sous forme de cases à cocher
 st.title("Sélection de Couleurs")
 css = """
     <style>
-        .stRadio div [data-testid="stMarkdownContainer"] p {
-            display: none;
-        }
-        .radio-container {
+        .stCheckbox {
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-top: 0px;
-            margin-bottom: 15px;
-        }
-        .color-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .first-color-box {
-            margin-top: 30px;
         }
         .color-box {
             border: 3px solid black;
+            margin-bottom: 5px;
         }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
 
-# Barre de sélection pour choisir le nombre de colonnes (entre 2 et 7)
+# Affichage des cases à cocher pour les couleurs de la palette
 num_selections = st.slider("Nombre de sélections de couleur", min_value=2, max_value=7, value=4)
+cols = st.columns(num_selections)
 
-# Créer les colonnes en fonction de la sélection du slider
-cols = st.columns(num_selections * 2)
-
-# Options de couleurs disponibles
-color_options = list(pal.keys())
-
-# Afficher les sélecteurs de couleurs et les rectangles correspondants
+# Affichage des couleurs sous forme de cases à cocher
 for i in range(num_selections):
-    # Colonne pour afficher les rectangles de toutes les couleurs
-    with cols[i * 2]:
-        st.markdown("<div class='color-container'>", unsafe_allow_html=True)
-        
+    with cols[i]:
         for idx, (color_name, color_rgb) in enumerate(pal.items()):
-            if idx == 0:  # Pour le premier rectangle, ajouter le décalage
-                st.markdown(
-                    f"<div class='first-color-box color-box' style='background-color: rgb{color_rgb}; width: 50px; height: 20px; border-radius: 5px; margin-bottom: 4px;'></div>",
-                    unsafe_allow_html=True
-                )
-            else:
-                st.markdown(
-                    f"<div class='color-box' style='background-color: rgb{color_rgb}; width: 50px; height: 20px; border-radius: 5px; margin-bottom: 4px;'></div>",
-                    unsafe_allow_html=True
-                )
-        st.markdown("</div>", unsafe_allow_html=True)
+            rgb_str = f"rgb({color_rgb[0]}, {color_rgb[1]}, {color_rgb[2]})"
+            color_label = f"{color_name}: {rgb_str}"
 
-    # Colonne pour le bouton radio de sélection de couleur sans texte
-    with cols[i * 2 + 1]:
-        with st.container():
-            st.markdown("<div class='radio-container'>", unsafe_allow_html=True)
-            selected_color_name = st.radio("", color_options, key=f"radio_{i}")
-            if selected_color_name:
-                rgb = pal[selected_color_name]
+            # Affichage d'une case à cocher pour chaque couleur
+            if st.checkbox(color_label, key=f"checkbox_{color_name}"):
+                st.session_state.selected_colors.append(color_name)
                 st.markdown(
-                    f"<div style='background-color: rgb{rgb}; width: 50px; height: 50px; border-radius: 5px;'></div>",
+                    f"<div class='color-box' style='background-color: {rgb_str}; width: 50px; height: 20px; border-radius: 5px;'></div>",
                     unsafe_allow_html=True
                 )
-            st.markdown("</div>", unsafe_allow_html=True)
