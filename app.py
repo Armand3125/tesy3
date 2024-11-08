@@ -55,28 +55,33 @@ def traiter_img(img, Nc, Nd, dim_max):
         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
         st.session_state.modified_image = new_img_arr.astype('uint8')
 
-        # Affichage des couleurs pour chaque cluster
+        # Affichage des couleurs pour chaque cluster avec le style demandé
         for idx, (cl, count) in enumerate(sorted_cls):
             percentage = (count / total_px) * 100
             st.write(f"Cluster {idx + 1} - {percentage:.2f}%")
             col_options = cl_proches[cl]
             num_selections = len(col_options)
-            cols = st.columns(num_selections)
+            cols = st.columns(num_selections * 2)  # Double le nombre de colonnes pour les couleurs et les radios
 
-            # Affichage des cases de couleurs et des boutons radios pour la sélection
+            # Afficher les rectangles de couleur pour chaque option
             for j, color in enumerate(col_options):
                 rgb = pal[color]
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
-                
-                # Rectangle de couleur
-                cols[j].markdown(f"<div style='background-color: {rgb_str}; width: 50px; height: 20px; border-radius: 5px; margin-bottom: 4px;'></div>", unsafe_allow_html=True)
 
-                # Radio button pour sélectionner la couleur
-                selected_color_name = st.radio(f"Choisir pour Cluster {idx+1}", options=[color], key=f"radio_{idx}_{j}")
-                if selected_color_name:
-                    st.session_state.selected_colors[cl] = j
-                    new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
-                    st.session_state.modified_image = new_img_arr.astype('uint8')
+                # Colonne pour afficher les rectangles de couleur
+                with cols[j * 2]:
+                    st.markdown(
+                        f"<div class='color-box' style='background-color: {rgb_str}; width: 50px; height: 20px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                        unsafe_allow_html=True
+                    )
+
+                # Colonne pour les radios de sélection sans texte
+                with cols[j * 2 + 1]:
+                    selected_color_name = st.radio("", [color], key=f"radio_{idx}_{j}")
+                    if selected_color_name:
+                        st.session_state.selected_colors[cl] = j
+                        new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
+                        st.session_state.modified_image = new_img_arr.astype('uint8')
 
     except Exception as e:
         st.error(f"Une erreur est survenue : {e}")
@@ -89,6 +94,35 @@ Nd = st.slider("Nombre de Couleurs dans la Palette", 2, len(pal), 6)
 
 # Fixer la dimension maximale de l'image à 400
 dim_max = 400  
+
+# CSS pour masquer les labels et ajuster l'apparence des cases
+css = """
+    <style>
+        .stRadio div [data-testid="stMarkdownContainer"] p {
+            display: none;
+        }
+        .radio-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+        .color-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .first-color-box {
+            margin-top: 30px;
+        }
+        .color-box {
+            border: 3px solid black;
+        }
+    </style>
+"""
+st.markdown(css, unsafe_allow_html=True)
 
 if uploaded_file is not None:
     traiter_img(uploaded_file, Nc, Nd, dim_max)
