@@ -2,7 +2,6 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances_argmin_min
 
 # Palette de couleurs
 pal = {
@@ -17,11 +16,11 @@ pal = {
 
 st.title("Tylice")
 
-# CSS personnalisé pour l'affichage
 css = """
     <style>
         .color-container { display: flex; flex-direction: column; align-items: center; }
         .color-box { border: 3px solid black; }
+        .first-box { margin-top: 15px; } /* Marges au-dessus du premier rectangle de chaque colonne */
         .stColumn { padding: 0 !important; }
     </style>
 """
@@ -29,7 +28,6 @@ st.markdown(css, unsafe_allow_html=True)
 
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
-# Initialisation de la sélection du nombre de couleurs
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
@@ -50,7 +48,6 @@ rectangle_height = 20
 cols = st.columns(num_selections * 2)
 color_options = list(pal.keys())
 
-# Si une image est téléchargée
 if uploaded_image is not None:
     image = Image.open(uploaded_image)
     width, height = image.size
@@ -65,41 +62,36 @@ if uploaded_image is not None:
     img_arr = np.array(resized_image)
     pixels = img_arr.reshape(-1, 3)
 
-    # KMeans en fonction du nombre de clusters
     kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
     labels = kmeans.labels_
     centers = kmeans.cluster_centers_
 
-    # Calculer les couleurs les plus proches des centres des clusters
     centers_rgb = np.array(centers, dtype=int)
     pal_rgb = np.array(list(pal.values()), dtype=int)
     distances = np.linalg.norm(centers_rgb[:, None] - pal_rgb[None, :], axis=2)
 
-    # Réorganiser les couleurs de la palette par proximité avec chaque centre de cluster
     ordered_colors_by_cluster = []
     for i in range(num_selections):
         closest_colors_idx = distances[i].argsort()
         ordered_colors_by_cluster.append([list(pal.keys())[idx] for idx in closest_colors_idx])
 
-    # Affichage des cases de couleurs triées par proximité avec chaque cluster
     selected_colors = []
     for i in range(num_selections):
         with cols[i * 2]:
             st.markdown("<div class='color-container'>", unsafe_allow_html=True)
-            for color_name in ordered_colors_by_cluster[i]:
+            for j, color_name in enumerate(ordered_colors_by_cluster[i]):
                 color_rgb = pal[color_name]
+                margin_class = "first-box" if j == 0 else ""  # Ajoute une marge au premier rectangle uniquement
                 st.markdown(
-                    f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                    f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
                     unsafe_allow_html=True
                 )
             st.markdown("</div>", unsafe_allow_html=True)
 
         with cols[i * 2 + 1]:
-            # Afficher les couleurs triées et ajouter des clés uniques pour chaque radio
             selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}")
             selected_colors.append(pal[selected_color_name])
     
-    # Appliquer les couleurs sélectionnées aux pixels de l'image
     new_img_arr = np.zeros_like(img_arr)
     for i in range(img_arr.shape[0]):
         for j in range(img_arr.shape[1]):
