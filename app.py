@@ -33,58 +33,13 @@ css = """
 """
 st.markdown(css, unsafe_allow_html=True)
 
+# Ajouter l'outil de sélection d'image
+uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
+
 # Initialisation de la sélection du nombre de couleurs
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
-# Déplacer la section de téléchargement de l'image et de l'affichage de l'image ici
-uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
-
-# Affichage de l'image téléchargée et de l'image traitée après le KMeans
-if uploaded_image is not None:
-    image = Image.open(uploaded_image)
-    
-    # Redimensionner l'image à 400px dans la dimension la plus grande
-    width, height = image.size
-    if width > height:
-        new_width = 400
-        new_height = int((new_width / width) * height)
-    else:
-        new_height = 400
-        new_width = int((new_height / height) * width)
-    
-    resized_image = image.resize((new_width, new_height))
-
-    # Traitement KMeans
-    img_arr = np.array(resized_image)
-    pixels = img_arr.reshape(-1, 3)
-
-    # Appliquer KMeans pour le nombre de clusters en fonction de la sélection
-    kmeans = KMeans(n_clusters=st.session_state.num_selections, random_state=0).fit(pixels)
-    labels = kmeans.labels_
-    centers = kmeans.cluster_centers_
-
-    # Remplacer les pixels par la couleur de leur cluster sélectionnée
-    selected_colors = []
-    for i in range(st.session_state.num_selections):
-        color_name = st.radio("", list(pal.keys()), key=f"radio_{i}")
-        selected_colors.append(pal[color_name])  # Enregistrer la couleur sélectionnée
-
-    new_img_arr = np.zeros_like(img_arr)
-    for i in range(img_arr.shape[0]):
-        for j in range(img_arr.shape[1]):
-            lbl = labels[i * img_arr.shape[1] + j]
-            new_img_arr[i, j] = selected_colors[lbl]
-
-    # Convertir l'image transformée en image PIL pour l'afficher
-    new_image = Image.fromarray(new_img_arr.astype('uint8'))
-
-    # Afficher l'image après traitement KMeans
-    st.image(new_image, caption=f"Image après traitement KMeans ({st.session_state.num_selections} couleurs)", use_column_width=False)
-else:
-    st.warning("Veuillez télécharger une image pour commencer.")
-
-# Déplacer les sélecteurs du nombre de couleurs sous l'image
 col1, col2 = st.columns([1, 5])
 
 with col1:
@@ -120,3 +75,39 @@ for i in range(num_selections):
         # Pas de texte pour les cases à cocher, juste des cases radio
         selected_color_name = st.radio("", color_options, key=f"radio_{i}")
         selected_colors.append(pal[selected_color_name])  # Enregistrer la couleur sélectionnée
+
+if uploaded_image is not None:
+    image = Image.open(uploaded_image)
+    
+    # Redimensionner l'image à 400px dans la dimension la plus grande
+    width, height = image.size
+    if width > height:
+        new_width = 400
+        new_height = int((new_width / width) * height)
+    else:
+        new_height = 400
+        new_width = int((new_height / height) * width)
+    
+    resized_image = image.resize((new_width, new_height))
+
+    # Traitement KMeans
+    img_arr = np.array(resized_image)
+    pixels = img_arr.reshape(-1, 3)
+
+    # Appliquer KMeans pour le nombre de clusters en fonction de la sélection
+    kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
+    labels = kmeans.labels_
+    centers = kmeans.cluster_centers_
+
+    # Remplacer les pixels par la couleur de leur cluster sélectionnée
+    new_img_arr = np.zeros_like(img_arr)
+    for i in range(img_arr.shape[0]):
+        for j in range(img_arr.shape[1]):
+            lbl = labels[i * img_arr.shape[1] + j]
+            new_img_arr[i, j] = selected_colors[lbl]
+
+    # Convertir l'image transformée en image PIL pour l'afficher
+    new_image = Image.fromarray(new_img_arr.astype('uint8'))
+
+    # Afficher uniquement l'image après traitement KMeans
+    st.image(new_image, caption=f"Image après traitement KMeans ({num_selections} couleurs)", use_column_width=False)
