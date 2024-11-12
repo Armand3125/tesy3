@@ -56,6 +56,7 @@ cols = st.columns(num_selections * 2)
 color_options = list(pal.keys())
 
 # Affichage des cases de couleurs sans texte
+selected_colors = []
 for i in range(num_selections):
     with cols[i * 2]:
         st.markdown("<div class='color-container'>", unsafe_allow_html=True)
@@ -70,12 +71,7 @@ for i in range(num_selections):
     with cols[i * 2 + 1]:
         # Pas de texte pour les cases à cocher, juste des cases radio
         selected_color_name = st.radio("", color_options, key=f"radio_{i}")
-        if selected_color_name:
-            rgb = pal[selected_color_name]
-            st.markdown(
-                f"<div style='background-color: rgb{rgb}; width: {rectangle_width}px; height: {rectangle_width // 4}px; border-radius: 5px;'></div>",
-                unsafe_allow_html=True
-            )
+        selected_colors.append(pal[selected_color_name])  # Enregistrer la couleur sélectionnée
 
 # Ajouter l'outil de sélection d'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
@@ -103,12 +99,12 @@ if uploaded_image is not None:
     labels = kmeans.labels_
     centers = kmeans.cluster_centers_
 
-    # Remplacer les pixels par la couleur de leur cluster
+    # Remplacer les pixels par la couleur de leur cluster sélectionnée
     new_img_arr = np.zeros_like(img_arr)
     for i in range(img_arr.shape[0]):
         for j in range(img_arr.shape[1]):
             lbl = labels[i * img_arr.shape[1] + j]
-            new_img_arr[i, j] = centers[lbl].astype(int)
+            new_img_arr[i, j] = selected_colors[lbl]
 
     # Convertir l'image transformée en image PIL pour l'afficher
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
