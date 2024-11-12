@@ -33,6 +33,30 @@ css = """
 """
 st.markdown(css, unsafe_allow_html=True)
 
+# Ajouter l'outil de sélection d'image
+uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
+
+if uploaded_image is not None:
+    image = Image.open(uploaded_image)
+    
+    # Redimensionner l'image à 400px dans la dimension la plus grande
+    width, height = image.size
+    if width > height:
+        new_width = 400
+        new_height = int((new_width / width) * height)
+    else:
+        new_height = 400
+        new_width = int((new_height / height) * width)
+    
+    resized_image = image.resize((new_width, new_height))
+
+    # Traitement KMeans
+    img_arr = np.array(resized_image)
+    pixels = img_arr.reshape(-1, 3)
+
+    # Afficher l'image avant traitement
+    st.image(resized_image, caption="Image d'origine", use_column_width=True)
+
 # Initialisation de la sélection du nombre de couleurs
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
@@ -73,28 +97,8 @@ for i in range(num_selections):
         selected_color_name = st.radio("", color_options, key=f"radio_{i}")
         selected_colors.append(pal[selected_color_name])  # Enregistrer la couleur sélectionnée
 
-# Ajouter l'outil de sélection d'image
-uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
-
+# Appliquer KMeans pour le nombre de clusters en fonction de la sélection
 if uploaded_image is not None:
-    image = Image.open(uploaded_image)
-    
-    # Redimensionner l'image à 400px dans la dimension la plus grande
-    width, height = image.size
-    if width > height:
-        new_width = 400
-        new_height = int((new_width / width) * height)
-    else:
-        new_height = 400
-        new_width = int((new_height / height) * width)
-    
-    resized_image = image.resize((new_width, new_height))
-
-    # Traitement KMeans
-    img_arr = np.array(resized_image)
-    pixels = img_arr.reshape(-1, 3)
-
-    # Appliquer KMeans pour le nombre de clusters en fonction de la sélection
     kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
     labels = kmeans.labels_
     centers = kmeans.cluster_centers_
