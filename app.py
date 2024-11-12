@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
+import math
 
 # Palette de couleurs
 pal = {
@@ -13,6 +14,10 @@ pal = {
     "BG": (163, 216, 225), "VM": (236, 0, 140),
     "GA": (166, 169, 170), "VB": (94, 67, 183),
 }
+
+# Fonction pour calculer la distance euclidienne entre deux couleurs
+def euclidean_distance(color1, color2):
+    return math.sqrt(sum((a - b) ** 2 for a, b in zip(color1, color2)))
 
 st.title("Tylice")
 
@@ -106,12 +111,25 @@ if uploaded_image is not None:
     labels = kmeans.labels_
     centers = kmeans.cluster_centers_
 
+    # Trier les couleurs de la palette en fonction de leur proximité aux centres des clusters
+    color_distances = []
+    for color_name, color_rgb in pal.items():
+        distances = [euclidean_distance(color_rgb, center) for center in centers]
+        min_distance = min(distances)  # Distance minimale au centre de cluster
+        color_distances.append((color_name, min_distance))
+
+    # Trier les couleurs en fonction de la distance minimale
+    color_distances.sort(key=lambda x: x[1])
+
+    # Trier les couleurs sélectionnées selon la proximité
+    sorted_colors = [pal[color_name] for color_name, _ in color_distances]
+
     # Remplacer les pixels par la couleur de leur cluster sélectionnée
     new_img_arr = np.zeros_like(img_arr)
     for i in range(img_arr.shape[0]):
         for j in range(img_arr.shape[1]):
             lbl = labels[i * img_arr.shape[1] + j]
-            new_img_arr[i, j] = selected_colors[lbl]
+            new_img_arr[i, j] = sorted_colors[lbl]
 
     # Convertir l'image transformée en image PIL pour l'afficher
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
