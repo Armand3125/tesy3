@@ -16,30 +16,6 @@ pal = {
 
 st.title("Tylice")
 
-css = """
-    <style>
-        .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
-        .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .color-container { display: flex; flex-direction: column; align-items: center; }
-        .color-box { border: 3px solid black; }
-        .stColumn { padding: 0 !important; }
-        @media (max-width: 768px) {
-            .stColumn { width: 100% !important; margin-bottom: 10px; }
-            .radio-container { flex-direction: row; }
-            .color-container { flex-direction: row; }
-            .color-box { width: 40px; height: 15px; }
-        }
-        /* Centrage de l'image */
-        .center-image {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-    </style>
-"""
-st.markdown(css, unsafe_allow_html=True)
-
 # Ajouter l'outil de sélection d'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
@@ -118,13 +94,14 @@ if uploaded_image is not None:
 
     # Agrandir l'image de 30% après le traitement KMeans
     width, height = new_image.size
-    new_width = int(width * 1.1)  # Augmenter la largeur de 30%
-    new_height = int(height * 1.1)  # Augmenter la hauteur de 30%
+    new_width = int(width * 1.3)  # Augmenter la largeur de 30%
+    new_height = int(height * 1.3)  # Augmenter la hauteur de 30%
     
     # Redimensionner l'image
     resized_image = new_image.resize((new_width, new_height))
-    
+
     # Centrer l'image avec st.columns
-    col1, col2, col3 = st.columns([1, 10, 1])  # Crée une colonne centrale avec 10 unités de largeur
+    # Cette fois-ci on va utiliser une méthode plus flexible pour le centrage.
+    col1, col2, col3 = st.columns([1, 1, 1])  # Crée une colonne centrale avec 1 unité de largeur de chaque côté
     with col2:
-        st.image(resized_image, caption=f"Image après traitement KMeans agrandie ({num_selections} couleurs)", use_column_width=False)
+        st.image(resized_image, caption=f"Image après traitement KMeans agrandie ({num_selections} couleurs)", use_column_width=True)
