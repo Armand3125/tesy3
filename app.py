@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
+from sklearn.metrics import pairwise_distances_argmin_min
 
 # Palette de couleurs
 pal = {
@@ -18,10 +19,12 @@ st.title("Tylice")
 
 css = """
     <style>
+        .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
+        .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
         .color-container { display: flex; flex-direction: column; align-items: center; }
         .color-box { border: 3px solid black; }
-        .first-box { margin-top: 15px; } /* Marges au-dessus du premier rectangle de chaque colonne */
         .stColumn { padding: 0 !important; }
+        .first-box { margin-top: 15px; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -44,9 +47,7 @@ with col2:
 num_selections = st.session_state.num_selections
 rectangle_width = 80 if num_selections == 4 else 50
 rectangle_height = 20
-
 cols = st.columns(num_selections * 2)
-color_options = list(pal.keys())
 
 if uploaded_image is not None:
     image = Image.open(uploaded_image)
@@ -81,7 +82,7 @@ if uploaded_image is not None:
             st.markdown("<div class='color-container'>", unsafe_allow_html=True)
             for j, color_name in enumerate(ordered_colors_by_cluster[i]):
                 color_rgb = pal[color_name]
-                margin_class = "first-box" if j == 0 else ""  # Ajoute une marge au premier rectangle uniquement
+                margin_class = "first-box" if j == 0 else ""
                 st.markdown(
                     f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
                     unsafe_allow_html=True
@@ -89,9 +90,9 @@ if uploaded_image is not None:
             st.markdown("</div>", unsafe_allow_html=True)
 
         with cols[i * 2 + 1]:
-            selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}")
+            selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden")
             selected_colors.append(pal[selected_color_name])
-    
+
     new_img_arr = np.zeros_like(img_arr)
     for i in range(img_arr.shape[0]):
         for j in range(img_arr.shape[1]):
