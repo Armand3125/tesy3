@@ -10,7 +10,7 @@ pal = {
     "GA": (166, 169, 170), "VB": (94, 67, 183),
 }
 
-st.title("Sélection de Couleurs")
+st.title("Tylice")
 
 css = """
     <style>
@@ -32,7 +32,7 @@ st.markdown(css, unsafe_allow_html=True)
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([1, 1])
 
 with col1:
     if st.button("4 Couleurs"):
