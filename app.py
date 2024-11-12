@@ -11,7 +11,7 @@ pal = {
     "GA": (166, 169, 170), "VB": (94, 67, 183),
 }
 
-st.title("Sélection de Couleurs")
+st.title("Sélection de Couleurs par Cluster")
 
 # CSS pour masquer les labels et ajuster l'apparence des cases
 css = """
@@ -67,24 +67,24 @@ css = """
 """
 st.markdown(css, unsafe_allow_html=True)
 
-# Barre de sélection pour choisir le nombre de colonnes (entre 2 et 7)
-num_selections = st.slider("Nombre de sélections de couleur", min_value=2, max_value=7, value=4)
+# Barre de sélection pour choisir le nombre de clusters (entre 2 et 7)
+num_clusters = st.slider("Nombre de clusters de couleur", min_value=2, max_value=7, value=4)
 
-# Créer les colonnes en fonction de la sélection du slider
-cols = st.columns(num_selections * 2)  # On double le nombre pour inclure les couleurs
+# Créer les colonnes en fonction du nombre de clusters
+cols = st.columns(num_clusters) 
 
 # Options de couleurs disponibles
 color_options = list(pal.keys())
 
-# Afficher les sélecteurs de couleurs et les rectangles correspondants
-for i in range(num_selections):
-    # Colonne pour afficher les rectangles de toutes les couleurs
-    with cols[i * 2]:
-        st.markdown("<div class='color-container'>", unsafe_allow_html=True)
+# Afficher les sélecteurs de couleurs et les rectangles correspondants pour chaque cluster
+for i in range(num_clusters):
+    # Colonne pour afficher le sélecteur de couleurs pour chaque cluster
+    with cols[i]:
+        st.markdown(f"<div class='color-container'>", unsafe_allow_html=True)
         
-        # Décalage du premier rectangle de couleur de 30px
+        # Afficher toutes les couleurs disponibles sous forme de rectangles
         for idx, (color_name, color_rgb) in enumerate(pal.items()):
-            if idx == 0:  # Pour le premier rectangle, ajouter le décalage
+            if idx == 0:  # Ajouter un décalage pour le premier rectangle
                 st.markdown(
                     f"<div class='first-color-box color-box' style='background-color: rgb{color_rgb}; width: 50px; height: 20px; border-radius: 5px; margin-bottom: 4px;'></div>",
                     unsafe_allow_html=True
@@ -94,17 +94,16 @@ for i in range(num_selections):
                     f"<div class='color-box' style='background-color: rgb{color_rgb}; width: 50px; height: 20px; border-radius: 5px; margin-bottom: 4px;'></div>",
                     unsafe_allow_html=True
                 )
+        
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # Colonne pour le bouton radio de sélection de couleur sans texte
-    with cols[i * 2 + 1]:
-        with st.container():
-            st.markdown("<div class='radio-container'>", unsafe_allow_html=True)
-            selected_color_name = st.radio("", color_options, key=f"radio_{i}")
-            if selected_color_name:
-                rgb = pal[selected_color_name]
-                st.markdown(
-                    f"<div style='background-color: rgb{rgb}; width: 50px; height: 50px; border-radius: 5px;'></div>",
-                    unsafe_allow_html=True
-                )
-            st.markdown("</div>", unsafe_allow_html=True)
+        # Sélecteur de couleur spécifique à chaque cluster avec un bouton radio
+        selected_color_name = st.radio(f"Choix de couleur pour Cluster {i + 1}", color_options, key=f"cluster_{i}")
+        
+        # Afficher la couleur sélectionnée sous forme de rectangle
+        if selected_color_name:
+            rgb = pal[selected_color_name]
+            st.markdown(
+                f"<div style='background-color: rgb{rgb}; width: 50px; height: 50px; border-radius: 5px; margin-top: 10px;'></div>",
+                unsafe_allow_html=True
+            )
