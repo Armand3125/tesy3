@@ -93,9 +93,6 @@ if uploaded_image is not None:
     
     resized_image = image.resize((new_width, new_height))
 
-    # Afficher l'image redimensionnée
-    st.image(resized_image, caption="Image redimensionnée", use_column_width=False)
-
     # Traitement KMeans
     img_arr = np.array(resized_image)
     pixels = img_arr.reshape(-1, 3)
@@ -116,5 +113,5 @@ if uploaded_image is not None:
     # Convertir l'image transformée en image PIL pour l'afficher
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
 
-    # Afficher l'image transformée
+    # Afficher uniquement l'image après traitement KMeans
     st.image(new_image, caption="Image après traitement KMeans", use_column_width=False)
