@@ -29,7 +29,7 @@ def nouvelle_img(img_arr, labels, cl_proches, selected_colors, pal):
     img_mapped = np.array([color_map[label] for label in labels])
     return img_mapped.reshape(img_arr.shape)
 
-# Traiter l'image pour clustering et application de la palette
+# Traitement de l'image pour clustering et application de la palette
 def traiter_img(img, Nc, Nd, dim_max):
     try:
         img = Image.open(img).convert('RGB')
@@ -55,20 +55,21 @@ def traiter_img(img, Nc, Nd, dim_max):
         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
         st.session_state.modified_image = new_img_arr.astype('uint8')
 
+        # Ajouter ta section de sélection de couleur ici
         for idx, (cl, count) in enumerate(sorted_cls):
             percentage = (count / total_px) * 100
             st.write(f"Cluster {idx + 1} - {percentage:.2f}%")
             col_options = cl_proches[cl]
             cols = st.columns(len(col_options))
 
-            # Afficher les cases à cocher pour chaque couleur dans la palette
+            # Afficher les boutons radio sans texte avec couleur
             for j, color in enumerate(col_options):
                 rgb = pal[color]
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
                 
-                # Affichage des cases à cocher pour chaque couleur
-                checkbox_key = f'checkbox_{idx}_{j}_{color}'
-                if cols[j].checkbox(label=color, key=checkbox_key, value=(st.session_state.selected_colors[cl] == j)):
+                # Affichage de la case colorée en radio-bouton pour chaque option
+                radio_key = f'radio_{idx}_{j}_{color}'
+                if cols[j].radio("", [color], key=radio_key, index=(st.session_state.selected_colors[cl] == j)):
                     st.session_state.selected_colors[cl] = j
                     new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                     st.session_state.modified_image = new_img_arr.astype('uint8')
