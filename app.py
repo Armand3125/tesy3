@@ -109,13 +109,16 @@ if uploaded_image is not None:
 
     st.subheader("Couleurs les plus proches des centres des clusters")
     color_cols = st.columns(num_selections)
-    
+
+    ordered_colors = []
+    for i in range(num_selections):
+        sorted_indices = distances[i].argsort()
+        ordered_colors.append([list(pal.keys())[idx] for idx in sorted_indices])
+
     for i in range(num_selections):
         with color_cols[i]:
             st.write(f"Cluster {i+1}:")
-            sorted_indices = distances[i].argsort()
-            for idx in sorted_indices:
-                color_name = list(pal.keys())[idx]
+            for color_name in ordered_colors[i]:
                 color_rgb = pal[color_name]
                 st.markdown(f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px;'></div>", unsafe_allow_html=True)
                 st.text(color_name)
