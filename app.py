@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances_argmin_min
+from sklearn.metrics import pairwise_distances  # Assurez-vous d'importer correctement cette fonction
 
 # Palette de couleurs
 pal = {
@@ -108,12 +108,12 @@ if uploaded_image is not None:
     centers_rgb = np.array(centers, dtype=int)
     pal_rgb = np.array(list(pal.values()), dtype=int)
 
-    distances = pairwise_distances(centers_rgb, pal_rgb)
+    distances = pairwise_distances(centers_rgb, pal_rgb)  # Utilisation correcte de pairwise_distances
 
     st.subheader("Couleurs les plus proches des centres des clusters")
     color_cols = st.columns(num_selections)
 
-    # Tri des couleurs pour chaque cluster en fonction de leur proximité
+    # Trie des couleurs pour chaque cluster en fonction de leur proximité
     ordered_colors_by_cluster = []
     for i in range(num_selections):
         # Trie les couleurs en fonction de leur proximité avec chaque centre de cluster
