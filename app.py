@@ -124,7 +124,7 @@ if uploaded_image is not None:
     # Redimensionner l'image
     resized_image = new_image.resize((new_width, new_height))
     
-    # Utiliser le style CSS pour centrer l'image dans le layout
-    st.markdown('<div class="center-image">', unsafe_allow_html=True)
-    st.image(resized_image, caption=f"Image après traitement KMeans agrandie ({num_selections} couleurs)", use_column_width=False)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Centrer l'image avec st.columns
+    col1, col2, col3 = st.columns([1, 10, 1])  # Crée une colonne centrale avec 10 unités de largeur
+    with col2:
+        st.image(resized_image, caption=f"Image après traitement KMeans agrandie ({num_selections} couleurs)", use_column_width=False)
