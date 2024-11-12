@@ -18,14 +18,52 @@ pal = {
 # CSS pour masquer les labels et ajuster l'apparence des cases
 css = """
     <style>
-        .color-box {
-            border: 3px solid black;
+        /* Cacher les textes des boutons radio */
+        .stRadio div [data-testid="stMarkdownContainer"] p {
+            display: none;
+        }
+        .radio-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;  /* Supprimer les marges entre les éléments */
         }
         .color-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+        }
+        .first-color-box {
+            margin-top: 30px;  /* Décalage de 30px pour le premier rectangle */
+        }
+        /* Ajout de la bordure noire autour des rectangles */
+        .color-box {
+            border: 3px solid black;  /* Bordure noire */
+        }
+        /* Réduire les marges entre les colonnes */
+        .stColumn {
+            padding: 0 !important;  /* Retirer le padding par défaut */
+        }
+        /* Ajustement de la mise en page pour les écrans plus petits */
+        @media (max-width: 768px) {
+            .stColumn {
+                width: 100% !important;  /* Occupe toute la largeur disponible */
+                margin-bottom: 10px;  /* Ajoute un petit espace entre les éléments */
+            }
+            .radio-container {
+                flex-direction: row;  /* Aligner les boutons radio horizontalement */
+            }
+            .color-container {
+                flex-direction: row;  /* Afficher les couleurs en ligne sur petits écrans */
+            }
+            .color-box {
+                width: 40px;  /* Ajuster la taille des cases de couleur sur mobile */
+                height: 15px; 
+            }
+            .first-color-box {
+                margin-top: 0px;  /* Enlever le décalage pour les petits écrans */
+            }
         }
     </style>
 """
