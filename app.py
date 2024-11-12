@@ -37,26 +37,7 @@ st.markdown(css, unsafe_allow_html=True)
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
-col1, col2 = st.columns([1, 5])
-
-# Affichage du sélecteur de nombre de couleurs
-with col1:
-    if st.button("4 Couleurs"):
-        st.session_state.num_selections = 4
-
-with col2:
-    if st.button("6 Couleurs"):
-        st.session_state.num_selections = 6
-
-num_selections = st.session_state.num_selections
-
-rectangle_width = 80 if num_selections == 4 else 50
-rectangle_height = 20
-
-cols = st.columns(num_selections * 2)
-color_options = list(pal.keys())
-
-# Ajouter l'outil de sélection d'image
+# Déplacer la section de téléchargement de l'image et de l'affichage de l'image ici
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
 # Affichage de l'image téléchargée et de l'image traitée après le KMeans
@@ -79,14 +60,14 @@ if uploaded_image is not None:
     pixels = img_arr.reshape(-1, 3)
 
     # Appliquer KMeans pour le nombre de clusters en fonction de la sélection
-    kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
+    kmeans = KMeans(n_clusters=st.session_state.num_selections, random_state=0).fit(pixels)
     labels = kmeans.labels_
     centers = kmeans.cluster_centers_
 
     # Remplacer les pixels par la couleur de leur cluster sélectionnée
     selected_colors = []
-    for i in range(num_selections):
-        color_name = st.radio("", color_options, key=f"radio_{i}")
+    for i in range(st.session_state.num_selections):
+        color_name = st.radio("", list(pal.keys()), key=f"radio_{i}")
         selected_colors.append(pal[color_name])  # Enregistrer la couleur sélectionnée
 
     new_img_arr = np.zeros_like(img_arr)
@@ -99,11 +80,30 @@ if uploaded_image is not None:
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
 
     # Afficher l'image après traitement KMeans
-    st.image(new_image, caption=f"Image après traitement KMeans ({num_selections} couleurs)", use_column_width=False)
+    st.image(new_image, caption=f"Image après traitement KMeans ({st.session_state.num_selections} couleurs)", use_column_width=False)
 else:
     st.warning("Veuillez télécharger une image pour commencer.")
 
-# Affichage des cases de couleurs sans texte (maintenant en dessous de l'image traitée)
+# Déplacer les sélecteurs du nombre de couleurs sous l'image
+col1, col2 = st.columns([1, 5])
+
+with col1:
+    if st.button("4 Couleurs"):
+        st.session_state.num_selections = 4
+
+with col2:
+    if st.button("6 Couleurs"):
+        st.session_state.num_selections = 6
+
+num_selections = st.session_state.num_selections
+
+rectangle_width = 80 if num_selections == 4 else 50
+rectangle_height = 20
+
+cols = st.columns(num_selections * 2)
+color_options = list(pal.keys())
+
+# Affichage des cases de couleurs sans texte
 selected_colors = []
 for i in range(num_selections):
     with cols[i * 2]:
