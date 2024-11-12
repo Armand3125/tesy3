@@ -16,6 +16,30 @@ pal = {
 
 st.title("Tylice")
 
+css = """
+    <style>
+        .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
+        .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .color-container { display: flex; flex-direction: column; align-items: center; }
+        .color-box { border: 3px solid black; }
+        .stColumn { padding: 0 !important; }
+        @media (max-width: 768px) {
+            .stColumn { width: 100% !important; margin-bottom: 10px; }
+            .radio-container { flex-direction: row; }
+            .color-container { flex-direction: row; }
+            .color-box { width: 40px; height: 15px; }
+        }
+        /* Centrage de l'image */
+        .center-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+    </style>
+"""
+st.markdown(css, unsafe_allow_html=True)
+
 # Ajouter l'outil de sélection d'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
@@ -99,9 +123,8 @@ if uploaded_image is not None:
     
     # Redimensionner l'image
     resized_image = new_image.resize((new_width, new_height))
-
-    # Centrer l'image avec st.columns
-    # Cette fois-ci on va utiliser une méthode plus flexible pour le centrage.
-    col1, col2, col3 = st.columns([1, 1, 1])  # Crée une colonne centrale avec 1 unité de largeur de chaque côté
+    
+    # Utiliser st.columns pour centrer l'image
+    col1, col2, col3 = st.columns([1, 6, 1])  # Crée trois colonnes : une de 1, une de 6 et une autre de 1
     with col2:
         st.image(resized_image, caption=f"Image après traitement KMeans agrandie ({num_selections} couleurs)", use_column_width=True)
