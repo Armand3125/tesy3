@@ -18,52 +18,14 @@ pal = {
 # CSS pour masquer les labels et ajuster l'apparence des cases
 css = """
     <style>
-        /* Cacher les textes des boutons radio */
-        .stRadio div [data-testid="stMarkdownContainer"] p {
-            display: none;
-        }
-        .radio-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0;  /* Supprimer les marges entre les éléments */
+        .color-box {
+            border: 3px solid black;
         }
         .color-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-        .first-color-box {
-            margin-top: 30px;  /* Décalage de 30px pour le premier rectangle */
-        }
-        /* Ajout de la bordure noire autour des rectangles */
-        .color-box {
-            border: 3px solid black;  /* Bordure noire */
-        }
-        /* Réduire les marges entre les colonnes */
-        .stColumn {
-            padding: 0 !important;  /* Retirer le padding par défaut */
-        }
-        /* Ajustement de la mise en page pour les écrans plus petits */
-        @media (max-width: 768px) {
-            .stColumn {
-                width: 100% !important;  /* Occupe toute la largeur disponible */
-                margin-bottom: 10px;  /* Ajoute un petit espace entre les éléments */
-            }
-            .radio-container {
-                flex-direction: row;  /* Aligner les boutons radio horizontalement */
-            }
-            .color-container {
-                flex-direction: row;  /* Afficher les couleurs en ligne sur petits écrans */
-            }
-            .color-box {
-                width: 40px;  /* Ajuster la taille des cases de couleur sur mobile */
-                height: 15px; 
-            }
-            .first-color-box {
-                margin-top: 0px;  /* Enlever le décalage pour les petits écrans */
-            }
+            justify-content: center;
         }
     </style>
 """
@@ -107,29 +69,25 @@ def traiter_img(img, Nc, Nd, dim_max):
         elif len(st.session_state.selected_colors) != Nc:
             st.session_state.selected_colors = [0] * Nc
 
-        new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
-        st.session_state.modified_image = new_img_arr.astype('uint8')
-
-        # Affichage des clusters et des choix de couleurs avec style CSS
+        # Affichage des clusters et des cases à cocher pour chaque couleur
         for idx, (cl, count) in enumerate(sorted_cls):
             percentage = (count / total_px) * 100
             st.write(f"Cluster {idx + 1} - {percentage:.2f}%")
-            col_options = cl_proches[cl]
-            cols = st.columns(len(col_options))
 
-            # Afficher les cases de couleur pour chaque option dans la palette
-            for j, color in enumerate(col_options):
-                rgb = pal[color]
-                rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
-                
-                # Utiliser un index de sélection pour garantir qu'il est valide
-                index = st.session_state.selected_colors[cl] if st.session_state.selected_colors[cl] < len(col_options) else 0
-                selected_color_name = cols[j].radio("", col_options, index=index, key=f'radio_{idx}_{j}')
-                
-                if selected_color_name == color:
-                    st.session_state.selected_colors[cl] = col_options.index(color)
-                    new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
-                    st.session_state.modified_image = new_img_arr.astype('uint8')
+            col_options = cl_proches[cl]
+            cols = st.columns(1)  # Une seule colonne pour les cases à cocher
+
+            # Afficher les cases à cocher pour chaque couleur dans la palette pour le cluster
+            with cols[0]:
+                for j, color in enumerate(col_options):
+                    rgb = pal[color]
+                    rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
+                    checkbox_key = f'checkbox_{idx}_{j}_{color}'
+
+                    if st.checkbox(label=color, key=checkbox_key, value=(st.session_state.selected_colors[cl] == j)):
+                        st.session_state.selected_colors[cl] = j
+                        new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
+                        st.session_state.modified_image = new_img_arr.astype('uint8')
 
     except Exception as e:
         st.error(f"Une erreur est survenue : {e}")
