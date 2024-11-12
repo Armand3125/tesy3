@@ -15,6 +15,60 @@ pal = {
     "Gris_Argent": (166, 169, 170), "Violet_Basic": (94, 67, 183),
 }
 
+# CSS pour masquer les labels et ajuster l'apparence des cases
+css = """
+    <style>
+        /* Cacher les textes des boutons radio */
+        .stRadio div [data-testid="stMarkdownContainer"] p {
+            display: none;
+        }
+        .radio-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;  /* Supprimer les marges entre les éléments */
+        }
+        .color-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .first-color-box {
+            margin-top: 30px;  /* Décalage de 30px pour le premier rectangle */
+        }
+        /* Ajout de la bordure noire autour des rectangles */
+        .color-box {
+            border: 3px solid black;  /* Bordure noire */
+        }
+        /* Réduire les marges entre les colonnes */
+        .stColumn {
+            padding: 0 !important;  /* Retirer le padding par défaut */
+        }
+        /* Ajustement de la mise en page pour les écrans plus petits */
+        @media (max-width: 768px) {
+            .stColumn {
+                width: 100% !important;  /* Occupe toute la largeur disponible */
+                margin-bottom: 10px;  /* Ajoute un petit espace entre les éléments */
+            }
+            .radio-container {
+                flex-direction: row;  /* Aligner les boutons radio horizontalement */
+            }
+            .color-container {
+                flex-direction: row;  /* Afficher les couleurs en ligne sur petits écrans */
+            }
+            .color-box {
+                width: 40px;  /* Ajuster la taille des cases de couleur sur mobile */
+                height: 15px; 
+            }
+            .first-color-box {
+                margin-top: 0px;  /* Enlever le décalage pour les petits écrans */
+            }
+        }
+    </style>
+"""
+st.markdown(css, unsafe_allow_html=True)
+
 # Calculer les couleurs les plus proches
 def proches(c, pal):
     dists = [(n, distance.euclidean(c, col)) for n, col in pal.items()]
@@ -55,22 +109,20 @@ def traiter_img(img, Nc, Nd, dim_max):
         new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
         st.session_state.modified_image = new_img_arr.astype('uint8')
 
-        # Ajouter ta section de sélection de couleur ici
+        # Affichage des clusters et des choix de couleurs avec style CSS
         for idx, (cl, count) in enumerate(sorted_cls):
             percentage = (count / total_px) * 100
             st.write(f"Cluster {idx + 1} - {percentage:.2f}%")
             col_options = cl_proches[cl]
             cols = st.columns(len(col_options))
 
-            # Afficher les boutons radio sans texte avec couleur
+            # Afficher les cases de couleur pour chaque option dans la palette
             for j, color in enumerate(col_options):
                 rgb = pal[color]
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
                 
-                # Affichage de la case colorée en radio-bouton pour chaque option
-                radio_key = f'radio_{idx}_{color}'
-                selected = (st.session_state.selected_colors[cl] == j)
-                if cols[j].radio("", [color], index=0 if selected else -1, key=radio_key):
+                # Affichage des cases de couleur en tant que boutons radio
+                if cols[j].radio("", [color], index=0 if st.session_state.selected_colors[cl] == j else -1, key=f'radio_{idx}_{j}'):
                     st.session_state.selected_colors[cl] = j
                     new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                     st.session_state.modified_image = new_img_arr.astype('uint8')
