@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances  # Assurez-vous d'importer correctement cette fonction
+from sklearn.metrics import pairwise_distances
 
 # Palette de couleurs
 pal = {
@@ -17,7 +17,6 @@ pal = {
 
 st.title("Tylice")
 
-# Custom CSS for style
 css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
@@ -66,6 +65,7 @@ selected_colors = []
 for i in range(num_selections):
     with cols[i * 2]:
         st.markdown("<div class='color-container'>", unsafe_allow_html=True)
+        
         for idx, (color_name, color_rgb) in enumerate(pal.items()):
             margin_top = "15px" if idx == 0 else "0px"
             st.markdown(
@@ -108,23 +108,35 @@ if uploaded_image is not None:
     centers_rgb = np.array(centers, dtype=int)
     pal_rgb = np.array(list(pal.values()), dtype=int)
 
-    distances = pairwise_distances(centers_rgb, pal_rgb)  # Utilisation correcte de pairwise_distances
+    distances = pairwise_distances(centers_rgb, pal_rgb)  # Calculer les distances
 
     st.subheader("Couleurs les plus proches des centres des clusters")
     color_cols = st.columns(num_selections)
 
-    # Trie des couleurs pour chaque cluster en fonction de leur proximité
+    # Réorganiser les couleurs par proximité aux centres des clusters
     ordered_colors_by_cluster = []
     for i in range(num_selections):
-        # Trie les couleurs en fonction de leur proximité avec chaque centre de cluster
+        # Tri des couleurs par proximité avec le centre du cluster
         closest_colors_idx = distances[i].argsort()  # Tri des indices
         ordered_colors_by_cluster.append([list(pal.keys())[idx] for idx in closest_colors_idx])
 
-    # Affichage des couleurs triées pour chaque cluster
+    # Affichage des cases à cocher avec les couleurs triées
+    selected_colors = []
     for i in range(num_selections):
-        with color_cols[i]:
-            st.write(f"Cluster {i+1}:")
-            for color_name in ordered_colors_by_cluster[i]:
-                color_rgb = pal[color_name]
-                st.markdown(f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px;'></div>", unsafe_allow_html=True)
-                st.text(color_name)
+        with cols[i * 2]:
+            st.markdown("<div class='color-container'>", unsafe_allow_html=True)
+
+            # Utiliser l'ordre des couleurs les plus proches de chaque cluster
+            for idx in ordered_colors_by_cluster[i]:
+                color_rgb = pal[idx]
+                st.markdown(
+                    f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                    unsafe_allow_html=True
+                )
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        with cols[i * 2 + 1]:
+            # Afficher les couleurs triées par ordre de proximité pour chaque cluster
+            selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}")
+            selected_colors.append(pal[selected_color_name])
