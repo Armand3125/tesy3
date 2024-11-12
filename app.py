@@ -109,14 +109,28 @@ if uploaded_image is not None:
     # Convertir l'image transformée en image PIL pour l'afficher
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
 
-# Agrandir l'image de 30% après le traitement KMeans
-width, height = new_image.size
-new_width = int(width * 1.3)  # Augmenter la largeur de 30%
-new_height = int(height * 1.3)  # Augmenter la hauteur de 30%
-
-# Redimensionner l'image
-resized_image = new_image.resize((new_width, new_height))
-
-# Afficher l'image agrandie
-st.image(resized_image, caption=f"Image après traitement KMeans agrandie ({num_selections} couleurs)", use_column_width=False)
-
+    # Agrandir l'image de 30% après le traitement KMeans
+    width, height = new_image.size
+    new_width = int(width * 1.3)  # Augmenter la largeur de 30%
+    new_height = int(height * 1.3)  # Augmenter la hauteur de 30%
+    
+    # Redimensionner l'image
+    resized_image = new_image.resize((new_width, new_height))
+    
+    # Ajouter du style CSS pour centrer l'image
+    st.markdown(
+        """
+        <style>
+            .center-image {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+    
+    # Utiliser le style pour centrer l'image dans le layout
+    st.markdown('<div class="center-image">', unsafe_allow_html=True)
+    st.image(resized_image, caption=f"Image après traitement KMeans agrandie ({num_selections} couleurs)", use_column_width=False)
+    st.markdown('</div>', unsafe_allow_html=True)
