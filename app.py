@@ -67,24 +67,26 @@ css = """
 """
 st.markdown(css, unsafe_allow_html=True)
 
+# Initialiser le nombre de sélections si ce n'est pas déjà fait dans session_state
+if "num_selections" not in st.session_state:
+    st.session_state.num_selections = 4  # Valeur par défaut
+
 # Afficher les boutons "4 Couleurs" et "6 Couleurs" sur la même ligne
 col1, col2 = st.columns(2)
 
 # Bouton pour 4 couleurs
 with col1:
     if st.button("4 Couleurs"):
-        num_selections = 4
-    else:
-        num_selections = 4  # Par défaut 4 couleurs sélectionnées
+        st.session_state.num_selections = 4  # Met à jour la sélection à 4 couleurs
 
 # Bouton pour 6 couleurs
 with col2:
     if st.button("6 Couleurs"):
-        num_selections = 6
-    else:
-        num_selections = num_selections  # Garde la sélection précédente si le bouton 6 couleurs n'est pas pressé
+        st.session_state.num_selections = 6  # Met à jour la sélection à 6 couleurs
 
 # Calculer la largeur des rectangles en fonction du nombre de colonnes
+num_selections = st.session_state.num_selections  # Utiliser la valeur mémorisée
+
 if num_selections == 4:
     rectangle_width = 80  # Largeur des rectangles pour 4 couleurs
 elif num_selections == 6:
