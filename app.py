@@ -86,9 +86,9 @@ with col2:
 
 # Calculer la largeur des rectangles en fonction du nombre de colonnes
 if num_selections == 4:
-    rectangle_width = 100  # Largeur des rectangles pour 4 couleurs
+    rectangle_width = 80  # Largeur des rectangles pour 4 couleurs
 elif num_selections == 6:
-    rectangle_width = 70  # Largeur des rectangles pour 6 couleurs
+    rectangle_width = 50  # Largeur des rectangles pour 6 couleurs
 else:
     rectangle_width = 100  # Par défaut (au cas où il y a plus de 6 colonnes)
 
