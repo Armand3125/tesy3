@@ -106,7 +106,7 @@ if uploaded_image is not None:
         
         new_image = Image.fromarray(new_img_arr.astype('uint8'))
         width, height = new_image.size
-        resized_image = new_image.resize((int(width * 1.3), int(height * 1.3)))
+        resized_image = new_image.resize((int(width * 1.1), int(height * 1.1)))
 
         col1, col2, col3 = st.columns([1, 6, 1])
         with col2:
