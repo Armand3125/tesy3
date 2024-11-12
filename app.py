@@ -40,15 +40,20 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
-col1, col2 = st.columns([1, 5])
+# Centering the buttons for "4 Couleurs" and "6 Couleurs"
+col1, col2, col3 = st.columns([1, 2, 1])
 
 with col1:
-    if st.button("4 Couleurs"):
-        st.session_state.num_selections = 4
+    st.write("")  # Empty space for left alignment
 
 with col2:
+    if st.button("4 Couleurs"):
+        st.session_state.num_selections = 4
     if st.button("6 Couleurs"):
         st.session_state.num_selections = 6
+
+with col3:
+    st.write("")  # Empty space for right alignment
 
 num_selections = st.session_state.num_selections
 
@@ -79,13 +84,14 @@ for i in range(num_selections):
 if uploaded_image is not None:
     image = Image.open(uploaded_image)
     
-    # Redimensionner l'image à 400px dans la dimension la plus grande
+    # Redimensionner l'image avec des limites de taille
+    max_width, max_height = 800, 800  # Maximum size of the image
     width, height = image.size
     if width > height:
-        new_width = 400
+        new_width = min(width, max_width)
         new_height = int((new_width / width) * height)
     else:
-        new_height = 400
+        new_height = min(height, max_height)
         new_width = int((new_height / height) * width)
     
     resized_image = image.resize((new_width, new_height))
@@ -109,5 +115,5 @@ if uploaded_image is not None:
     # Convertir l'image transformée en image PIL pour l'afficher
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
 
-    # Afficher uniquement l'image après traitement KMeans et centrer
-    st.image(new_image, caption=f"Image après traitement KMeans ({num_selections} couleurs)", use_column_width=True)
+    # Afficher l'image après traitement KMeans et centrer
+    st.image(new_image, caption=f"Image après traitement KMeans ({num_selections} couleurs)", use_column_width=False)
