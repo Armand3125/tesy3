@@ -112,7 +112,7 @@ if uploaded_image is not None:
 
     ordered_colors = []
     for i in range(num_selections):
-        sorted_indices = distances[i].argsort()
+        sorted_indices = distances[i].argsort()  # Trie les couleurs par proximité avec le centre du cluster
         ordered_colors.append([list(pal.keys())[idx] for idx in sorted_indices])
 
     for i in range(num_selections):
