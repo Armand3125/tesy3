@@ -33,6 +33,7 @@ css = """
 """
 st.markdown(css, unsafe_allow_html=True)
 
+# Initialisation de la sélection du nombre de couleurs
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
@@ -97,9 +98,8 @@ if uploaded_image is not None:
     img_arr = np.array(resized_image)
     pixels = img_arr.reshape(-1, 3)
 
-    # Appliquer KMeans pour trouver les couleurs dominantes
-    Nc = 5  # Nombre de clusters (couleurs dominantes)
-    kmeans = KMeans(n_clusters=Nc, random_state=0).fit(pixels)
+    # Appliquer KMeans pour le nombre de clusters en fonction de la sélection
+    kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
     labels = kmeans.labels_
     centers = kmeans.cluster_centers_
 
@@ -114,4 +114,4 @@ if uploaded_image is not None:
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
 
     # Afficher uniquement l'image après traitement KMeans
-    st.image(new_image, caption="Image après traitement KMeans", use_column_width=False)
+    st.image(new_image, caption=f"Image après traitement KMeans ({num_selections} couleurs)", use_column_width=False)
