@@ -79,10 +79,14 @@ for i in range(num_selections):
 if uploaded_image is not None:
     image = Image.open(uploaded_image)
     
-    # Agrandir l'image de 30%
+    # Redimensionner l'image à 400px dans la dimension la plus grande
     width, height = image.size
-    new_width = int(width * 1.3)
-    new_height = int(height * 1.3)
+    if width > height:
+        new_width = 400
+        new_height = int((new_width / width) * height)
+    else:
+        new_height = 400
+        new_width = int((new_height / height) * width)
     
     resized_image = image.resize((new_width, new_height))
 
@@ -105,5 +109,5 @@ if uploaded_image is not None:
     # Convertir l'image transformée en image PIL pour l'afficher
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
 
-    # Afficher l'image après agrandissement et transformation
+    # Afficher uniquement l'image après traitement KMeans
     st.image(new_image, caption=f"Image après traitement KMeans ({num_selections} couleurs)", use_column_width=False)
