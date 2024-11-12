@@ -70,8 +70,9 @@ st.markdown(css, unsafe_allow_html=True)
 # Barre de sélection pour choisir le nombre de colonnes (entre 2 et 7)
 num_selections = st.slider("Nombre de sélections de couleur", min_value=2, max_value=7, value=4)
 
-# Calculer la taille des rectangles en fonction du nombre de colonnes
-rectangle_size = 80 - (num_selections - 2) * 10  # Plus il y a de colonnes, plus le rectangle est petit
+# Calculer la largeur des rectangles en fonction du nombre de colonnes
+rectangle_width = 200 - (num_selections - 2) * 20  # Plus il y a de colonnes, plus le rectangle est petit en largeur
+rectangle_height = 20  # Garder la hauteur constante
 
 # Créer les colonnes en fonction de la sélection du slider
 cols = st.columns(num_selections * 2)  # On double le nombre pour inclure les couleurs
@@ -89,12 +90,12 @@ for i in range(num_selections):
         for idx, (color_name, color_rgb) in enumerate(pal.items()):
             if idx == 0:  # Pour le premier rectangle, ajouter le décalage
                 st.markdown(
-                    f"<div class='first-color-box color-box' style='background-color: rgb{color_rgb}; width: {rectangle_size}px; height: {rectangle_size//2}px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                    f"<div class='first-color-box color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
                     unsafe_allow_html=True
                 )
             else:
                 st.markdown(
-                    f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_size}px; height: {rectangle_size//2}px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                    f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
                     unsafe_allow_html=True
                 )
         st.markdown("</div>", unsafe_allow_html=True)
@@ -107,7 +108,7 @@ for i in range(num_selections):
             if selected_color_name:
                 rgb = pal[selected_color_name]
                 st.markdown(
-                    f"<div style='background-color: rgb{rgb}; width: {rectangle_size}px; height: {rectangle_size}px; border-radius: 5px;'></div>",
+                    f"<div style='background-color: rgb{rgb}; width: {rectangle_width}px; height: {rectangle_width // 4}px; border-radius: 5px;'></div>",
                     unsafe_allow_html=True
                 )
             st.markdown("</div>", unsafe_allow_html=True)
