@@ -101,6 +101,7 @@ def traiter_img(img, Nc, Nd, dim_max):
         sorted_cls = sorted(cl_counts.items(), key=lambda x: x[1], reverse=True)
         cl_proches = [proches_lim(kmeans.cluster_centers_[i], pal, Nd) for i in cl_counts.keys()]
 
+        # Initialiser selected_colors s'il n'est pas déjà dans l'état de session
         if 'selected_colors' not in st.session_state:
             st.session_state.selected_colors = [0] * Nc
         elif len(st.session_state.selected_colors) != Nc:
@@ -121,9 +122,12 @@ def traiter_img(img, Nc, Nd, dim_max):
                 rgb = pal[color]
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
                 
-                # Affichage des cases de couleur en tant que boutons radio
-                if cols[j].radio("", [color], index=0 if st.session_state.selected_colors[cl] == j else -1, key=f'radio_{idx}_{j}'):
-                    st.session_state.selected_colors[cl] = j
+                # Utiliser un index de sélection pour garantir qu'il est valide
+                index = st.session_state.selected_colors[cl] if st.session_state.selected_colors[cl] < len(col_options) else 0
+                selected_color_name = cols[j].radio("", col_options, index=index, key=f'radio_{idx}_{j}')
+                
+                if selected_color_name == color:
+                    st.session_state.selected_colors[cl] = col_options.index(color)
                     new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                     st.session_state.modified_image = new_img_arr.astype('uint8')
 
