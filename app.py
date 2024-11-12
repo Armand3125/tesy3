@@ -1,6 +1,9 @@
 import streamlit as st
 from PIL import Image
+import numpy as np
+from sklearn.cluster import KMeans
 
+# Palette de couleurs
 pal = {
     "NC": (0, 0, 0), "BJ": (255, 255, 255),
     "JO": (228, 189, 104), "BC": (0, 134, 214),
@@ -92,3 +95,26 @@ if uploaded_image is not None:
 
     # Afficher l'image redimensionnée
     st.image(resized_image, caption="Image redimensionnée", use_column_width=False)
+
+    # Traitement KMeans
+    img_arr = np.array(resized_image)
+    pixels = img_arr.reshape(-1, 3)
+
+    # Appliquer KMeans pour trouver les couleurs dominantes
+    Nc = 5  # Nombre de clusters (couleurs dominantes)
+    kmeans = KMeans(n_clusters=Nc, random_state=0).fit(pixels)
+    labels = kmeans.labels_
+    centers = kmeans.cluster_centers_
+
+    # Remplacer les pixels par la couleur de leur cluster
+    new_img_arr = np.zeros_like(img_arr)
+    for i in range(img_arr.shape[0]):
+        for j in range(img_arr.shape[1]):
+            lbl = labels[i * img_arr.shape[1] + j]
+            new_img_arr[i, j] = centers[lbl].astype(int)
+
+    # Convertir l'image transformée en image PIL pour l'afficher
+    new_image = Image.fromarray(new_img_arr.astype('uint8'))
+
+    # Afficher l'image transformée
+    st.image(new_image, caption="Image après traitement KMeans", use_column_width=False)
