@@ -73,18 +73,8 @@ for i in range(num_selections):
 
     with st.columns(num_selections * 2)[i * 2 + 1]:
         # Trier les couleurs par proximité avec le centre du cluster
-        if uploaded_image is not None:
-            kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
-            centers = kmeans.cluster_centers_
-
-            cluster_center = centers[i]  # Centre du cluster en cours
-            distances = [(color_name, couleur_distance(cluster_center, pal[color_name])) for color_name in pal.keys()]
-            distances.sort(key=lambda x: x[1])  # Trier par distance croissante
-
-            # Afficher les couleurs triées en fonction de la proximité du cluster
-            sorted_color_names = [color[0] for color in distances]
-            selected_color_name = st.radio("", sorted_color_names, key=f"radio_{i}")
-            selected_colors.append(pal[selected_color_name])
+        selected_color_name = st.radio("", list(pal.keys()), key=f"radio_{i}")
+        selected_colors.append(pal[selected_color_name])
 
 # Ajouter l'outil de sélection d'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
