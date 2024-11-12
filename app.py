@@ -67,14 +67,19 @@ css = """
 """
 st.markdown(css, unsafe_allow_html=True)
 
-# Barre de sélection pour choisir le nombre de colonnes (entre 2 et 7)
-num_selections = st.slider("Nombre de sélections de couleur", min_value=2, max_value=7, value=4)
+# Boutons pour choisir le nombre de couleurs (4 ou 6 couleurs)
+if st.button("4 Couleurs"):
+    num_selections = 4
+elif st.button("6 Couleurs"):
+    num_selections = 6
+else:
+    num_selections = 4  # Valeur par défaut
 
 # Calculer la largeur des rectangles en fonction du nombre de colonnes
 rectangle_width = 200 - (num_selections - 2) * 20  # Plus il y a de colonnes, plus le rectangle est petit en largeur
 rectangle_height = 20  # Garder la hauteur constante
 
-# Créer les colonnes en fonction de la sélection du slider
+# Créer les colonnes en fonction de la sélection du bouton
 cols = st.columns(num_selections * 2)  # On double le nombre pour inclure les couleurs
 
 # Options de couleurs disponibles
