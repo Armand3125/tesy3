@@ -32,7 +32,7 @@ st.markdown(css, unsafe_allow_html=True)
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
-col1, col2 = st.columns([1, 6])
+col1, col2 = st.columns([1, 5])
 
 with col1:
     if st.button("4 Couleurs"):
