@@ -24,23 +24,36 @@ css = """
         .color-container { display: flex; flex-direction: column; align-items: center; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
-        .first-box { margin-top: 15px; }
+        @media (max-width: 768px) {
+            .stColumn { width: 100% !important; margin-bottom: 10px; }
+            .radio-container { flex-direction: row; }
+            .color-container { flex-direction: row; }
+            .color-box { width: 40px; height: 15px; }
+        }
+        /* Centrage de l'image */
+        .center-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
 
+# Ajouter l'outil de sélection d'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
+# Initialisation de la sélection du nombre de couleurs
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
-col1, col2 = st.columns([1, 5])
-
-with col1:
-    if st.button("4 Couleurs"):
-        st.session_state.num_selections = 4
+# Utiliser des colonnes pour centrer les boutons
+col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
+    if st.button("4 Couleurs"):
+        st.session_state.num_selections = 4
     if st.button("6 Couleurs"):
         st.session_state.num_selections = 6
 
