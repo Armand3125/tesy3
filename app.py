@@ -22,16 +22,6 @@ def proches(c, pal):
 def proches_lim(c, pal, n):
     return [n for n, _ in proches(c, pal)[:n]]
 
-def nouvelle_img(img_arr, labels, cl, idx, pal):
-    new_img_arr = np.zeros_like(img_arr)
-    for i in range(img_arr.shape[0]):
-        for j in range(img_arr.shape[1]):
-            lbl = labels[i * img_arr.shape[1] + j]
-            cl_idx = np.where(sorted_cls == lbl)[0][0]
-            color_idx = idx[cl_idx]
-            new_img_arr[i, j] = pal[cl[cl_idx][color_idx]]
-    return new_img_arr
-
 def process_image(image, Nc=4, Nd=3, dim_max=400):
     img = image.convert('RGB')
     img.thumbnail((dim_max, dim_max))
@@ -58,14 +48,58 @@ def process_image(image, Nc=4, Nd=3, dim_max=400):
     initial_img = Image.fromarray(initial_img_arr.astype('uint8'))
     return initial_img
 
-st.title("Tylice - Traitement d'Image")
+# Interface utilisateur de Streamlit
+st.title("Tylice")
 
+# Sélection du nombre de couleurs
+if "num_selections" not in st.session_state:
+    st.session_state.num_selections = 4
+
+col1, col2 = st.columns([1, 5])
+
+with col1:
+    if st.button("4 Couleurs"):
+        st.session_state.num_selections = 4
+
+with col2:
+    if st.button("6 Couleurs"):
+        st.session_state.num_selections = 6
+
+num_selections = st.session_state.num_selections
+rectangle_width = 80 if num_selections == 4 else 50
+rectangle_height = 20
+
+# Affichage des cases de sélection de couleurs
+cols = st.columns(num_selections * 2)
+color_options = list(pal.keys())
+
+for i in range(num_selections):
+    with cols[i * 2]:
+        st.markdown("<div class='color-container'>", unsafe_allow_html=True)
+        for idx, (color_name, color_rgb) in enumerate(pal.items()):
+            margin_top = "15px" if idx == 0 else "0px"
+            st.markdown(
+                f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px; margin-top: {margin_top};'></div>",
+                unsafe_allow_html=True
+            )
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with cols[i * 2 + 1]:
+        selected_color_name = st.radio("", color_options, key=f"radio_{i}")
+        if selected_color_name:
+            rgb = pal[selected_color_name]
+            st.markdown(
+                f"<div style='background-color: rgb{rgb}; width: {rectangle_width}px; height: {rectangle_width // 4}px; border-radius: 5px;'></div>",
+                unsafe_allow_html=True
+            )
+
+# Sélection et traitement de l'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
 if uploaded_image is not None:
     image = Image.open(uploaded_image)
     
-    # Appliquer le traitement KMeans
+    # Appliquer le traitement KMeans pour extraire les couleurs dominantes
     processed_image = process_image(image)
 
     # Afficher l'image traitée
