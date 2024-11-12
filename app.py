@@ -109,5 +109,5 @@ if uploaded_image is not None:
     # Convertir l'image transformée en image PIL pour l'afficher
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
 
-    # Afficher uniquement l'image après traitement KMeans
-    st.image(new_image, caption=f"Image après traitement KMeans ({num_selections} couleurs)", use_column_width=False)
+    # Afficher uniquement l'image après traitement KMeans et centrer
+    st.image(new_image, caption=f"Image après traitement KMeans ({num_selections} couleurs)", use_column_width=True)
