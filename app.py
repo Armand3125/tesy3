@@ -29,6 +29,14 @@ css = """
             .color-container { flex-direction: row; }
             .color-box { width: 40px; height: 15px; }
         }
+        /* Ajout du style CSS pour centrer l'image */
+        .center-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -117,20 +125,7 @@ if uploaded_image is not None:
     # Redimensionner l'image
     resized_image = new_image.resize((new_width, new_height))
     
-    # Ajouter du style CSS pour centrer l'image
-    st.markdown(
-        """
-        <style>
-            .center-image {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-            }
-        </style>
-        """, unsafe_allow_html=True)
-    
-    # Utiliser le style pour centrer l'image dans le layout
+    # Utiliser le style CSS pour centrer l'image dans le layout
     st.markdown('<div class="center-image">', unsafe_allow_html=True)
     st.image(resized_image, caption=f"Image après traitement KMeans agrandie ({num_selections} couleurs)", use_column_width=False)
     st.markdown('</div>', unsafe_allow_html=True)
