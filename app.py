@@ -68,8 +68,9 @@ def traiter_img(img, Nc, Nd, dim_max):
                 rgb_str = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
                 
                 # Affichage de la case colorée en radio-bouton pour chaque option
-                radio_key = f'radio_{idx}_{j}_{color}'
-                if cols[j].radio("", [color], key=radio_key, index=(st.session_state.selected_colors[cl] == j)):
+                radio_key = f'radio_{idx}_{color}'
+                selected = (st.session_state.selected_colors[cl] == j)
+                if cols[j].radio("", [color], index=0 if selected else -1, key=radio_key):
                     st.session_state.selected_colors[cl] = j
                     new_img_arr = nouvelle_img(img_arr, labels, cl_proches, st.session_state.selected_colors, pal)
                     st.session_state.modified_image = new_img_arr.astype('uint8')
