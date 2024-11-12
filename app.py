@@ -77,13 +77,13 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 if uploaded_image is not None:
     image = Image.open(uploaded_image)
     
-    # Redimensionner l'image à 400px dans la dimension la plus grande
+    # Redimensionner l'image à 100px dans la dimension la plus grande
     width, height = image.size
     if width > height:
-        new_width = 400
+        new_width = 100
         new_height = int((new_width / width) * height)
     else:
-        new_height = 400
+        new_height = 100
         new_width = int((new_height / height) * width)
     
     resized_image = image.resize((new_width, new_height))
