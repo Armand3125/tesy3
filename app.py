@@ -85,7 +85,13 @@ with col2:
         num_selections = num_selections  # Garde la sélection précédente si le bouton 6 couleurs n'est pas pressé
 
 # Calculer la largeur des rectangles en fonction du nombre de colonnes
-rectangle_width = 120 - (num_selections - 2) * 10  # Plus il y a de colonnes, plus le rectangle est petit en largeur
+if num_selections == 4:
+    rectangle_width = 100  # Largeur des rectangles pour 4 couleurs
+elif num_selections == 6:
+    rectangle_width = 70  # Largeur des rectangles pour 6 couleurs
+else:
+    rectangle_width = 100  # Par défaut (au cas où il y a plus de 6 colonnes)
+
 rectangle_height = 20  # Garder la hauteur constante
 
 # Créer les colonnes en fonction de la sélection du bouton
