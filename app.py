@@ -2,7 +2,6 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-from scipy.spatial import distance
 
 # Palette de couleurs
 pal = {
@@ -15,13 +14,8 @@ pal = {
     "GA": (166, 169, 170), "VB": (94, 67, 183),
 }
 
-# Fonction pour calculer la distance entre deux couleurs
-def couleur_distance(c1, c2):
-    return np.linalg.norm(np.array(c1) - np.array(c2))
-
 st.title("Tylice")
 
-# Style CSS
 css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
@@ -39,7 +33,7 @@ css = """
 """
 st.markdown(css, unsafe_allow_html=True)
 
-# Initialisation du nombre de couleurs sélectionnées
+# Initialisation de la sélection du nombre de couleurs
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
@@ -58,10 +52,13 @@ num_selections = st.session_state.num_selections
 rectangle_width = 80 if num_selections == 4 else 50
 rectangle_height = 20
 
-# Affichage des cases à cocher sans texte
+cols = st.columns(num_selections * 2)
+color_options = list(pal.keys())
+
+# Affichage des cases de couleurs sans texte
 selected_colors = []
 for i in range(num_selections):
-    with st.columns(num_selections * 2)[i * 2]:
+    with cols[i * 2]:
         st.markdown("<div class='color-container'>", unsafe_allow_html=True)
         for idx, (color_name, color_rgb) in enumerate(pal.items()):
             margin_top = "15px" if idx == 0 else "0px"
@@ -71,20 +68,10 @@ for i in range(num_selections):
             )
         st.markdown("</div>", unsafe_allow_html=True)
 
-    with st.columns(num_selections * 2)[i * 2 + 1]:
-        # Trier les couleurs par proximité avec le centre du cluster
-        if uploaded_image is not None:
-            kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
-            centers = kmeans.cluster_centers_
-
-            cluster_center = centers[i]  # Centre du cluster en cours
-            distances = [(color_name, couleur_distance(cluster_center, pal[color_name])) for color_name in pal.keys()]
-            distances.sort(key=lambda x: x[1])  # Trier par distance croissante
-
-            # Afficher les couleurs triées en fonction de la proximité du cluster
-            sorted_color_names = [color[0] for color in distances]
-            selected_color_name = st.radio("", sorted_color_names, key=f"radio_{i}")
-            selected_colors.append(pal[selected_color_name])
+    with cols[i * 2 + 1]:
+        # Pas de texte pour les cases à cocher, juste des cases radio
+        selected_color_name = st.radio("", color_options, key=f"radio_{i}")
+        selected_colors.append(pal[selected_color_name])  # Enregistrer la couleur sélectionnée
 
 # Ajouter l'outil de sélection d'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
