@@ -54,9 +54,8 @@ for i in range(num_selections):
     with cols[i * 2]:
         st.markdown("<div class='color-container'>", unsafe_allow_html=True)
         for idx, (color_name, color_rgb) in enumerate(pal.items()):
-            margin_top = "30px" if idx == 0 else "0px"
             st.markdown(
-                f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px; margin-top: {margin_top};'></div>",
+                f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
                 unsafe_allow_html=True
             )
         st.markdown("</div>", unsafe_allow_html=True)
