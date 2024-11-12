@@ -2,8 +2,9 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances
+from sklearn.metrics import pairwise_distances_argmin_min
 
+# Palette de couleurs
 pal = {
     "NC": (0, 0, 0), "BJ": (255, 255, 255),
     "JO": (228, 189, 104), "BC": (0, 134, 214),
@@ -16,6 +17,7 @@ pal = {
 
 st.title("Tylice")
 
+# Custom CSS for style
 css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
@@ -105,20 +107,24 @@ if uploaded_image is not None:
 
     centers_rgb = np.array(centers, dtype=int)
     pal_rgb = np.array(list(pal.values()), dtype=int)
+
     distances = pairwise_distances(centers_rgb, pal_rgb)
 
     st.subheader("Couleurs les plus proches des centres des clusters")
     color_cols = st.columns(num_selections)
 
-    ordered_colors = []
+    # Tri des couleurs pour chaque cluster en fonction de leur proximité
+    ordered_colors_by_cluster = []
     for i in range(num_selections):
-        sorted_indices = distances[i].argsort()  # Trie les couleurs par proximité avec le centre du cluster
-        ordered_colors.append([list(pal.keys())[idx] for idx in sorted_indices])
+        # Trie les couleurs en fonction de leur proximité avec chaque centre de cluster
+        closest_colors_idx = distances[i].argsort()  # Tri des indices
+        ordered_colors_by_cluster.append([list(pal.keys())[idx] for idx in closest_colors_idx])
 
+    # Affichage des couleurs triées pour chaque cluster
     for i in range(num_selections):
         with color_cols[i]:
             st.write(f"Cluster {i+1}:")
-            for color_name in ordered_colors[i]:
+            for color_name in ordered_colors_by_cluster[i]:
                 color_rgb = pal[color_name]
                 st.markdown(f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px;'></div>", unsafe_allow_html=True)
                 st.text(color_name)
