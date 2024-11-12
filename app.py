@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 
 pal = {
     "NC": (0, 0, 0), "BJ": (255, 255, 255),
@@ -69,3 +70,23 @@ for i in range(num_selections):
                 f"<div style='background-color: rgb{rgb}; width: {rectangle_width}px; height: {rectangle_width // 4}px; border-radius: 5px;'></div>",
                 unsafe_allow_html=True
             )
+
+# Ajouter l'outil de sélection d'image
+uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
+
+if uploaded_image is not None:
+    image = Image.open(uploaded_image)
+    
+    # Redimensionner l'image à 400px dans la dimension la plus grande
+    width, height = image.size
+    if width > height:
+        new_width = 400
+        new_height = int((new_width / width) * height)
+    else:
+        new_height = 400
+        new_width = int((new_height / height) * width)
+    
+    resized_image = image.resize((new_width, new_height))
+
+    # Afficher l'image redimensionnée
+    st.image(resized_image, caption="Image redimensionnée", use_column_width=False)
