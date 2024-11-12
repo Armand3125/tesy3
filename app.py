@@ -58,6 +58,24 @@ rectangle_height = 20
 cols = st.columns(num_selections * 2)
 color_options = list(pal.keys())
 
+# Affichage de l'image téléchargée
+if uploaded_image is not None:
+    image = Image.open(uploaded_image)
+    
+    # Redimensionner l'image à 400px dans la dimension la plus grande
+    width, height = image.size
+    if width > height:
+        new_width = 400
+        new_height = int((new_width / width) * height)
+    else:
+        new_height = 400
+        new_width = int((new_height / height) * width)
+    
+    resized_image = image.resize((new_width, new_height))
+
+    # Afficher l'image téléchargée
+    st.image(resized_image, caption="Image téléchargée", use_column_width=False)
+
 # Affichage des cases de couleurs sans texte
 selected_colors = []
 for i in range(num_selections):
@@ -76,28 +94,14 @@ for i in range(num_selections):
         selected_color_name = st.radio("", color_options, key=f"radio_{i}")
         selected_colors.append(pal[selected_color_name])  # Enregistrer la couleur sélectionnée
 
+# Traitement de l'image avec KMeans après la sélection des couleurs
 if uploaded_image is not None:
-    image = Image.open(uploaded_image)
-    
-    # Redimensionner l'image à 400px dans la dimension la plus grande
-    width, height = image.size
-    if width > height:
-        new_width = 400
-        new_height = int((new_width / width) * height)
-    else:
-        new_height = 400
-        new_width = int((new_height / height) * width)
-    
-    resized_image = image.resize((new_width, new_height))
-
-    # Traitement KMeans
     img_arr = np.array(resized_image)
     pixels = img_arr.reshape(-1, 3)
 
     # Appliquer KMeans pour le nombre de clusters en fonction de la sélection
     kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
     labels = kmeans.labels_
-    centers = kmeans.cluster_centers_
 
     # Remplacer les pixels par la couleur de leur cluster sélectionnée
     new_img_arr = np.zeros_like(img_arr)
