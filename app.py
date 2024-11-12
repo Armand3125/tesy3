@@ -67,13 +67,22 @@ css = """
 """
 st.markdown(css, unsafe_allow_html=True)
 
-# Boutons pour choisir le nombre de couleurs (4 ou 6 couleurs)
-if st.button("4 Couleurs"):
-    num_selections = 4
-elif st.button("6 Couleurs"):
-    num_selections = 6
-else:
-    num_selections = 4  # Valeur par défaut
+# Afficher les boutons "4 Couleurs" et "6 Couleurs" sur la même ligne
+col1, col2 = st.columns(2)
+
+# Bouton pour 4 couleurs
+with col1:
+    if st.button("4 Couleurs"):
+        num_selections = 4
+    else:
+        num_selections = 4  # Par défaut 4 couleurs sélectionnées
+
+# Bouton pour 6 couleurs
+with col2:
+    if st.button("6 Couleurs"):
+        num_selections = 6
+    else:
+        num_selections = num_selections  # Garde la sélection précédente si le bouton 6 couleurs n'est pas pressé
 
 # Calculer la largeur des rectangles en fonction du nombre de colonnes
 rectangle_width = 200 - (num_selections - 2) * 20  # Plus il y a de colonnes, plus le rectangle est petit en largeur
