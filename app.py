@@ -29,13 +29,12 @@ css = """
             .color-container { flex-direction: row; }
             .color-box { width: 40px; height: 15px; }
         }
-        /* Ajout du style CSS pour centrer l'image */
+        /* Centrage de l'image */
         .center-image {
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            margin-top: 20px;
+            width: 100%;
         }
     </style>
 """
