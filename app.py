@@ -40,6 +40,25 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
+# Affichage de l'image téléchargée en haut
+if uploaded_image is not None:
+    image = Image.open(uploaded_image)
+    
+    # Redimensionner l'image à 400px dans la dimension la plus grande
+    width, height = image.size
+    if width > height:
+        new_width = 400
+        new_height = int((new_width / width) * height)
+    else:
+        new_height = 400
+        new_width = int((new_height / height) * width)
+    
+    resized_image = image.resize((new_width, new_height))
+
+    # Afficher l'image téléchargée
+    st.image(resized_image, caption="Image téléchargée", use_column_width=False)
+
+# Initialisation de la sélection du nombre de couleurs
 col1, col2 = st.columns([1, 5])
 
 with col1:
@@ -57,24 +76,6 @@ rectangle_height = 20
 
 cols = st.columns(num_selections * 2)
 color_options = list(pal.keys())
-
-# Affichage de l'image téléchargée
-if uploaded_image is not None:
-    image = Image.open(uploaded_image)
-    
-    # Redimensionner l'image à 400px dans la dimension la plus grande
-    width, height = image.size
-    if width > height:
-        new_width = 400
-        new_height = int((new_width / width) * height)
-    else:
-        new_height = 400
-        new_width = int((new_height / height) * width)
-    
-    resized_image = image.resize((new_width, new_height))
-
-    # Afficher l'image téléchargée
-    st.image(resized_image, caption="Image téléchargée", use_column_width=False)
 
 # Affichage des cases de couleurs sans texte
 selected_colors = []
@@ -113,5 +114,5 @@ if uploaded_image is not None:
     # Convertir l'image transformée en image PIL pour l'afficher
     new_image = Image.fromarray(new_img_arr.astype('uint8'))
 
-    # Afficher uniquement l'image après traitement KMeans
+    # Afficher l'image après traitement KMeans
     st.image(new_image, caption=f"Image après traitement KMeans ({num_selections} couleurs)", use_column_width=False)
