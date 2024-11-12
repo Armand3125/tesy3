@@ -118,8 +118,8 @@ if uploaded_image is not None:
 
     # Agrandir l'image de 30% après le traitement KMeans
     width, height = new_image.size
-    new_width = int(width * 1.3)  # Augmenter la largeur de 30%
-    new_height = int(height * 1.3)  # Augmenter la hauteur de 30%
+    new_width = int(width * 1.1)  # Augmenter la largeur de 30%
+    new_height = int(height * 1.1)  # Augmenter la hauteur de 30%
     
     # Redimensionner l'image
     resized_image = new_image.resize((new_width, new_height))
