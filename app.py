@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances_argmin_min
+from sklearn.metrics import pairwise_distances
 
 # Palette de couleurs
 pal = {
@@ -130,31 +130,26 @@ if uploaded_image is not None:
     with col2:
         st.image(resized_image, caption=f"Image après traitement KMeans agrandie ({num_selections} couleurs)", use_column_width=True)
 
-    # Calculer les couleurs les plus proches des centres des clusters
+    # Calculer les distances entre les centres des clusters et toutes les couleurs de la palette
     centers_rgb = np.array(centers, dtype=int)
     pal_rgb = np.array(list(pal.values()), dtype=int)
-    closest_colors_idx = pairwise_distances_argmin_min(centers_rgb, pal_rgb)[0]
+    distances = pairwise_distances(centers_rgb, pal_rgb)
 
-   # Affichage des couleurs les plus proches des centres des clusters
-st.subheader("Couleurs les plus proches des centres des clusters")
-color_cols = st.columns(num_selections)
-
-# Calculer les distances entre les centres des clusters et toutes les couleurs de la palette
-centers_rgb = np.array(centers, dtype=int)
-pal_rgb = np.array(list(pal.values()), dtype=int)
-distances = pairwise_distances(centers_rgb, pal_rgb)
-
-# Affichage des couleurs triées par proximité pour chaque centre de cluster
-for i in range(num_selections):
-    with color_cols[i]:
-        st.write(f"Cluster {i+1}:")
-        
-        # Trier les indices des couleurs par distance croissante
-        sorted_indices = distances[i].argsort()
-        
-        # Afficher les couleurs triées pour ce cluster
-        for idx in sorted_indices:
-            color_name = list(pal.keys())[idx]
-            color_rgb = pal[color_name]
-            st.markdown(f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px;'></div>", unsafe_allow_html=True)
-            st.text(color_name)
+    # Affichage des couleurs triées par proximité pour chaque centre de cluster
+    st.subheader("Couleurs les plus proches des centres des clusters")
+    color_cols = st.columns(num_selections)
+    
+    # Affichage des couleurs triées pour chaque centre de cluster
+    for i in range(num_selections):
+        with color_cols[i]:
+            st.write(f"Cluster {i+1}:")
+            
+            # Trier les indices des couleurs par distance croissante
+            sorted_indices = distances[i].argsort()
+            
+            # Afficher les couleurs triées pour ce cluster
+            for idx in sorted_indices:
+                color_name = list(pal.keys())[idx]
+                color_rgb = pal[color_name]
+                st.markdown(f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px;'></div>", unsafe_allow_html=True)
+                st.text(color_name)
