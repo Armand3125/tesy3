@@ -100,7 +100,7 @@ if uploaded_image is not None:
         
         # Afficher les pourcentages de présence sur des colonnes distinctes juste sous les boutons
         for i in range(num_selections):
-            with cols_percentages[2*i]:
+            with cols_percentages[i]:
                 st.markdown(
                     f"<div class='center-text'><b>{cluster_percentages[i]:.2f}%</b></div>",
                     unsafe_allow_html=True
