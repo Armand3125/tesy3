@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
+import io
 
 # Palette de couleurs
 pal = {
@@ -140,5 +141,18 @@ if uploaded_image is not None:
         col1, col2, col3 = st.columns([1, 6, 1])
         with col2:
             st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
+
+        # Sauvegarder l'image en mémoire pour téléchargement
+        img_buffer = io.BytesIO()
+        new_image.save(img_buffer, format="PNG")
+        img_buffer.seek(0)
+
+        # Bouton de téléchargement
+        st.download_button(
+            label="Télécharger l'image",
+            data=img_buffer,
+            file_name="image_recolorisée.png",
+            mime="image/png"
+        )
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.")
