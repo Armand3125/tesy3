@@ -73,7 +73,7 @@ if uploaded_image is not None:
         new_height = int((new_width / width) * height)
     else:
         new_height = 400
-        new_width = int((new_height / width) * width)
+        new_width = int((new_height / height) * width)
 
     resized_image = image.resize((new_width, new_height))
     img_arr = np.array(resized_image)
@@ -138,8 +138,9 @@ if uploaded_image is not None:
                 new_img_arr[i, j] = selected_colors[new_color_index]
 
         new_image = Image.fromarray(new_img_arr.astype('uint8'))
-        width, height = new_image.size
-        resized_image = new_image.resize((int(width * 1.1), int(height * 1.1)))
+
+        # On garde l'image à sa taille originale
+        resized_image = new_image
 
         col1, col2, col3 = st.columns([1, 6, 1])
         with col2:
