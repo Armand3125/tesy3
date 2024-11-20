@@ -21,16 +21,21 @@ st.title("Tylice")
 css = """
     <style>
         .stRadio:first-child label {
-            margin-top: 0px;  /* Ajout de la marge supérieure uniquement pour la première case à cocher */
+            margin-top: 20px;  /* Ajout de la marge supérieure uniquement pour la première case à cocher */
         }
         .stRadio label {
             margin-top: 0px;  /* Suppression de la marge entre les cases à cocher */
         }
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
         .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .color-container { display: flex; flex-direction: column; align-items: center; }
-        .color-box { border: 3px solid black; }
-        .stColumn { padding: 0 !important; }
+        .color-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .color-container div {
+            margin-top: 0px;  /* Supprime toute marge entre les éléments enfants */
+        }
+        .color-box { 
+            border: 3px solid black; 
+            margin-bottom: 0px;  /* Supprime la marge entre les rectangles de couleur */
+        }
         .first-box { margin-top: 15px; }
     </style>
 """
@@ -107,7 +112,7 @@ if uploaded_image is not None:
                     color_rgb = pal[color_name]
                     margin_class = "first-box" if j == 0 else ""
                     st.markdown(
-                        f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                        f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px;'></div>",
                         unsafe_allow_html=True
                     )
                 st.markdown("</div>", unsafe_allow_html=True)
