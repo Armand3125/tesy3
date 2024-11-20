@@ -22,11 +22,12 @@ css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
         .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .color-container { display: flex; flex-direction: column; align-items: center; margin-top: 0px; }
+        .color-container { display: flex; flex-direction: column; align-items: center; margin-top: 5px; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
+        .button-container { margin-bottom: 20px; } /* Marge entre les boutons et les pourcentages */
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -42,12 +43,16 @@ col1, col2 = st.columns([1, 5])
 
 # Boutons pour définir le nombre de couleurs
 with col1:
+    st.markdown("<div class='button-container'>", unsafe_allow_html=True)
     if st.button("4 Couleurs"):
         st.session_state.num_selections = 4
+    st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
+    st.markdown("<div class='button-container'>", unsafe_allow_html=True)
     if st.button("6 Couleurs"):
         st.session_state.num_selections = 6
+    st.markdown("</div>", unsafe_allow_html=True)
 
 num_selections = st.session_state.num_selections
 cols_percentages = st.columns(num_selections)
