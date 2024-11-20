@@ -20,12 +20,11 @@ st.title("Tylice")
 css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
+        .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
         .color-container { display: flex; flex-direction: column; align-items: center; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
-        .first-box { margin-top: 0px; }
-        .color-percent { font-weight: bold; font-size: 16px; text-align: center; margin-bottom: 0px; } /* Ajuster les marges */
-        .color-box-container { display: flex; flex-direction: column; justify-content: center; align-items: center; } /* Alignement des couleurs et pourcentages */
+        .first-box { margin-top: 15px; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -92,10 +91,9 @@ if uploaded_image is not None:
             with cols[i * 2]:
                 # Affichage du pourcentage avec un chiffre après la virgule et le symbole %
                 percentage = cluster_percentages[i]
-                st.markdown(f"<div class='color-percent'>{percentage:.1f}%</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='color: black; text-align: center; font-weight: bold;'>{percentage:.1f}%</div>", unsafe_allow_html=True)
                 
-                # Affichage des couleurs
-                st.markdown("<div class='color-box-container'>", unsafe_allow_html=True)
+                st.markdown("<div class='color-container'>", unsafe_allow_html=True)
                 for j, color_name in enumerate(ordered_colors_by_cluster[i]):
                     color_rgb = pal[color_name]
                     margin_class = "first-box" if j == 0 else ""
