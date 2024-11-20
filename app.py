@@ -27,7 +27,7 @@ css = """
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
         .percentage-text {
-            font-size: 24px;  /* Augmente la taille de la police ici */
+            font-size: 16px;  /* Augmente la taille de la police ici */
             font-weight: bold;
             text-align: center;
         }
