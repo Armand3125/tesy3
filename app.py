@@ -17,37 +17,23 @@ pal = {
 
 st.title("Tylice")
 
-# Ajout du style CSS pour une marge uniquement au-dessus de la première case à cocher et suppression des marges entre les cases
 css = """
     <style>
-        .stRadio:first-child label {
-            margin-top: 20px;  /* Ajout de la marge supérieure uniquement pour la première case à cocher */
-        }
-        .stRadio label {
-            margin-top: 0px;  /* Suppression de la marge entre les cases à cocher */
-        }
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
         .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .color-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .color-container div {
-            margin-top: 0px;  /* Supprime toute marge entre les éléments enfants */
-        }
-        .color-box { 
-            border: 3px solid black; 
-            margin-bottom: 0px;  /* Supprime la marge entre les rectangles de couleur */
-        }
+        .color-container { display: flex; flex-direction: column; align-items: center; }
+        .color-box { border: 3px solid black; }
+        .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
 
-# Téléchargement de l'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
-# Colonnes pour le choix du nombre de couleurs
 col1, col2 = st.columns([1, 5])
 
 with col1:
@@ -112,7 +98,7 @@ if uploaded_image is not None:
                     color_rgb = pal[color_name]
                     margin_class = "first-box" if j == 0 else ""
                     st.markdown(
-                        f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px;'></div>",
+                        f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
                         unsafe_allow_html=True
                     )
                 st.markdown("</div>", unsafe_allow_html=True)
@@ -136,4 +122,4 @@ if uploaded_image is not None:
         with col2:
             st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
     else:
-        st.error("L'image doit être en RGB (3 canaux) pour continuer.")
+        st.error("L'image doit être en RGB (3 canaux) pour continuer.") 
