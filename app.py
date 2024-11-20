@@ -17,11 +17,14 @@ pal = {
 
 st.title("Tylice")
 
-# Ajout du style CSS pour une marge uniquement au-dessus de la première case à cocher
+# Ajout du style CSS pour une marge uniquement au-dessus de la première case à cocher et suppression des marges entre les cases
 css = """
     <style>
         .stRadio:first-child label {
             margin-top: 20px;  /* Ajout de la marge supérieure uniquement pour la première case à cocher */
+        }
+        .stRadio label {
+            margin-top: 0px;  /* Suppression de la marge entre les cases à cocher */
         }
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
         .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
