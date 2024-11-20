@@ -89,9 +89,9 @@ if uploaded_image is not None:
         selected_colors = []
         for i in range(num_selections):
             with cols[i * 2]:
-                # Affichage du pourcentage au-dessus de chaque couleur
+                # Affichage du pourcentage (seulement le chiffre, sans "Présence")
                 percentage = cluster_percentages[i]
-                st.markdown(f"<div style='color: black; text-align: center; font-weight: bold;'>Présence : {percentage:.2f}%</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='color: black; text-align: center; font-weight: bold;'>{percentage:.2f}</div>", unsafe_allow_html=True)
                 
                 st.markdown("<div class='color-container'>", unsafe_allow_html=True)
                 for j, color_name in enumerate(ordered_colors_by_cluster[i]):
