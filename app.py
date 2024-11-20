@@ -56,6 +56,29 @@ with col2:
         st.session_state.num_selections = 6
     st.markdown("</div>", unsafe_allow_html=True)
 
+# Ajouter un bouton de téléchargement à côté du bouton 6 Couleurs
+col_download = st.columns([5, 1])
+with col_download[1]:
+    st.markdown("<div class='button-container'>", unsafe_allow_html=True)
+    if uploaded_image is not None:
+        # Sauvegarder l'image en mémoire pour téléchargement
+        img_buffer = io.BytesIO()
+        new_image.save(img_buffer, format="PNG")
+        img_buffer.seek(0)
+
+        # Construire le nom de fichier basé sur les couleurs des clusters et la date/heure
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
+
+        # Bouton de téléchargement
+        st.download_button(
+            label="Télécharger l'image",
+            data=img_buffer,
+            file_name=file_name,
+            mime="image/png"
+        )
+    st.markdown("</div>", unsafe_allow_html=True)
+
 num_selections = st.session_state.num_selections
 cols_percentages = st.columns(num_selections)
 
