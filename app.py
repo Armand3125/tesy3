@@ -155,7 +155,7 @@ if uploaded_image is not None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
 
-        col1, col2, col3 = st.columns([4, 6, 4])
+        col1, col2, col3 = st.columns([6, 4, 6])
         with col2:
             st.download_button(
                 label="Télécharger l'image",
