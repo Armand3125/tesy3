@@ -155,12 +155,13 @@ if uploaded_image is not None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
 
-        # Bouton de téléchargement
-        st.download_button(
-            label="Télécharger l'image",
-            data=img_buffer,
-            file_name=file_name,
-            mime="image/png"
-        )
+        col1, col2, col3 = st.columns([4, 6, 4])
+        with col2:
+            st.download_button(
+                label="Télécharger l'image",
+                data=img_buffer,
+                file_name=file_name,
+                mime="image/png"
+            )
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.") 
