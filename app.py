@@ -2,7 +2,6 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances_argmin_min
 
 # Palette de couleurs
 pal = {
@@ -13,32 +12,35 @@ pal = {
     "OM": (249, 153, 99), "VGa": (59, 102, 94),
     "BG": (163, 216, 225), "VM": (236, 0, 140),
     "GA": (166, 169, 170), "VB": (94, 67, 183),
-    "BF": (4, 47, 86), 
+    "BF": (4, 47, 86),
 }
 
 st.title("Tylice")
 
+# CSS
 css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
         .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .color-container { display: flex; flex-direction: column; align-items: center; }
+        .color-container { display: flex; flex-direction: column; align-items: center; margin-top: 5px; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
+        .percentage-container { margin-bottom: 0; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
 
+# Téléchargement de l'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
+# Gestion des sélections de couleurs
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
-# Créez les colonnes pour les boutons et les pourcentages
 col1, col2 = st.columns([1, 5])
 
-# Affichez les boutons pour la sélection du nombre de couleurs
+# Boutons pour définir le nombre de couleurs
 with col1:
     if st.button("4 Couleurs"):
         st.session_state.num_selections = 4
@@ -47,18 +49,16 @@ with col2:
     if st.button("6 Couleurs"):
         st.session_state.num_selections = 6
 
-# Assurez-vous que le nombre de sélections est défini avant de créer les colonnes pour les pourcentages
 num_selections = st.session_state.num_selections
 cols_percentages = st.columns(num_selections)
 
-# Obtenez le nombre de couleurs sélectionnées et les dimensions des rectangles
+# Dimensions des rectangles
 rectangle_width = 80 if num_selections == 4 else 50
 rectangle_height = 20
 cols = st.columns(num_selections * 2)
 
-
 if uploaded_image is not None:
-    # Assure que l'image est en RGB pour éviter les problèmes liés au canal alpha ou au mode niveaux de gris
+    # Chargement et redimensionnement de l'image
     image = Image.open(uploaded_image).convert("RGB")
     width, height = image.size
     if width > height:
@@ -67,15 +67,14 @@ if uploaded_image is not None:
     else:
         new_height = 400
         new_width = int((new_height / height) * width)
-    
+
     resized_image = image.resize((new_width, new_height))
     img_arr = np.array(resized_image)
-    
-    # Vérifie que l'image est bien en RGB
-    if img_arr.shape[-1] == 3:
+
+    if img_arr.shape[-1] == 3:  # Assurez-vous que l'image est RGB
         pixels = img_arr.reshape(-1, 3)
-        
-        # Clustering et sélection de couleurs
+
+        # KMeans pour trouver les clusters de couleurs
         kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
         labels = kmeans.labels_
         centers = kmeans.cluster_centers_
@@ -89,16 +88,16 @@ if uploaded_image is not None:
             closest_colors_idx = distances[i].argsort()
             ordered_colors_by_cluster.append([list(pal.keys())[idx] for idx in closest_colors_idx])
 
-        # Calculer le pourcentage de présence de chaque cluster
+        # Calcul des pourcentages de présence des clusters
         cluster_counts = np.bincount(labels)
         total_pixels = len(labels)
         cluster_percentages = (cluster_counts / total_pixels) * 100
-        
-        # Afficher les pourcentages de présence sur des colonnes distinctes juste sous les boutons
+
+        # Affichage des pourcentages dans des colonnes distinctes
         for i in range(num_selections):
             with cols_percentages[i]:
-                st.markdown(f"<b>{cluster_percentages[i]:.2f}%</b>", unsafe_allow_html=True)
-        
+                st.markdown(f"<div class='percentage-container'><b>{cluster_percentages[i]:.2f}%</b></div>", unsafe_allow_html=True)
+
         selected_colors = []
         for i in range(num_selections):
             with cols[i * 2]:
@@ -116,12 +115,13 @@ if uploaded_image is not None:
                 selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden")
                 selected_colors.append(pal[selected_color_name])
 
+        # Nouvelle image recolorisée
         new_img_arr = np.zeros_like(img_arr)
         for i in range(img_arr.shape[0]):
             for j in range(img_arr.shape[1]):
                 lbl = labels[i * img_arr.shape[1] + j]
                 new_img_arr[i, j] = selected_colors[lbl]
-        
+
         new_image = Image.fromarray(new_img_arr.astype('uint8'))
         width, height = new_image.size
         resized_image = new_image.resize((int(width * 1.1), int(height * 1.1)))
