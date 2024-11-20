@@ -50,6 +50,10 @@ rectangle_width = 80 if num_selections == 4 else 50
 rectangle_height = 20
 cols = st.columns(num_selections * 2)
 
+# Ajoutez un espace pour afficher les pourcentages juste en dessous des boutons
+st.markdown("### Pourcentages des couleurs :")
+cols_percentages = st.columns(num_selections)  # Créer des colonnes pour afficher chaque pourcentage
+
 if uploaded_image is not None:
     # Assure que l'image est en RGB pour éviter les problèmes liés au canal alpha ou au mode niveaux de gris
     image = Image.open(uploaded_image).convert("RGB")
@@ -88,7 +92,6 @@ if uploaded_image is not None:
         cluster_percentages = (cluster_counts / total_pixels) * 100
         
         # Afficher les pourcentages de présence sur des colonnes distinctes
-        cols_percentages = st.columns(num_selections)  # Créer des colonnes pour afficher chaque pourcentage
         for i in range(num_selections):
             with cols_percentages[i]:
                 st.write(f"{cluster_percentages[i]:.2f}%")
