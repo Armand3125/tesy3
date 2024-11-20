@@ -89,6 +89,10 @@ if uploaded_image is not None:
         selected_colors = []
         for i in range(num_selections):
             with cols[i * 2]:
+                # Affichage du pourcentage au-dessus de chaque couleur
+                percentage = cluster_percentages[i]
+                st.markdown(f"<div style='color: black; text-align: center; font-weight: bold;'>Présence : {percentage:.2f}%</div>", unsafe_allow_html=True)
+                
                 st.markdown("<div class='color-container'>", unsafe_allow_html=True)
                 for j, color_name in enumerate(ordered_colors_by_cluster[i]):
                     color_rgb = pal[color_name]
@@ -102,10 +106,6 @@ if uploaded_image is not None:
             with cols[i * 2 + 1]:
                 selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden")
                 selected_colors.append(pal[selected_color_name])
-
-                # Affichage du pourcentage de présence pour chaque couleur
-                percentage = cluster_percentages[i]
-                st.markdown(f"<div style='color: black; text-align: center;'>Présence : {percentage:.2f}%</div>", unsafe_allow_html=True)
 
         # Reconstruction de l'image avec les couleurs sélectionnées
         new_img_arr = np.zeros_like(img_arr)
