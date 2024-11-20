@@ -17,7 +17,7 @@ pal = {
 
 st.title("Tylice")
 
-# CSS modifié pour ajouter une marge de 10px au-dessus de la première case
+# CSS modifié pour ajouter une marge au-dessus de la première case à cocher
 css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
@@ -25,7 +25,7 @@ css = """
         .color-container { display: flex; flex-direction: column; align-items: center; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
-        .first-box { margin-top: 30px; }  /* Ajout de la marge ici */
+        .first-radio { margin-top: 10px; }  /* Ajout de la marge pour la première case à cocher */
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -97,15 +97,16 @@ if uploaded_image is not None:
                 st.markdown("<div class='color-container'>", unsafe_allow_html=True)
                 for j, color_name in enumerate(ordered_colors_by_cluster[i]):
                     color_rgb = pal[color_name]
-                    margin_class = "first-box" if j == 0 else ""  # Applique la marge au premier élément
                     st.markdown(
-                        f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                        f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
                         unsafe_allow_html=True
                     )
                 st.markdown("</div>", unsafe_allow_html=True)
 
             with cols[i * 2 + 1]:
-                selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden")
+                # Ajout de la classe "first-radio" à la première case à cocher pour ajouter la marge
+                radio_class = "first-radio" if i == 0 else ""
+                selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden", help="Sélectionnez une couleur", index=0 if i == 0 else None)
                 selected_colors.append(pal[selected_color_name])
 
         # Reconstruction de l'image avec les couleurs sélectionnées
