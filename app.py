@@ -107,7 +107,12 @@ if uploaded_image is not None:
                 # Ajout de la classe "first-radio" à la première case à cocher pour ajouter la marge
                 radio_class = "first-radio" if i == 0 else ""
                 selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden", help="Sélectionnez une couleur", index=0 if i == 0 else None)
-                selected_colors.append(pal[selected_color_name])
+
+                # Vérification si la clé existe avant de l'ajouter au dictionnaire
+                if selected_color_name in pal:
+                    selected_colors.append(pal[selected_color_name])
+                else:
+                    st.error(f"Couleur {selected_color_name} non valide.")
 
         # Reconstruction de l'image avec les couleurs sélectionnées
         new_img_arr = np.zeros_like(img_arr)
