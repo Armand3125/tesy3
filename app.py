@@ -1,3 +1,67 @@
+import streamlit as st
+from PIL import Image
+import numpy as np
+from sklearn.cluster import KMeans
+
+# Palette de couleurs
+pal = {
+    "NC": (0, 0, 0), "BJ": (255, 255, 255),
+    "JO": (228, 189, 104), "BC": (0, 134, 214),
+    "VL": (174, 150, 212), "VG": (63, 142, 67),
+    "RE": (222, 67, 67), "BM": (0, 120, 191),
+    "OM": (249, 153, 99), "VGa": (59, 102, 94),
+    "BG": (163, 216, 225), "VM": (236, 0, 140),
+    "GA": (166, 169, 170), "VB": (94, 67, 183),
+    "BF": (4, 47, 86),
+}
+
+st.title("Tylice")
+
+# CSS
+css = """
+    <style>
+        .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
+        .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .color-container { display: flex; flex-direction: column; align-items: center; margin-top: 5px; }
+        .color-box { border: 3px solid black; }
+        .stColumn { padding: 0 !important; }
+        .first-box { margin-top: 15px; }
+        .percentage-container { margin-bottom: 0; }
+        .button-container { margin-bottom: 20px; } /* Marge entre les boutons et les pourcentages */
+    </style>
+"""
+st.markdown(css, unsafe_allow_html=True)
+
+# Téléchargement de l'image
+uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
+
+# Gestion des sélections de couleurs
+if "num_selections" not in st.session_state:
+    st.session_state.num_selections = 4
+
+col1, col2 = st.columns([1, 5])
+
+# Boutons pour définir le nombre de couleurs
+with col1:
+    st.markdown("<div class='button-container'>", unsafe_allow_html=True)
+    if st.button("4 Couleurs"):
+        st.session_state.num_selections = 4
+    st.markdown("</div>", unsafe_allow_html=True)
+
+with col2:
+    st.markdown("<div class='button-container'>", unsafe_allow_html=True)
+    if st.button("6 Couleurs"):
+        st.session_state.num_selections = 6
+    st.markdown("</div>", unsafe_allow_html=True)
+
+num_selections = st.session_state.num_selections
+cols_percentages = st.columns(num_selections)
+
+# Dimensions des rectangles
+rectangle_width = 80 if num_selections == 4 else 50
+rectangle_height = 20
+cols = st.columns(num_selections * 2)
+
 if uploaded_image is not None:
     # Chargement et redimensionnement de l'image
     image = Image.open(uploaded_image).convert("RGB")
