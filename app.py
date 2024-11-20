@@ -57,7 +57,7 @@ cols = st.columns(num_selections * 2)
 if uploaded_image is not None:
     image = Image.open(uploaded_image).convert("RGB")
     width, height = image.size
-    dim = 150
+    dim = 350
     new_width = dim if width > height else int((dim / height) * width)
     new_height = dim if height >= width else int((dim / width) * height)
 
