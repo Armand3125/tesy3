@@ -100,7 +100,7 @@ if uploaded_image is not None:
         # Afficher les pourcentages de présence sur des colonnes distinctes juste sous les boutons
         for i in range(num_selections):
             with cols_percentages[i]:
-                st.write(f"{cluster_percentages[i]:.2f}%")
+                st.markdown(f"<b>{cluster_percentages[i]:.2f}%</b>", unsafe_allow_html=True)
         
         selected_colors = []
         for i in range(num_selections):
