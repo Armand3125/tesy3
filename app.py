@@ -22,7 +22,7 @@ css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
         .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .color-container { display: flex; flex-direction: column; align-items: center; margin-top: 5px; }
+        .color-container { display: flex; flex-direction: column; align-items: center; margin-top: 0px; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
