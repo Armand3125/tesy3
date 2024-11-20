@@ -20,15 +20,15 @@ st.title("Tylice")
 # Ajout du style CSS pour les cases à cocher
 css = """
     <style>
+        .stRadio label {
+            margin-top: 20px;  /* Ajout de la marge supérieure pour les cases à cocher */
+        }
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
         .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
         .color-container { display: flex; flex-direction: column; align-items: center; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
-        .stRadio div[data-testid="stCheckbox"] {
-            margin-top: 15px;  /* Ajout de la magfrge supérieure */
-        }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
