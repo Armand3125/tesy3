@@ -17,6 +17,7 @@ pal = {
 
 st.title("Tylice")
 
+# Ajout du style CSS pour les cases à cocher
 css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
@@ -25,15 +26,20 @@ css = """
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
+        .stRadio div[data-testid="stCheckbox"] {
+            margin-top: 15px;  /* Ajout de la marge supérieure */
+        }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
 
+# Téléchargement de l'image
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
+# Colonnes pour le choix du nombre de couleurs
 col1, col2 = st.columns([1, 5])
 
 with col1:
