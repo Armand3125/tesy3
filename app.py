@@ -29,7 +29,8 @@ css = """
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
-        .button-container { margin-bottom: 20px; } /* Marge entre les boutons et les pourcentages */
+        .button-container { margin-bottom: 20px; }
+        .download-button-container { display: flex; justify-content: center; margin-top: 20px; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -155,12 +156,13 @@ if uploaded_image is not None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
 
-        # Bouton de téléchargement
-        st.download_button(
-            label="Télécharger l'image",
-            data=img_buffer,
-            file_name=file_name,
-            mime="image/png"
-        )
+        # Bouton de téléchargement centré
+        with st.markdown("<div class='download-button-container'>", unsafe_allow_html=True):
+            st.download_button(
+                label="Télécharger l'image",
+                data=img_buffer,
+                file_name=file_name,
+                mime="image/png"
+            )
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.")
