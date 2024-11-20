@@ -25,6 +25,8 @@ css = """
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 0px; }
+        .color-box-container { margin-top: 0px; } /* Assure qu'il n'y a pas de décalage */
+        .color-percent { font-weight: bold; font-size: 16px; text-align: center; } /* Style pour les pourcentages */
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -91,7 +93,7 @@ if uploaded_image is not None:
             with cols[i * 2]:
                 # Affichage du pourcentage avec un chiffre après la virgule et le symbole %
                 percentage = cluster_percentages[i]
-                st.markdown(f"<div style='color: black; text-align: center; font-weight: bold;'>{percentage:.1f}%</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='color-percent'>{percentage:.1f}%</div>", unsafe_allow_html=True)
                 
                 st.markdown("<div class='color-container'>", unsafe_allow_html=True)
                 for j, color_name in enumerate(ordered_colors_by_cluster[i]):
