@@ -57,8 +57,9 @@ cols = st.columns(num_selections * 2)
 if uploaded_image is not None:
     image = Image.open(uploaded_image).convert("RGB")
     width, height = image.size
-    new_width = 400 if width > height else int((400 / height) * width)
-    new_height = 400 if height >= width else int((400 / width) * height)
+    dim = 350
+    new_width = dim if width > height else int((dim / height) * width)
+    new_height = dim if height >= width else int((dim / width) * height)
 
     resized_image = image.resize((new_width, new_height))
     img_arr = np.array(resized_image)
