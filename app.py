@@ -110,6 +110,7 @@ if uploaded_image is not None:
                 st.markdown(f"<div class='percentage-container'><b>{percentage:.2f}%</b></div>", unsafe_allow_html=True)
 
         selected_colors = []
+        selected_color_names = []
         for i, cluster_index in enumerate(sorted_indices):
             with cols[i * 2]:
                 st.markdown("<div class='color-container'>", unsafe_allow_html=True)
@@ -125,6 +126,7 @@ if uploaded_image is not None:
             with cols[i * 2 + 1]:
                 selected_color_name = st.radio("", sorted_ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden")
                 selected_colors.append(pal[selected_color_name])
+                selected_color_names.append(selected_color_name)
 
         # Nouvelle image recolorisée
         new_img_arr = np.zeros_like(img_arr)
@@ -147,11 +149,14 @@ if uploaded_image is not None:
         new_image.save(img_buffer, format="PNG")
         img_buffer.seek(0)
 
+        # Construire le nom de fichier basé sur les couleurs des clusters
+        file_name = "".join(selected_color_names) + ".png"
+
         # Bouton de téléchargement
         st.download_button(
             label="Télécharger l'image",
             data=img_buffer,
-            file_name="image_recolorisée.png",
+            file_name=file_name,
             mime="image/png"
         )
     else:
