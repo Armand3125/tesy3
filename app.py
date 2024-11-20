@@ -13,11 +13,11 @@ pal = {
     "OM": (249, 153, 99), "VGa": (59, 102, 94),
     "BG": (163, 216, 225), "VM": (236, 0, 140),
     "GA": (166, 169, 170), "VB": (94, 67, 183),
+    "BF": (4, 47, 86), 
 }
 
 st.title("Tylice")
 
-# CSS modifié pour ajouter une marge au-dessus de la première case à cocher
 css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
@@ -25,7 +25,7 @@ css = """
         .color-container { display: flex; flex-direction: column; align-items: center; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
-        .first-radio { margin-top: 10px; }  /* Ajout de la marge pour la première case à cocher */
+        .first-box { margin-top: 15px; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -82,55 +82,45 @@ if uploaded_image is not None:
             closest_colors_idx = distances[i].argsort()
             ordered_colors_by_cluster.append([list(pal.keys())[idx] for idx in closest_colors_idx])
 
-        # Calcul du pourcentage de présence de chaque cluster
+        # Calculer le pourcentage de présence de chaque cluster
         cluster_counts = np.bincount(labels)
         total_pixels = len(labels)
         cluster_percentages = (cluster_counts / total_pixels) * 100
-
+        
+        # Afficher les pourcentages de présence
+        st.write("### Pourcentage de présence de chaque cluster:")
+        for i in range(num_selections):
+            st.write(f"Cluster {i + 1}: {cluster_percentages[i]:.2f}%")
+        
         selected_colors = []
         for i in range(num_selections):
             with cols[i * 2]:
-                # Affichage du pourcentage avec un chiffre après la virgule et le symbole %
-                percentage = cluster_percentages[i]
-                st.markdown(f"<div style='color: black; text-align: center; font-weight: bold;'>{percentage:.1f}%</div>", unsafe_allow_html=True)
-                
                 st.markdown("<div class='color-container'>", unsafe_allow_html=True)
                 for j, color_name in enumerate(ordered_colors_by_cluster[i]):
                     color_rgb = pal[color_name]
+                    margin_class = "first-box" if j == 0 else ""
                     st.markdown(
-                        f"<div class='color-box' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                        f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
                         unsafe_allow_html=True
                     )
                 st.markdown("</div>", unsafe_allow_html=True)
 
             with cols[i * 2 + 1]:
-                # Ajout de la classe "first-radio" à la première case à cocher pour ajouter la marge
-                radio_class = "first-radio" if i == 0 else ""
-                selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden", help="Sélectionnez une couleur", index=0 if i == 0 else None)
+                selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden")
+                selected_colors.append(pal[selected_color_name])
 
-                # Vérification si la couleur est valide avant de l'ajouter
-                if selected_color_name is not None and selected_color_name in pal:
-                    selected_colors.append(pal[selected_color_name])
-                else:
-                    st.error(f"Couleur sélectionnée non valide pour l'indice {i}. Vérifiez votre sélection.")
+        new_img_arr = np.zeros_like(img_arr)
+        for i in range(img_arr.shape[0]):
+            for j in range(img_arr.shape[1]):
+                lbl = labels[i * img_arr.shape[1] + j]
+                new_img_arr[i, j] = selected_colors[lbl]
+        
+        new_image = Image.fromarray(new_img_arr.astype('uint8'))
+        width, height = new_image.size
+        resized_image = new_image.resize((int(width * 1.1), int(height * 1.1)))
 
-        # Vérification que le nombre de couleurs sélectionnées est cohérent avec le nombre de clusters
-        if len(selected_colors) == num_selections:
-            # Reconstruction de l'image avec les couleurs sélectionnées
-            new_img_arr = np.zeros_like(img_arr)
-            for i in range(img_arr.shape[0]):
-                for j in range(img_arr.shape[1]):
-                    lbl = labels[i * img_arr.shape[1] + j]
-                    new_img_arr[i, j] = selected_colors[lbl]
-            
-            new_image = Image.fromarray(new_img_arr.astype('uint8'))
-            width, height = new_image.size
-            resized_image = new_image.resize((int(width * 1.1), int(height * 1.1)))
-
-            col1, col2, col3 = st.columns([1, 6, 1])
-            with col2:
-                st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
-        else:
-            st.error("Erreur : Le nombre de couleurs sélectionnées ne correspond pas au nombre de clusters.")
+        col1, col2, col3 = st.columns([1, 6, 1])
+        with col2:
+            st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.")
