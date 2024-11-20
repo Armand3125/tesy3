@@ -25,7 +25,7 @@ css = """
         .color-container { display: flex; flex-direction: column; align-items: center; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
-        .first-box { margin-top: 10px; }  /* Ajout de la marge ici */
+        .first-box { margin-top: 30px; }  /* Ajout de la marge ici */
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
