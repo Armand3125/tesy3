@@ -26,11 +26,6 @@ css = """
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
-        .percentage-text {
-            font-size: 16px;  /* Augmente la taille de la police ici */
-            font-weight: bold;
-            text-align: center;
-        }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -96,7 +91,7 @@ if uploaded_image is not None:
         cols_percentages = st.columns(num_selections)  # Créer des colonnes pour afficher chaque pourcentage
         for i in range(num_selections):
             with cols_percentages[i]:
-                st.markdown(f'<p class="percentage-text">{cluster_percentages[i]:.2f}%</p>', unsafe_allow_html=True)
+                st.write(f"{cluster_percentages[i]:.2f}%")
         
         selected_colors = []
         for i in range(num_selections):
