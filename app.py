@@ -108,7 +108,7 @@ if uploaded_image is not None:
         # Affichage des pourcentages dans des colonnes distinctes
         for i, percentage in enumerate(sorted_percentages):
             with cols_percentages[i]:
-                st.markdown(f"<div class='percentage-container'><b>{percentage:.1f}%</b></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='percentage-container'><b>{percentage:.2f}%</b></div>", unsafe_allow_html=True)
 
         selected_colors = []
         selected_color_names = []
@@ -142,26 +142,25 @@ if uploaded_image is not None:
         # On garde l'image à sa taille originale
         resized_image = new_image
 
-        col1, col2, col3 = st.columns([1, 6, 1])  # Colonnes pour centrer le bouton
+        col1, col2, col3 = st.columns([1, 6, 1])
         with col2:
             st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
 
-            # Sauvegarder l'image en mémoire pour téléchargement
-            img_buffer = io.BytesIO()
-            new_image.save(img_buffer, format="PNG")
-            img_buffer.seek(0)
+        # Sauvegarder l'image en mémoire pour téléchargement
+        img_buffer = io.BytesIO()
+        new_image.save(img_buffer, format="PNG")
+        img_buffer.seek(0)
 
-            # Construire le nom de fichier basé sur les couleurs des clusters et la date/heure
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
+        # Construire le nom de fichier basé sur les couleurs des clusters et la date/heure
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
 
-            # Bouton de téléchargement centré
-            st.download_button(
-                label="Télécharger l'image",
-                data=img_buffer,
-                file_name=file_name,
-                mime="image/png",
-                use_container_width=False  # Le bouton ne prendra pas toute la largeur
-            )
+        # Bouton de téléchargement
+        st.download_button(
+            label="Télécharger l'image",
+            data=img_buffer,
+            file_name=file_name,
+            mime="image/png"
+        )
     else:
-        st.error("L'image doit être en RGB (3 canaux) pour continuer.")
+        st.error("L'image doit être en RGB (3 canaux) pour continuer.") 
