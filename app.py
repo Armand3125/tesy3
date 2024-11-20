@@ -26,7 +26,6 @@ css = """
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
-        .center-text { text-align: center; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -101,10 +100,7 @@ if uploaded_image is not None:
         # Afficher les pourcentages de présence sur des colonnes distinctes juste sous les boutons
         for i in range(num_selections):
             with cols_percentages[i]:
-                st.markdown(
-                    f"<div class='center-text'><b>{cluster_percentages[i]:.2f}%</b></div>",
-                    unsafe_allow_html=True
-                )
+                st.markdown(f"<b>{cluster_percentages[i]:.2f}%</b>", unsafe_allow_html=True)
         
         selected_colors = []
         for i in range(num_selections):
