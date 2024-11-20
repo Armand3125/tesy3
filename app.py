@@ -24,7 +24,7 @@ css = """
             margin-top: 0px;  /* Ajout de la marge supérieure uniquement pour la première case à cocher */
         }
         .stRadio label {
-            margin-top: 20px;  /* Suppression de la marge entre les cases à cocher */
+            margin-top: 0px;  /* Suppression de la marge entre les cases à cocher */
         }
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
         .radio-container { display: flex; flex-direction: column; align-items: center; margin: 0; }
