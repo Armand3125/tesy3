@@ -81,6 +81,11 @@ if uploaded_image is not None:
             closest_colors_idx = distances[i].argsort()
             ordered_colors_by_cluster.append([list(pal.keys())[idx] for idx in closest_colors_idx])
 
+        # Calcul du pourcentage de présence de chaque cluster
+        cluster_counts = np.bincount(labels)
+        total_pixels = len(labels)
+        cluster_percentages = (cluster_counts / total_pixels) * 100
+
         selected_colors = []
         for i in range(num_selections):
             with cols[i * 2]:
@@ -98,6 +103,11 @@ if uploaded_image is not None:
                 selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden")
                 selected_colors.append(pal[selected_color_name])
 
+                # Affichage du pourcentage de présence pour chaque couleur
+                percentage = cluster_percentages[i]
+                st.markdown(f"<div style='color: black; text-align: center;'>Présence : {percentage:.2f}%</div>", unsafe_allow_html=True)
+
+        # Reconstruction de l'image avec les couleurs sélectionnées
         new_img_arr = np.zeros_like(img_arr)
         for i in range(img_arr.shape[0]):
             for j in range(img_arr.shape[1]):
