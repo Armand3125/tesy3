@@ -87,10 +87,9 @@ if uploaded_image is not None:
         total_pixels = len(labels)
         cluster_percentages = (cluster_counts / total_pixels) * 100
         
-        # Afficher les pourcentages de présence
-        st.write("### Pourcentage de présence de chaque cluster:")
-        for i in range(num_selections):
-            st.write(f"Cluster {i + 1}: {cluster_percentages[i]:.2f}%")
+        # Afficher les pourcentages de présence sur une seule ligne
+        percentages_text = " | ".join([f"Cluster {i + 1}: {cluster_percentages[i]:.2f}%" for i in range(num_selections)])
+        st.markdown(f"### Pourcentages de présence des clusters : {percentages_text}")
         
         selected_colors = []
         for i in range(num_selections):
