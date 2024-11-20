@@ -17,6 +17,7 @@ pal = {
 
 st.title("Tylice")
 
+# CSS modifié pour ajouter une marge de 10px au-dessus de la première case
 css = """
     <style>
         .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
@@ -24,7 +25,7 @@ css = """
         .color-container { display: flex; flex-direction: column; align-items: center; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
-        .first-box { margin-top: 0px; }
+        .first-box { margin-top: 10px; }  /* Ajout de la marge ici */
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -96,7 +97,7 @@ if uploaded_image is not None:
                 st.markdown("<div class='color-container'>", unsafe_allow_html=True)
                 for j, color_name in enumerate(ordered_colors_by_cluster[i]):
                     color_rgb = pal[color_name]
-                    margin_class = "first-box" if j == 0 else ""
+                    margin_class = "first-box" if j == 0 else ""  # Applique la marge au premier élément
                     st.markdown(
                         f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
                         unsafe_allow_html=True
@@ -122,4 +123,4 @@ if uploaded_image is not None:
         with col2:
             st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
     else:
-        st.error("L'image doit être en RGB (3 canaux) pour continuer.") 
+        st.error("L'image doit être en RGB (3 canaux) pour continuer.")
