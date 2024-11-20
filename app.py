@@ -35,8 +35,10 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
+# Créez les colonnes pour les boutons et les pourcentages
 col1, col2 = st.columns([1, 5])
 
+# Affichez les boutons pour la sélection du nombre de couleurs
 with col1:
     if st.button("4 Couleurs"):
         st.session_state.num_selections = 4
@@ -45,14 +47,15 @@ with col2:
     if st.button("6 Couleurs"):
         st.session_state.num_selections = 6
 
+# Obtenez le nombre de couleurs sélectionnées et les dimensions des rectangles
 num_selections = st.session_state.num_selections
 rectangle_width = 80 if num_selections == 4 else 50
 rectangle_height = 20
 cols = st.columns(num_selections * 2)
 
-# Ajoutez un espace pour afficher les pourcentages juste en dessous des boutons
+# Affichez les pourcentages sous les boutons
 st.markdown("### Pourcentages des couleurs :")
-cols_percentages = st.columns(num_selections)  # Créer des colonnes pour afficher chaque pourcentage
+cols_percentages = st.columns(num_selections)
 
 if uploaded_image is not None:
     # Assure que l'image est en RGB pour éviter les problèmes liés au canal alpha ou au mode niveaux de gris
@@ -91,7 +94,7 @@ if uploaded_image is not None:
         total_pixels = len(labels)
         cluster_percentages = (cluster_counts / total_pixels) * 100
         
-        # Afficher les pourcentages de présence sur des colonnes distinctes
+        # Afficher les pourcentages de présence sur des colonnes distinctes juste sous les boutons
         for i in range(num_selections):
             with cols_percentages[i]:
                 st.write(f"{cluster_percentages[i]:.2f}%")
