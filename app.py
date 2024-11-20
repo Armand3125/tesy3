@@ -26,8 +26,6 @@ css = """
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
-        table { width: 100%; }
-        th, td { padding: 10px; text-align: center; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -89,27 +87,12 @@ if uploaded_image is not None:
         total_pixels = len(labels)
         cluster_percentages = (cluster_counts / total_pixels) * 100
         
-        # Créer un tableau de 1 ligne avec les couleurs et les pourcentages
-        st.write("### Tableau des couleurs et pourcentages de présence des clusters")
-        table_data = []
-        
+        # Afficher les pourcentages de présence sur des colonnes distinctes
+        cols_percentages = st.columns(num_selections)  # Créer des colonnes pour afficher chaque pourcentage
         for i in range(num_selections):
-            color_name = list(pal.keys())[np.argmin(distances[i])]
-            color_rgb = pal[color_name]
-            percentage = cluster_percentages[i]
-            
-            # Ajouter la couleur et le pourcentage dans une ligne
-            table_data.append([
-                f'<div class="color-box" style="background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px;"></div>',
-                f"{percentage:.2f}%"
-            ])
+            with cols_percentages[i]:
+                st.write(f"{cluster_percentages[i]:.2f}%")
         
-        # Afficher le tableau
-        st.markdown("<table>", unsafe_allow_html=True)
-        for row in table_data:
-            st.markdown("<tr>" + "".join([f"<td>{col}</td>" for col in row]) + "</tr>", unsafe_allow_html=True)
-        st.markdown("</table>", unsafe_allow_html=True)
-
         selected_colors = []
         for i in range(num_selections):
             with cols[i * 2]:
