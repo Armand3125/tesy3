@@ -30,6 +30,7 @@ css = """
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
         .button-container { margin-bottom: 20px; } /* Marge entre les boutons et les pourcentages */
+        .stDownloadButton { display: block; margin: 0 auto; } /* Centrer le bouton de téléchargement */
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -108,7 +109,7 @@ if uploaded_image is not None:
         # Affichage des pourcentages dans des colonnes distinctes
         for i, percentage in enumerate(sorted_percentages):
             with cols_percentages[i]:
-                st.markdown(f"<div class='percentage-container'><b>{percentage:.2f}%</b></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='percentage-container'><b>{percentage:.1f}%</b></div>", unsafe_allow_html=True)
 
         selected_colors = []
         selected_color_names = []
@@ -160,7 +161,8 @@ if uploaded_image is not None:
             label="Télécharger l'image",
             data=img_buffer,
             file_name=file_name,
-            mime="image/png"
+            mime="image/png",
+            use_container_width=True  # Centrer le bouton
         )
     else:
-        st.error("L'image doit être en RGB (3 canaux) pour continuer.") 
+        st.error("L'image doit être en RGB (3 canaux) pour continuer.")
