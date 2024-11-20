@@ -27,7 +27,7 @@ css = """
         .stColumn { padding: 0 !important; }
         .first-box { margin-top: 15px; }
         .stRadio div[data-testid="stCheckbox"] {
-            margin-top: 15px;  /* Ajout de la marge supérieure */
+            margin-top: 15px;  /* Ajout de la magfrge supérieure */
         }
     </style>
 """
