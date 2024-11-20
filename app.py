@@ -108,25 +108,29 @@ if uploaded_image is not None:
                 radio_class = "first-radio" if i == 0 else ""
                 selected_color_name = st.radio("", ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden", help="Sélectionnez une couleur", index=0 if i == 0 else None)
 
-                # Vérification si la clé existe avant de l'ajouter au dictionnaire
-                if selected_color_name in pal:
+                # Vérification si la couleur est valide avant de l'ajouter
+                if selected_color_name is not None and selected_color_name in pal:
                     selected_colors.append(pal[selected_color_name])
                 else:
-                    st.error(f"Couleur {selected_color_name} non valide.")
+                    st.error(f"Couleur sélectionnée non valide pour l'indice {i}. Vérifiez votre sélection.")
 
-        # Reconstruction de l'image avec les couleurs sélectionnées
-        new_img_arr = np.zeros_like(img_arr)
-        for i in range(img_arr.shape[0]):
-            for j in range(img_arr.shape[1]):
-                lbl = labels[i * img_arr.shape[1] + j]
-                new_img_arr[i, j] = selected_colors[lbl]
-        
-        new_image = Image.fromarray(new_img_arr.astype('uint8'))
-        width, height = new_image.size
-        resized_image = new_image.resize((int(width * 1.1), int(height * 1.1)))
+        # Vérification que le nombre de couleurs sélectionnées est cohérent avec le nombre de clusters
+        if len(selected_colors) == num_selections:
+            # Reconstruction de l'image avec les couleurs sélectionnées
+            new_img_arr = np.zeros_like(img_arr)
+            for i in range(img_arr.shape[0]):
+                for j in range(img_arr.shape[1]):
+                    lbl = labels[i * img_arr.shape[1] + j]
+                    new_img_arr[i, j] = selected_colors[lbl]
+            
+            new_image = Image.fromarray(new_img_arr.astype('uint8'))
+            width, height = new_image.size
+            resized_image = new_image.resize((int(width * 1.1), int(height * 1.1)))
 
-        col1, col2, col3 = st.columns([1, 6, 1])
-        with col2:
-            st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
+            col1, col2, col3 = st.columns([1, 6, 1])
+            with col2:
+                st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
+        else:
+            st.error("Erreur : Le nombre de couleurs sélectionnées ne correspond pas au nombre de clusters.")
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.")
