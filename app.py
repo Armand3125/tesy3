@@ -31,6 +31,8 @@ css = """
         .percentage-container { margin-bottom: 0; }
         .button-container { margin-bottom: 20px; }
         .download-button-container { display: flex; justify-content: center; margin-top: 20px; }
+        /* Centrer l'image */
+        .image-container { display: flex; justify-content: center; margin-top: 20px; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -143,9 +145,10 @@ if uploaded_image is not None:
         # On garde l'image à sa taille originale
         resized_image = new_image
 
-        col1, col2, col3 = st.columns([1, 6, 1])
-        with col2:
-            st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
+        # Centrer l'image
+        st.markdown("<div class='image-container'>", unsafe_allow_html=True)
+        st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
         # Sauvegarder l'image en mémoire pour téléchargement
         img_buffer = io.BytesIO()
