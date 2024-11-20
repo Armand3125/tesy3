@@ -156,13 +156,13 @@ if uploaded_image is not None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
 
-        # Bouton de téléchargement
+        # Bouton de téléchargement, centré sans prendre toute la largeur
         st.download_button(
             label="Télécharger l'image",
             data=img_buffer,
             file_name=file_name,
             mime="image/png",
-            use_container_width=True  # Centrer le bouton
+            use_container_width=False  # Le bouton ne prendra pas toute la largeur
         )
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.")
