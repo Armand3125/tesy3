@@ -3,6 +3,7 @@ from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
 import io
+from datetime import datetime
 
 # Palette de couleurs
 pal = {
@@ -72,7 +73,7 @@ if uploaded_image is not None:
         new_height = int((new_width / width) * height)
     else:
         new_height = 400
-        new_width = int((new_height / height) * width)
+        new_width = int((new_height / width) * width)
 
     resized_image = image.resize((new_width, new_height))
     img_arr = np.array(resized_image)
@@ -149,8 +150,9 @@ if uploaded_image is not None:
         new_image.save(img_buffer, format="PNG")
         img_buffer.seek(0)
 
-        # Construire le nom de fichier basé sur les couleurs des clusters
-        file_name = "".join(selected_color_names) + ".png"
+        # Construire le nom de fichier basé sur les couleurs des clusters et la date/heure
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
 
         # Bouton de téléchargement
         st.download_button(
