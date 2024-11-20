@@ -51,7 +51,6 @@ with col2:
 num_selections = st.session_state.num_selections
 
 # Créez les colonnes pour les pourcentages sous les boutons
-st.markdown("### Pourcentages des couleurs :")
 cols_percentages = st.columns(num_selections)
 
 # Obtenez le nombre de couleurs sélectionnées et les dimensions des rectangles
