@@ -47,15 +47,17 @@ with col2:
     if st.button("6 Couleurs"):
         st.session_state.num_selections = 6
 
+# Affichez les pourcentages sous les boutons
+st.markdown("### Pourcentages des couleurs :")
+cols_percentages = st.columns(num_selections)
+
 # Obtenez le nombre de couleurs sélectionnées et les dimensions des rectangles
 num_selections = st.session_state.num_selections
 rectangle_width = 80 if num_selections == 4 else 50
 rectangle_height = 20
 cols = st.columns(num_selections * 2)
 
-# Affichez les pourcentages sous les boutons
-st.markdown("### Pourcentages des couleurs :")
-cols_percentages = st.columns(num_selections)
+
 
 if uploaded_image is not None:
     # Assure que l'image est en RGB pour éviter les problèmes liés au canal alpha ou au mode niveaux de gris
