@@ -122,7 +122,7 @@ if uploaded_image is not None:
 
         col1, col2, col3 = st.columns([1, 6, 1])
         with col2:
-            st.image(resized_image, caption=f"Image avec {num_selections} couleurs", use_column_width=True)
+            st.image(resized_image, use_column_width=True)
 
         img_buffer = io.BytesIO()
         new_image.save(img_buffer, format="PNG")
