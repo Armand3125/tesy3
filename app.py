@@ -37,7 +37,7 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = 4
 
-col1, col2 = st.columns([1, 5])
+col1, col2 = st.columns([2, 5])
 
 with col1:
     if st.button("4 Couleurs : 7.95 €"):
