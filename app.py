@@ -57,7 +57,6 @@ st.markdown("""
     - **Expérimentez** avec différentes combinaisons pour trouver l'esthétique qui correspond le mieux à votre projet.
 """, unsafe_allow_html=True)
 
-
 num_selections = st.session_state.num_selections
 cols_percentages = st.columns(num_selections)
 
