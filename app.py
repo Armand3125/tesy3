@@ -49,7 +49,7 @@ with col2:
 
 # Section de conseils
 st.markdown("""
-    ## 📝 Conseils d'utilisation :
+    ### 📝 Conseils d'utilisation :
     - **Les zones de couleurs sont données par ordre de présence dans l'image.**
     - **L'ordre des couleurs est déterminé par leur proximité avec les couleurs d'origine de l'image.**
     - Il est recommandé d'inclure au moins une zone de **noir** ou de **blanc** pour assurer un bon contraste.
