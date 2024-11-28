@@ -49,8 +49,8 @@ with col2:
 
 st.markdown("""
     ### 📝 Conseils d'utilisation :
-    - **Les couleurs les plus compatibles avec l'image apparaissent en premier.**
-    - **Préférez des images avec un bon contraste et des éléments bien définis.**
+    - Les couleurs les plus compatibles avec l'image apparaissent en premier.
+    - Préférez des images avec un bon contraste et des éléments bien définis.
     - **Une image carrée** donnera un meilleur résultat.
     - Il est recommandé d'inclure au moins **une zone de noir ou de blanc** pour assurer un bon contraste.
     - Utiliser des **familles de couleurs** (ex: blanc, jaune, orange, rouge) peut produire des résultats visuellement intéressants.
