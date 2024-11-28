@@ -64,8 +64,13 @@ if uploaded_image is not None:
     resized_image = image.resize((new_width, new_height))
     img_arr = np.array(resized_image)
 
-    # Display the resized image dimensions
-    st.markdown(f"**Dimensions de l'image redimensionnée : {new_width}x{new_height} pixels**")
+    # Conversion de pixels à centimètres (350px = 14cm, soit 25px/cm)
+    px_per_cm = 25
+    new_width_cm = round(new_width / px_per_cm, 1)  # Arrondi à 1 décimale (en cm)
+    new_height_cm = round(new_height / px_per_cm, 1)  # Arrondi à 1 décimale (en cm)
+
+    # Affichage des dimensions en cm
+    st.markdown(f"**Dimensions de l'image redimensionnée : {new_width_cm} cm x {new_height_cm} cm**")
 
     if img_arr.shape[-1] == 3:
         pixels = img_arr.reshape(-1, 3)
