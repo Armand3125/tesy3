@@ -47,8 +47,6 @@ with col2:
     if st.button("6 Couleurs : 11.95 €"):
         st.session_state.num_selections = 6
 
-
-
 num_selections = st.session_state.num_selections
 cols_percentages = st.columns(num_selections)
 
@@ -88,10 +86,6 @@ if uploaded_image is not None:
         sorted_indices = np.argsort(-cluster_percentages)
         sorted_percentages = cluster_percentages[sorted_indices]
         sorted_ordered_colors_by_cluster = [ordered_colors_by_cluster[i] for i in sorted_indices]
-
-        for i, percentage in enumerate(sorted_percentages):
-            with cols_percentages[i]:
-                st.markdown(f"<div class='percentage-container'><b>{percentage:.2f}%</b></div>", unsafe_allow_html=True)
 
         selected_colors = []
         selected_color_names = []
