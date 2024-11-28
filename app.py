@@ -53,7 +53,7 @@ st.markdown("""
     - **Préférez des images avec un bon contraste et des éléments bien définis.**
     - **Une image carrée donnera un meilleur résultat.**
     - **Il est recommandé d'inclure au moins une zone de noir ou de blanc pour assurer un bon contraste.**
-    - **Utiliser des familles de couleurs (par exemple, blanc, jaune, orange, rouge) peut produire des résultats visuellement intéressants.**
+    - **Utiliser des familles de couleurs (ex: blanc, jaune, orange, rouge) peut produire des résultats visuellement intéressants.**
     - **Expérimentez avec différentes combinaisons pour trouver l'esthétique qui correspond le mieux à votre projet !**
 """, unsafe_allow_html=True)
 
