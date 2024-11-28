@@ -142,7 +142,7 @@ if uploaded_image is not None:
             )
 
         # Afficher les dimensions après le bouton de téléchargement
-        st.markdown(f"**Mets tes dimensions : {new_width_cm} cm x {new_height_cm} cm**")
+        st.markdown(f"**Dimensions de l'impression : {new_width_cm} cm x {new_height_cm} cm**")
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.")
 
