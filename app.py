@@ -25,9 +25,9 @@ css = """
         .color-container { display: flex; flex-direction: column; align-items: center; margin-top: 5px; }
         .color-box { border: 3px solid black; }
         .stColumn { padding: 0 !important; }
-        .first-box { margin-top: 15px; }
+        .first-box { margin-top: 5px; }
         .percentage-container { margin-bottom: 0; }
-        .button-container { margin-bottom: 20px; }
+        .button-container { margin-bottom: 10px; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
