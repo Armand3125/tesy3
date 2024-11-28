@@ -69,9 +69,6 @@ if uploaded_image is not None:
     new_width_cm = round(new_width / px_per_cm, 1)  # Arrondi à 1 décimale (en cm)
     new_height_cm = round(new_height / px_per_cm, 1)  # Arrondi à 1 décimale (en cm)
 
-    # Affichage des dimensions en cm
-    st.markdown(f"**Dimensions de l'image redimensionnée : {new_width_cm} cm x {new_height_cm} cm**")
-
     if img_arr.shape[-1] == 3:
         pixels = img_arr.reshape(-1, 3)
         kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
@@ -143,6 +140,9 @@ if uploaded_image is not None:
                 file_name=file_name,
                 mime="image/png"
             )
+
+        # Afficher les dimensions après le bouton de téléchargement
+        st.markdown(f"**Mets tes dimensions : {new_width_cm} cm x {new_height_cm} cm**")
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.")
 
