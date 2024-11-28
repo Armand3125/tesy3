@@ -64,6 +64,9 @@ if uploaded_image is not None:
     resized_image = image.resize((new_width, new_height))
     img_arr = np.array(resized_image)
 
+    # Display the resized image dimensions
+    st.markdown(f"**Dimensions de l'image redimensionnée : {new_width}x{new_height} pixels**")
+
     if img_arr.shape[-1] == 3:
         pixels = img_arr.reshape(-1, 3)
         kmeans = KMeans(n_clusters=num_selections, random_state=0).fit(pixels)
