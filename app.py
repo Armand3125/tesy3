@@ -135,7 +135,7 @@ if uploaded_image is not None:
         col1, col2, col3, col4 = st.columns([3, 5, 5, 3])
         with col2:
             # Afficher les dimensions après le bouton de téléchargement
-            st.markdown(f"**Dimensions : {new_width_cm} cm x {new_height_cm} cm**")
+            st.markdown(f"**{new_width_cm} cm x {new_height_cm} cm**")
         with col3:
             st.download_button(
                 label="Télécharger l'image",
