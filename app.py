@@ -132,7 +132,7 @@ if uploaded_image is not None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
 
-        col1, col2, col3, col4 = st.columns([3, 5, 5, 3])
+        col1, col2, col3, col4 = st.columns([4, 5, 5, 4])
         with col2:
             # Afficher les dimensions après le bouton de téléchargement
             st.markdown(f"**{new_width_cm} cm x {new_height_cm} cm**")
