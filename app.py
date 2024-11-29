@@ -5,7 +5,6 @@ from sklearn.cluster import KMeans
 import io
 from datetime import datetime
 
-# Palette de couleurs
 pal = {
     "NC": (0, 0, 0), "BJ": (255, 255, 255),
     "JO": (228, 189, 104), "BC": (0, 134, 214),
@@ -19,24 +18,16 @@ pal = {
 
 st.title("Tylice")
 
-# CSS pour une disposition adaptative
 css = """
     <style>
-        @media (max-width: 768px) {
-            .stColumn {
-                display: block !important;
-                width: 100% !important;
-                margin-bottom: 10px !important;
-            }
-            .color-box {
-                margin: 0 auto;
-            }
-        }
-        @media (min-width: 769px) {
-            .stColumn {
-                padding: 0 !important;
-            }
-        }
+        .stRadio div [data-testid="stMarkdownContainer"] p { display: none; }
+        .radio-container { display: flex; flex-direction: column; align-items: center; margin: 10px; }
+        .color-container { display: flex; flex-direction: column; align-items: center; margin-top: 5px; }
+        .color-box { border: 3px solid black; }
+        .stColumn { padding: 0 !important; }
+        .first-box { margin-top: 15px; }
+        .percentage-container { margin-bottom: 0; }
+        .button-container { margin-bottom: 20px; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -57,6 +48,11 @@ with col2:
         st.session_state.num_selections = 6
 
 num_selections = st.session_state.num_selections
+cols_percentages = st.columns(num_selections)
+
+rectangle_width = 80 if num_selections == 4 else 50
+rectangle_height = 20
+cols = st.columns(num_selections * 2)
 
 if uploaded_image is not None:
     image = Image.open(uploaded_image).convert("RGB")
@@ -99,23 +95,21 @@ if uploaded_image is not None:
         selected_colors = []
         selected_color_names = []
         for i, cluster_index in enumerate(sorted_indices):
-            with st.container():  # Utilise container pour une disposition adaptative
-                col_color, col_radio = st.columns([1, 3])
-                with col_color:
-                    st.markdown("<div class='color-container'>", unsafe_allow_html=True)
-                    for j, color_name in enumerate(sorted_ordered_colors_by_cluster[i]):
-                        color_rgb = pal[color_name]
-                        margin_class = "first-box" if j == 0 else ""
-                        st.markdown(
-                            f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: 80px; height: 20px; border-radius: 5px; margin-bottom: 4px;'></div>",
-                            unsafe_allow_html=True
-                        )
-                    st.markdown("</div>", unsafe_allow_html=True)
+            with cols[i * 2]:
+                st.markdown("<div class='color-container'>", unsafe_allow_html=True)
+                for j, color_name in enumerate(sorted_ordered_colors_by_cluster[i]):
+                    color_rgb = pal[color_name]
+                    margin_class = "first-box" if j == 0 else ""
+                    st.markdown(
+                        f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                        unsafe_allow_html=True
+                    )
+                st.markdown("</div>", unsafe_allow_html=True)
 
-                with col_radio:
-                    selected_color_name = st.radio("", sorted_ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden")
-                    selected_colors.append(pal[selected_color_name])
-                    selected_color_names.append(selected_color_name)
+            with cols[i * 2 + 1]:
+                selected_color_name = st.radio("", sorted_ordered_colors_by_cluster[i], key=f"radio_{i}", label_visibility="hidden")
+                selected_colors.append(pal[selected_color_name])
+                selected_color_names.append(selected_color_name)
 
         new_img_arr = np.zeros_like(img_arr)
         for i in range(img_arr.shape[0]):
@@ -140,6 +134,7 @@ if uploaded_image is not None:
 
         col1, col2, col3, col4 = st.columns([4, 5, 5, 4])
         with col2:
+            # Afficher les dimensions après le bouton de téléchargement
             st.markdown(f"**{new_width_cm} cm x {new_height_cm} cm**")
         with col3:
             st.download_button(
@@ -148,6 +143,7 @@ if uploaded_image is not None:
                 file_name=file_name,
                 mime="image/png"
             )
+        
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.")
 
