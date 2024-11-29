@@ -132,7 +132,7 @@ if uploaded_image is not None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"{''.join(selected_color_names)}_{timestamp}.png"
 
-        col1, col2, col3 = st.columns([6, 4, 6])
+        col1, col2, col3, col4 = st.columns([5, 3, 3, 5])
         with col2:
             st.download_button(
                 label="Télécharger l'image",
@@ -140,9 +140,10 @@ if uploaded_image is not None:
                 file_name=file_name,
                 mime="image/png"
             )
-
-        # Afficher les dimensions après le bouton de téléchargement
-        st.markdown(f"**Dimensions de l'impression : {new_width_cm} cm x {new_height_cm} cm**")
+        with col3:
+            # Afficher les dimensions après le bouton de téléchargement
+            st.markdown(f"**Dimensions de l'impression : {new_width_cm} cm x {new_height_cm} cm**")
+        
     else:
         st.error("L'image doit être en RGB (3 canaux) pour continuer.")
 
