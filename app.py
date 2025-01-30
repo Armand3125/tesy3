@@ -129,6 +129,40 @@ css = """
 st.markdown(css, unsafe_allow_html=True)
 
 # =========================================
+# Initialisation des variables de session
+# =========================================
+if "num_selections" not in st.session_state:
+    st.session_state.num_selections = 4  # Valeur par défaut
+
+if "show_personalization" not in st.session_state:
+    st.session_state.show_personalization = False
+
+if "show_examples" not in st.session_state:
+    st.session_state.show_examples = False
+
+# =========================================
+# Définition des Fonctions de Rappel
+# =========================================
+
+def select_4():
+    st.session_state.num_selections = 4
+    st.session_state.show_personalization = False
+    st.session_state.show_examples = False
+
+def select_6():
+    st.session_state.num_selections = 6
+    st.session_state.show_personalization = False
+    st.session_state.show_examples = False
+
+def show_examples_callback():
+    st.session_state.show_examples = True
+    st.session_state.show_personalization = False
+
+def show_personalize_callback():
+    st.session_state.show_personalization = True
+    st.session_state.show_examples = False
+
+# =========================================
 # Section 1: Téléchargement de l'image
 # =========================================
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
@@ -143,38 +177,22 @@ if uploaded_image is not None:
     col1, col2 = st.columns([2, 5])
 
     with col1:
-        if st.button("4 Couleurs : 7.95 €", key="select_4"):
-            st.session_state.num_selections = 4
-            st.session_state.show_personalization = False
-            st.session_state.show_examples = False
+        st.button("4 Couleurs : 7.95 €", key="select_4_btn", on_click=select_4)
 
     with col2:
-        if st.button("6 Couleurs : 11.95 €", key="select_6"):
-            st.session_state.num_selections = 6
-            st.session_state.show_personalization = False
-            st.session_state.show_examples = False
-
-    # Initialisation des états de session pour affichage
-    if "show_personalization" not in st.session_state:
-        st.session_state.show_personalization = False
-    if "show_examples" not in st.session_state:
-        st.session_state.show_examples = False
+        st.button("6 Couleurs : 11.95 €", key="select_6_btn", on_click=select_6)
 
     # Ajout des nouveaux boutons pour séparer les sections
     st.markdown("<hr>", unsafe_allow_html=True)
     col3, col4 = st.columns([2, 5])
 
     with col3:
-        if st.button("Voir Exemples", key="show_examples"):
-            st.session_state.show_examples = True
-            st.session_state.show_personalization = False
+        st.button("Voir Exemples", key="show_examples_btn", on_click=show_examples_callback)
 
     with col4:
-        if st.button("Personnaliser", key="show_personalization_btn"):
-            st.session_state.show_personalization = True
-            st.session_state.show_examples = False
+        st.button("Personnaliser", key="show_personalize_btn", on_click=show_personalize_callback)
 
-    num_selections = st.session_state.get("num_selections", 4)
+    num_selections = st.session_state.num_selections
 
     # =========================================
     # Section Personnalisation
