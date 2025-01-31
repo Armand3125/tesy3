@@ -321,7 +321,7 @@ if uploaded_image is not None:
                 add_to_cart_button = "Erreur lors de l'ajout au panier."
 
             with cols_display[col_count % 2]:
-                st.image(recolored_image, caption=f"Palette: {' - '.join(palette)}", use_container_width=True, width=350)
+                st.image(recolored_image, use_container_width=True, width=350)
                 if cloudinary_url:
                     st.markdown(f"<div class='add-to-cart-button'>{add_to_cart_button}</div>", unsafe_allow_html=True)
                 else:
