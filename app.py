@@ -121,15 +121,12 @@ css = """
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
         .button-container { margin-bottom: 20px; }
-        /* Pour les liens et boutons, on utilise la couleur rgb(36,40,51) */
+        /* Liens sans encadré */
         .shopify-link { 
             font-size: 16px; 
             font-weight: bold; 
             text-decoration: none; 
-            color: #ffffff; 
-            background-color: #242833; 
-            padding: 5px 10px; 
-            border-radius: 5px; 
+            color: #242833; 
         }
         .dimension-text { 
             font-size: 14px; 
@@ -148,7 +145,7 @@ css = """
             display: inline-block;
             margin-left: 10px;
         }
-        /* Nouveau style pour les boutons en haut */
+        /* Boutons en haut avec la couleur rgb(36,40,51) */
         div.stButton > button {
             background-color: #242833 !important;
             color: #ffffff !important;
@@ -197,12 +194,13 @@ def show_examples_callback():
     st.session_state.show_personalization = False
 
 # =========================================
-# Fonction pour Générer le Conteneur avec Label et Bouton
+# Fonction pour Générer le Conteneur avec Label et Bouton (pour les exemples)
 # =========================================
 
 def generate_label_and_button(num_colors, price, shopify_cart_url):
     """
     Génère un conteneur avec le label et le bouton "Ajouter au panier" sur la même ligne.
+    (Utilisé uniquement pour la section Exemples)
     """
     label_html = f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
     add_to_cart_html = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
@@ -223,7 +221,7 @@ if uploaded_image is not None:
         st.session_state.show_examples = True
 
     # Boutons alignés horizontalement sur toute la largeur, dans l'ordre : Exemples, 4 Couleurs, 6 Couleurs
-    col_ex, col_4, col_6 = st.columns([1,1,1])
+    col_ex, col_4, col_6 = st.columns([1, 1, 1])
     with col_ex:
         st.button("Exemples", key="show_examples_btn", on_click=show_examples_callback)
     with col_4:
@@ -314,7 +312,7 @@ if uploaded_image is not None:
             with col2_pers:
                 st.image(resized_image_pers_final, use_container_width=True)
 
-            # Préparation pour l'upload et l'ajout au panier
+            # Préparation pour l'upload et l'ajout au panier (sans label)
             img_buffer_pers = io.BytesIO()
             new_image_pers.save(img_buffer_pers, format="PNG")
             img_buffer_pers.seek(0)
@@ -324,13 +322,12 @@ if uploaded_image is not None:
                 st.error("Erreur lors du téléchargement de l'image. Veuillez réessayer.")
             else:
                 shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
-                # Affichage des dimensions et du conteneur avec label et bouton sur la même ligne (réduire l'espace)
+                # Affichage des dimensions et du lien "Ajouter au panier" sur la même ligne, sans encadré supplémentaire
                 col1_cart, col2_cart = st.columns(2)
                 with col1_cart:
                     st.markdown(f"<p class='dimension-text'> {new_width_cm} cm x {new_height_cm} cm</p>", unsafe_allow_html=True)
                 with col2_cart:
-                    combined_html = generate_label_and_button(num_selections, "7.95" if num_selections == 4 else "11.95", shopify_cart_url_pers)
-                    st.markdown(combined_html, unsafe_allow_html=True)
+                    st.markdown(f"<a href='{shopify_cart_url_pers}' class='shopify-link' target='_blank'>Ajouter au panier</a>", unsafe_allow_html=True)
 
     # =========================================
     # Section Exemples de Recoloration
@@ -387,7 +384,7 @@ if uploaded_image is not None:
             # Déterminer le prix en fonction du nombre de couleurs
             price = "7.95" if num_clusters == 4 else "11.95"
 
-            # Générer le conteneur avec label et bouton "Ajouter au panier"
+            # Générer le conteneur avec label et bouton "Ajouter au panier" pour les exemples
             if cloudinary_url:
                 shopify_cart_url = generate_shopify_cart_url(cloudinary_url, num_colors=num_clusters)
                 combined_html = generate_label_and_button(num_clusters, price, shopify_cart_url)
