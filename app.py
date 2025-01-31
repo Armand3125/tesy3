@@ -121,22 +121,34 @@ css = """
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
         .button-container { margin-bottom: 20px; }
-        /* Le lien "Ajouter au panier" en jaune-orange */
-        .shopify-link { font-size: 16px; font-weight: bold; text-decoration: none; color: #ffa500; }
-        .dimension-text { font-size: 14px; font-weight: bold; color: #ffffff; }
+        /* Pour les liens et boutons, on utilise la couleur rgb(36,40,51) */
+        .shopify-link { 
+            font-size: 16px; 
+            font-weight: bold; 
+            text-decoration: none; 
+            color: #ffffff; 
+            background-color: #242833; 
+            padding: 5px 10px; 
+            border-radius: 5px; 
+        }
+        .dimension-text { 
+            font-size: 14px; 
+            font-weight: bold; 
+            color: #555; 
+            margin: 0;
+        }
         .add-to-cart-button { margin-top: 10px; }
-        /* Le label en jaune-orange */
         .label { 
             font-size: 14px; 
             font-weight: bold; 
             color: #ffffff; 
-            background-color: #ffa500; 
+            background-color: #242833; 
             padding: 5px 10px; 
             border-radius: 5px; 
             display: inline-block;
             margin-left: 10px;
         }
-        /* Style pour les boutons en haut : fond rgb(36,40,51) (#242833) */
+        /* Nouveau style pour les boutons en haut */
         div.stButton > button {
             background-color: #242833 !important;
             color: #ffffff !important;
@@ -150,7 +162,7 @@ css = """
         div.stButton > button:hover {
             background-color: #1d1f2a !important;
         }
-        /* Pour supprimer les gaps entre colonnes de boutons */
+        /* Réduire les gaps entre les colonnes des boutons */
         div.row-widget.stHorizontal { gap: 0 !important; }
     </style>
 """
@@ -185,14 +197,16 @@ def show_examples_callback():
     st.session_state.show_personalization = False
 
 # =========================================
-# Fonction pour Générer le HTML du Label et du Bouton
+# Fonction pour Générer le Conteneur avec Label et Bouton
 # =========================================
 
 def generate_label_and_button(num_colors, price, shopify_cart_url):
-    # Pas d'encadré supplémentaire, simplement un affichage inline
-    label_html = f"<span class='label'>{num_colors} Couleurs - {price} €</span>"
+    """
+    Génère un conteneur avec le label et le bouton "Ajouter au panier" sur la même ligne.
+    """
+    label_html = f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
     add_to_cart_html = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
-    combined_html = f"<div style='display: inline-flex; align-items: center; gap: 10px;'>{add_to_cart_html}{label_html}</div>"
+    combined_html = f"<div style='display: flex; align-items: center; justify-content: center; gap: 10px;'>{add_to_cart_html}{label_html}</div>"
     return combined_html
 
 # =========================================
@@ -201,14 +215,14 @@ def generate_label_and_button(num_colors, price, shopify_cart_url):
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
 # =========================================
-# Section 2: Boutons de sélection (ordre: Exemples, 4 Couleurs, 6 Couleurs)
+# Section 2: Boutons de sélection
 # =========================================
 if uploaded_image is not None:
-    # Affichage par défaut des exemples dès le téléversement
+    # Après le téléversement d'une image, afficher les exemples par défaut
     if not st.session_state.show_examples and not st.session_state.show_personalization:
         st.session_state.show_examples = True
 
-    # Les boutons s'étendent sur toute la largeur
+    # Boutons alignés horizontalement sur toute la largeur, dans l'ordre : Exemples, 4 Couleurs, 6 Couleurs
     col_ex, col_4, col_6 = st.columns([1,1,1])
     with col_ex:
         st.button("Exemples", key="show_examples_btn", on_click=show_examples_callback)
@@ -234,7 +248,7 @@ if uploaded_image is not None:
             image_pers, num_clusters=num_selections
         )
 
-        # Conversion en centimètres (350px = 14cm, soit 25px/cm)
+        # Conversion de pixels à centimètres (350px = 14cm, soit 25px/cm)
         px_per_cm = 25
         new_width_cm = round(new_width_pers / px_per_cm, 1)
         new_height_cm = round(new_height_pers / px_per_cm, 1)
@@ -284,7 +298,7 @@ if uploaded_image is not None:
                     selected_colors.append(pal[selected_color_name])
                     selected_color_names.append(selected_color_name)
 
-            # Recolorisation basée sur les sélections de l'utilisateur
+            # Recolorisation de l'image basée sur les sélections de l'utilisateur
             new_img_arr_pers = np.zeros_like(img_arr_pers)
             for i in range(img_arr_pers.shape[0]):
                 for j in range(img_arr_pers.shape[1]):
@@ -310,9 +324,13 @@ if uploaded_image is not None:
                 st.error("Erreur lors du téléchargement de l'image. Veuillez réessayer.")
             else:
                 shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
-                # Regrouper les dimensions et le conteneur (bouton et label) dans un même bloc avec moins d'espacement
-                personalization_html = f"<div style='display: flex; align-items: center; justify-content: center; gap: 10px;'><p style='margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;'>{new_width_cm} cm x {new_height_cm} cm</p>{generate_label_and_button(num_selections, '7.95' if num_selections == 4 else '11.95', shopify_cart_url_pers)}</div>"
-                st.markdown(personalization_html, unsafe_allow_html=True)
+                # Affichage des dimensions et du conteneur avec label et bouton sur la même ligne (réduire l'espace)
+                col1_cart, col2_cart = st.columns(2)
+                with col1_cart:
+                    st.markdown(f"<p class='dimension-text'> {new_width_cm} cm x {new_height_cm} cm</p>", unsafe_allow_html=True)
+                with col2_cart:
+                    combined_html = generate_label_and_button(num_selections, "7.95" if num_selections == 4 else "11.95", shopify_cart_url_pers)
+                    st.markdown(combined_html, unsafe_allow_html=True)
 
     # =========================================
     # Section Exemples de Recoloration
@@ -358,12 +376,12 @@ if uploaded_image is not None:
                 palette_colors
             )
 
-            # Convertir l'image recolorée en buffer pour upload
+            # Convert recolored image to buffer for upload
             img_buffer = io.BytesIO()
             recolored_image.save(img_buffer, format="PNG")
             img_buffer.seek(0)
 
-            # Upload vers Cloudinary
+            # Upload to Cloudinary
             cloudinary_url = upload_to_cloudinary(img_buffer)
 
             # Déterminer le prix en fonction du nombre de couleurs
@@ -372,7 +390,7 @@ if uploaded_image is not None:
             # Générer le conteneur avec label et bouton "Ajouter au panier"
             if cloudinary_url:
                 shopify_cart_url = generate_shopify_cart_url(cloudinary_url, num_colors=num_clusters)
-                combined_html = f"<div style='display: inline-flex; align-items: center; gap: 10px;'>{generate_label_and_button(num_clusters, price, shopify_cart_url)}</div>"
+                combined_html = generate_label_and_button(num_clusters, price, shopify_cart_url)
             else:
                 combined_html = "Erreur lors de l'ajout au panier."
 
