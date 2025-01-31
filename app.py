@@ -121,7 +121,7 @@ css = """
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
         .button-container { margin-bottom: 20px; }
-        /* Liens sans encadré */
+        /* Pour les liens, on affiche un simple texte sans encadré */
         .shopify-link { 
             font-size: 16px; 
             font-weight: bold; 
@@ -194,12 +194,12 @@ def show_examples_callback():
     st.session_state.show_personalization = False
 
 # =========================================
-# Fonction pour Générer le Conteneur avec Label et Bouton (pour les exemples)
+# Section pour générer le conteneur (Exemples)
 # =========================================
 
 def generate_label_and_button(num_colors, price, shopify_cart_url):
     """
-    Génère un conteneur avec le label et le bouton "Ajouter au panier" sur la même ligne.
+    Génère un conteneur avec le lien "Ajouter au panier" et le label sur la même ligne.
     """
     label_html = f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
     add_to_cart_html = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
@@ -215,7 +215,7 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 # Section 2: Boutons de sélection
 # =========================================
 if uploaded_image is not None:
-    # Après le téléversement d'une image, afficher les exemples par défaut
+    # Dès le téléversement, afficher par défaut les Exemples
     if not st.session_state.show_examples and not st.session_state.show_personalization:
         st.session_state.show_examples = True
 
@@ -245,7 +245,7 @@ if uploaded_image is not None:
             image_pers, num_clusters=num_selections
         )
 
-        # Conversion de pixels à centimètres (350px = 14cm, soit 25px/cm)
+        # Conversion (350px = 14cm, soit 25px/cm)
         px_per_cm = 25
         new_width_cm = round(new_width_pers / px_per_cm, 1)
         new_height_cm = round(new_height_pers / px_per_cm, 1)
@@ -270,7 +270,6 @@ if uploaded_image is not None:
             cluster_percentages_pers = (cluster_counts_pers / total_pixels_pers) * 100
 
             sorted_indices_pers = np.argsort(-cluster_percentages_pers)
-            sorted_percentages_pers = cluster_percentages_pers[sorted_indices_pers]
             sorted_ordered_colors_by_cluster_pers = [ordered_colors_by_cluster[i] for i in sorted_indices_pers]
 
             selected_colors = []
@@ -295,7 +294,7 @@ if uploaded_image is not None:
                     selected_colors.append(pal[selected_color_name])
                     selected_color_names.append(selected_color_name)
 
-            # Recolorisation de l'image basée sur les sélections de l'utilisateur
+            # Recolorisation basée sur les sélections
             new_img_arr_pers = np.zeros_like(img_arr_pers)
             for i in range(img_arr_pers.shape[0]):
                 for j in range(img_arr_pers.shape[1]):
@@ -310,23 +309,19 @@ if uploaded_image is not None:
             col1_pers, col2_pers, col3_pers = st.columns([1, 6, 1])
             with col2_pers:
                 st.image(resized_image_pers_final, use_container_width=True)
-
-            # Préparation pour l'upload et l'ajout au panier
-            img_buffer_pers = io.BytesIO()
-            new_image_pers.save(img_buffer_pers, format="PNG")
-            img_buffer_pers.seek(0)
-
-            cloudinary_url_pers = upload_to_cloudinary(img_buffer_pers)
-            if not cloudinary_url_pers:
-                st.error("Erreur lors du téléchargement de l'image. Veuillez réessayer.")
-            else:
-                shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
-                # Affichage des dimensions et du lien "Ajouter au panier" sous l'image, aligné à droite
-                st.markdown(
-                    f"<div style='text-align: right; margin-top: 5px;'>"
-                    f"<span class='dimension-text'>{new_width_cm} cm x {new_height_cm} cm</span> "
-                    f"<a href='{shopify_cart_url_pers}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
-                    f"</div>", unsafe_allow_html=True)
+                # Affichage sous l'image : dimensions puis lien d'ajout au panier (sans encadré supplémentaire)
+                st.markdown(f"<p class='dimension-text'>{new_width_cm} cm x {new_height_cm} cm</p>", unsafe_allow_html=True)
+                cloudinary_url_pers = upload_to_cloudinary(io.BytesIO())
+                # Pour l'ajout, on prépare l'image recolorée pour l'upload
+                img_buffer_pers = io.BytesIO()
+                new_image_pers.save(img_buffer_pers, format="PNG")
+                img_buffer_pers.seek(0)
+                cloudinary_url_pers = upload_to_cloudinary(img_buffer_pers)
+                if not cloudinary_url_pers:
+                    st.error("Erreur lors du téléchargement de l'image. Veuillez réessayer.")
+                else:
+                    shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
+                    st.markdown(f"<a href='{shopify_cart_url_pers}' class='shopify-link' target='_blank'>Ajouter au panier</a>", unsafe_allow_html=True)
 
     # =========================================
     # Section Exemples de Recoloration
@@ -335,66 +330,54 @@ if uploaded_image is not None:
         st.header("Exemples de Recoloration")
 
         image = Image.open(uploaded_image).convert("RGB")
-        # Combiner les palettes de 4 et 6 couleurs
-        combined_palettes = palettes_examples_4 + palettes_examples_6
-
-        # Pré-calculer les clusterings pour 4 et 6 couleurs
-        clusterings = {}
-        for num_clusters in [4, 6]:
-            resized_image, img_arr, labels, sorted_indices, new_width, new_height = process_image(image, num_clusters=num_clusters)
-            clusterings[num_clusters] = {
-                "resized_image": resized_image,
-                "img_arr": img_arr,
-                "labels": labels,
-                "sorted_indices": sorted_indices,
-                "new_width": new_width,
-                "new_height": new_height
-            }
-
-        col_count = 0
+        # Afficher d'abord les palettes 4 couleurs
+        st.subheader("Palettes 4 Couleurs")
         cols_display = st.columns(2)
-
-        for palette in combined_palettes:
+        col_count = 0
+        for palette in palettes_examples_4:
             num_clusters = len(palette)
             palette_colors = [pal[color] for color in palette]
-
-            # Récupérer les clusterings pré-calculés
-            clustering = clusterings.get(num_clusters)
-            if not clustering:
-                st.error(f"Nombre de clusters non supporté: {num_clusters}")
-                continue
-
-            # Recoloriser l'image avec la palette actuelle
-            recolored_image = recolor_image(
-                clustering["img_arr"],
-                clustering["labels"],
-                clustering["sorted_indices"],
-                palette_colors
-            )
-
-            # Convert recolored image to buffer for upload
+            resized_image, img_arr, labels, sorted_indices, new_width, new_height = process_image(image, num_clusters=num_clusters)
+            recolored_image = recolor_image(img_arr, labels, sorted_indices, palette_colors)
             img_buffer = io.BytesIO()
             recolored_image.save(img_buffer, format="PNG")
             img_buffer.seek(0)
-
-            # Upload to Cloudinary
             cloudinary_url = upload_to_cloudinary(img_buffer)
-
-            # Déterminer le prix en fonction du nombre de couleurs
-            price = "7.95" if num_clusters == 4 else "11.95"
-
-            # Générer le conteneur avec label et bouton "Ajouter au panier"
+            price = "7.95"
             if cloudinary_url:
                 shopify_cart_url = generate_shopify_cart_url(cloudinary_url, num_colors=num_clusters)
                 combined_html = generate_label_and_button(num_clusters, price, shopify_cart_url)
             else:
                 combined_html = "Erreur lors de l'ajout au panier."
-
             with cols_display[col_count % 2]:
                 st.image(recolored_image, use_container_width=True, width=350)
                 st.markdown(combined_html, unsafe_allow_html=True)
-
             col_count += 1
-
+            if col_count % 2 == 0:
+                st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<hr style='border: 1px solid #ccc;'>", unsafe_allow_html=True)
+        # Puis, les palettes 6 couleurs
+        st.subheader("Palettes 6 Couleurs")
+        cols_display = st.columns(2)
+        col_count = 0
+        for palette in palettes_examples_6:
+            num_clusters = len(palette)
+            palette_colors = [pal[color] for color in palette]
+            resized_image, img_arr, labels, sorted_indices, new_width, new_height = process_image(image, num_clusters=num_clusters)
+            recolored_image = recolor_image(img_arr, labels, sorted_indices, palette_colors)
+            img_buffer = io.BytesIO()
+            recolored_image.save(img_buffer, format="PNG")
+            img_buffer.seek(0)
+            cloudinary_url = upload_to_cloudinary(img_buffer)
+            price = "11.95"
+            if cloudinary_url:
+                shopify_cart_url = generate_shopify_cart_url(cloudinary_url, num_colors=num_clusters)
+                combined_html = generate_label_and_button(num_clusters, price, shopify_cart_url)
+            else:
+                combined_html = "Erreur lors de l'ajout au panier."
+            with cols_display[col_count % 2]:
+                st.image(recolored_image, use_container_width=True, width=350)
+                st.markdown(combined_html, unsafe_allow_html=True)
+            col_count += 1
             if col_count % 2 == 0:
                 st.markdown("<br>", unsafe_allow_html=True)
