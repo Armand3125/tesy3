@@ -123,7 +123,7 @@ css = """
         .button-container { margin-bottom: 20px; }
         .shopify-link { font-size: 20px; font-weight: bold; text-decoration: none; color: #2e86de; }
         .dimension-text { font-size: 16px; font-weight: bold; color: #555; }
-        .add-to-cart-button { margin-top: 10px; }
+        .add-to-cart-button { margin-top: 10px; text-align: center; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -323,6 +323,7 @@ if uploaded_image is not None:
             with cols_display[col_count % 2]:
                 st.image(recolored_image, use_container_width=True, width=350)
                 if cloudinary_url:
+                    # Centrer le bouton "Ajouter au panier" sous l'image
                     st.markdown(f"<div class='add-to-cart-button'>{add_to_cart_button}</div>", unsafe_allow_html=True)
                 else:
                     st.error("Erreur lors de l'upload de l'image.")
