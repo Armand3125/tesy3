@@ -296,6 +296,19 @@ if uploaded_image is not None:
         # Combiner les palettes de 4 et 6 couleurs
         combined_palettes = palettes_examples_4 + palettes_examples_6
 
+        # Pré-calculer les clusterings pour 4 et 6 couleurs
+        clusterings = {}
+        for num_clusters in [4, 6]:
+            resized_image, img_arr, labels, sorted_indices, new_width, new_height = process_image(image, num_clusters=num_clusters)
+            clusterings[num_clusters] = {
+                "resized_image": resized_image,
+                "img_arr": img_arr,
+                "labels": labels,
+                "sorted_indices": sorted_indices,
+                "new_width": new_width,
+                "new_height": new_height
+            }
+
         col_count = 0
         cols_display = st.columns(2)
 
@@ -303,10 +316,19 @@ if uploaded_image is not None:
             num_clusters = len(palette)
             palette_colors = [pal[color] for color in palette]
 
-            # Processus d'image pour chaque palette
-            resized_image, img_arr, labels, sorted_indices, new_width, new_height = process_image(image, num_clusters=num_clusters)
+            # Récupérer les clusterings pré-calculés
+            clustering = clusterings.get(num_clusters)
+            if not clustering:
+                st.error(f"Nombre de clusters non supporté: {num_clusters}")
+                continue
 
-            recolored_image = recolor_image(img_arr, labels, sorted_indices, palette_colors)
+            # Recoloriser l'image avec la palette actuelle
+            recolored_image = recolor_image(
+                clustering["img_arr"],
+                clustering["labels"],
+                clustering["sorted_indices"],
+                palette_colors
+            )
 
             # Convert recolored image to buffer for upload
             img_buffer = io.BytesIO()
