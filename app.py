@@ -89,9 +89,9 @@ pal = {
     "BF": (4, 47, 86),
 }
 
-# ====================================
+# =========================================
 # Listes de palettes fixes pour les Exemples
-# ====================================
+# =========================================
 palettes_examples_4 = [
     ["NC", "RE", "JO", "BJ"],
     ["NC", "BM", "BG", "BJ"],
@@ -106,9 +106,9 @@ palettes_examples_6 = [
     ["NC", "BF", "VGa", "VG", "VL", "BJ"],  # Palette improvisée 2
 ]
 
-# ====================================
+# =========================================
 # Configuration du titre et du style
-# ====================================
+# =========================================
 st.title("Tylice")
 
 css = """
@@ -121,14 +121,14 @@ css = """
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
         .button-container { margin-bottom: 20px; }
-        .shopify-link { font-size: 16px; font-weight: bold; text-decoration: none; color: #ff4500; }
+        .shopify-link { font-size: 16px; font-weight: bold; text-decoration: none; color: #ffa500; }
         .dimension-text { font-size: 14px; font-weight: bold; color: #555; }
         .add-to-cart-button { margin-top: 10px; }
         .label { 
             font-size: 14px; 
             font-weight: bold; 
             color: #ffffff; 
-            background-color: #ff4500; 
+            background-color: #ffa500; 
             padding: 5px 10px; 
             border-radius: 5px; 
             display: inline-block;
@@ -136,7 +136,7 @@ css = """
         }
         /* Nouveau style pour les boutons */
         div.stButton > button {
-            background-color: #ff4500 !important;
+            background-color: #ffa500 !important;
             color: #ffffff !important;
             border: none !important;
             border-radius: 5px !important;
@@ -145,7 +145,7 @@ css = """
             margin: 5px;
         }
         div.stButton > button:hover {
-            background-color: #e03e00 !important;
+            background-color: #e69500 !important;
         }
     </style>
 """
@@ -205,15 +205,14 @@ if uploaded_image is not None:
     if not st.session_state.show_examples and not st.session_state.show_personalization:
         st.session_state.show_examples = True
 
-    # Boutons alignés horizontalement
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.button("4 Couleurs : 7.95 €", key="select_4_btn", on_click=select_4)
-    with col2:
-        st.button("6 Couleurs : 11.95 €", key="select_6_btn", on_click=select_6)
-    with col3:
+    # Boutons alignés horizontalement dans l'ordre : Exemples, 4 Couleurs, 6 Couleurs
+    col_ex, col_4, col_6 = st.columns(3)
+    with col_ex:
         st.button("Exemples", key="show_examples_btn", on_click=show_examples_callback)
+    with col_4:
+        st.button("4 Couleurs : 7.95 €", key="select_4_btn", on_click=select_4)
+    with col_6:
+        st.button("6 Couleurs : 11.95 €", key="select_6_btn", on_click=select_6)
 
     num_selections = st.session_state.num_selections
 
