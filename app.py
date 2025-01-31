@@ -288,7 +288,7 @@ if uploaded_image is not None:
             # Affichage de l'image recolorée
             col1_pers, col2_pers, col3_pers = st.columns([1, 6, 1])
             with col2_pers:
-                st.image(resized_image_pers_final, 350)
+                st.image(resized_image_pers_final, use_container_width=True)
 
             # Préparation pour l'upload et l'ajout au panier
             img_buffer_pers = io.BytesIO()
