@@ -194,12 +194,13 @@ def show_examples_callback():
     st.session_state.show_personalization = False
 
 # =========================================
-# Section pour générer le conteneur (Exemples)
+# Fonction pour Générer le Conteneur avec Label et Bouton (Exemples)
 # =========================================
 
 def generate_label_and_button(num_colors, price, shopify_cart_url):
     """
     Génère un conteneur avec le lien "Ajouter au panier" et le label sur la même ligne.
+    (Utilisé uniquement pour la section Exemples)
     """
     label_html = f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
     add_to_cart_html = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
@@ -215,7 +216,7 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 # Section 2: Boutons de sélection
 # =========================================
 if uploaded_image is not None:
-    # Dès le téléversement, afficher par défaut les Exemples
+    # Dès le téléversement d'une image, afficher par défaut les Exemples
     if not st.session_state.show_examples and not st.session_state.show_personalization:
         st.session_state.show_examples = True
 
@@ -245,7 +246,7 @@ if uploaded_image is not None:
             image_pers, num_clusters=num_selections
         )
 
-        # Conversion (350px = 14cm, soit 25px/cm)
+        # Conversion de pixels à centimètres (350px = 14cm, soit 25px/cm)
         px_per_cm = 25
         new_width_cm = round(new_width_pers / px_per_cm, 1)
         new_height_cm = round(new_height_pers / px_per_cm, 1)
@@ -294,7 +295,7 @@ if uploaded_image is not None:
                     selected_colors.append(pal[selected_color_name])
                     selected_color_names.append(selected_color_name)
 
-            # Recolorisation basée sur les sélections
+            # Recolorisation de l'image basée sur les sélections de l'utilisateur
             new_img_arr_pers = np.zeros_like(img_arr_pers)
             for i in range(img_arr_pers.shape[0]):
                 for j in range(img_arr_pers.shape[1]):
@@ -309,19 +310,20 @@ if uploaded_image is not None:
             col1_pers, col2_pers, col3_pers = st.columns([1, 6, 1])
             with col2_pers:
                 st.image(resized_image_pers_final, use_container_width=True)
-                # Affichage sous l'image : dimensions puis lien d'ajout au panier (sans encadré supplémentaire)
-                st.markdown(f"<p class='dimension-text'>{new_width_cm} cm x {new_height_cm} cm</p>", unsafe_allow_html=True)
-                cloudinary_url_pers = upload_to_cloudinary(io.BytesIO())
-                # Pour l'ajout, on prépare l'image recolorée pour l'upload
-                img_buffer_pers = io.BytesIO()
-                new_image_pers.save(img_buffer_pers, format="PNG")
-                img_buffer_pers.seek(0)
-                cloudinary_url_pers = upload_to_cloudinary(img_buffer_pers)
-                if not cloudinary_url_pers:
-                    st.error("Erreur lors du téléchargement de l'image. Veuillez réessayer.")
-                else:
-                    shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
-                    st.markdown(f"<a href='{shopify_cart_url_pers}' class='shopify-link' target='_blank'>Ajouter au panier</a>", unsafe_allow_html=True)
+                # Sous l'image, sur une même ligne, afficher les dimensions à gauche et le lien d'ajout au panier à droite
+                cols_info = st.columns([1, 1])
+                with cols_info[0]:
+                    st.markdown(f"<p class='dimension-text'>{new_width_cm} cm x {new_height_cm} cm</p>", unsafe_allow_html=True)
+                with cols_info[1]:
+                    img_buffer_pers = io.BytesIO()
+                    new_image_pers.save(img_buffer_pers, format="PNG")
+                    img_buffer_pers.seek(0)
+                    cloudinary_url_pers = upload_to_cloudinary(img_buffer_pers)
+                    if not cloudinary_url_pers:
+                        st.error("Erreur lors du téléchargement de l'image. Veuillez réessayer.")
+                    else:
+                        shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
+                        st.markdown(f"<a href='{shopify_cart_url_pers}' class='shopify-link' target='_blank'>Ajouter au panier</a>", unsafe_allow_html=True)
 
     # =========================================
     # Section Exemples de Recoloration
