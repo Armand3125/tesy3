@@ -134,19 +134,22 @@ css = """
             display: inline-block;
             margin-left: 10px;
         }
-        /* Nouveau style pour les boutons */
+        /* Nouveau style pour les boutons en haut */
         div.stButton > button {
-            background-color: #ffa500 !important;
+            background-color: #242833 !important; /* rgb(36,40,51) */
             color: #ffffff !important;
             border: none !important;
             border-radius: 5px !important;
             padding: 8px 16px !important;
             font-size: 14px !important;
-            margin: 5px;
+            margin: 0 !important;
+            width: 100% !important;
         }
         div.stButton > button:hover {
-            background-color: #e69500 !important;
+            background-color: #1d1f2a !important;
         }
+        /* Réduire les gaps entre les colonnes des boutons */
+        div.row-widget.stHorizontal { gap: 0 !important; }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -205,8 +208,8 @@ if uploaded_image is not None:
     if not st.session_state.show_examples and not st.session_state.show_personalization:
         st.session_state.show_examples = True
 
-    # Boutons alignés horizontalement dans l'ordre : Exemples, 4 Couleurs, 6 Couleurs
-    col_ex, col_4, col_6 = st.columns(3)
+    # Boutons alignés horizontalement sur toute la largeur
+    col_ex, col_4, col_6 = st.columns([1,1,1])
     with col_ex:
         st.button("Exemples", key="show_examples_btn", on_click=show_examples_callback)
     with col_4:
