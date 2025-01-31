@@ -102,8 +102,8 @@ palettes_examples_4 = [
 palettes_examples_6 = [
     ["NC", "VB", "RE", "OM", "JO", "BJ"],
     ["NC", "BF", "BM", "BC", "BG", "BJ"],
-    ["NC", "VGa", "BM", "GA", "JO", "BJ"],  # Palette improvisée 1
-    ["NC", "BF", "VGa", "VG", "VL", "BJ"],  # Palette improvisée 2
+    ["NC", "VGa", "BM", "GA", "JO", "BJ"],
+    ["NC", "BF", "VGa", "VG", "VL", "BJ"],
 ]
 
 # =========================================
@@ -169,7 +169,7 @@ st.markdown(css, unsafe_allow_html=True)
 # Initialisation des variables de session
 # =========================================
 if "num_selections" not in st.session_state:
-    st.session_state.num_selections = None  # Aucun sélection par défaut
+    st.session_state.num_selections = None
 if "show_personalization" not in st.session_state:
     st.session_state.show_personalization = False
 if "show_examples" not in st.session_state:
@@ -200,7 +200,6 @@ def show_examples_callback():
 def generate_label_and_button(num_colors, price, shopify_cart_url):
     """
     Génère un conteneur avec le label et le bouton "Ajouter au panier" sur la même ligne.
-    (Utilisé uniquement pour la section Exemples)
     """
     label_html = f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
     add_to_cart_html = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
@@ -312,7 +311,7 @@ if uploaded_image is not None:
             with col2_pers:
                 st.image(resized_image_pers_final, use_container_width=True)
 
-            # Préparation pour l'upload et l'ajout au panier (sans label)
+            # Préparation pour l'upload et l'ajout au panier
             img_buffer_pers = io.BytesIO()
             new_image_pers.save(img_buffer_pers, format="PNG")
             img_buffer_pers.seek(0)
@@ -322,12 +321,12 @@ if uploaded_image is not None:
                 st.error("Erreur lors du téléchargement de l'image. Veuillez réessayer.")
             else:
                 shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
-                # Affichage des dimensions et du lien "Ajouter au panier" sur la même ligne, sans encadré supplémentaire
-                col1_cart, col2_cart = st.columns(2)
-                with col1_cart:
-                    st.markdown(f"<p class='dimension-text'> {new_width_cm} cm x {new_height_cm} cm</p>", unsafe_allow_html=True)
-                with col2_cart:
-                    st.markdown(f"<a href='{shopify_cart_url_pers}' class='shopify-link' target='_blank'>Ajouter au panier</a>", unsafe_allow_html=True)
+                # Affichage des dimensions et du lien "Ajouter au panier" sous l'image, aligné à droite
+                st.markdown(
+                    f"<div style='text-align: right; margin-top: 5px;'>"
+                    f"<span class='dimension-text'>{new_width_cm} cm x {new_height_cm} cm</span> "
+                    f"<a href='{shopify_cart_url_pers}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
+                    f"</div>", unsafe_allow_html=True)
 
     # =========================================
     # Section Exemples de Recoloration
@@ -384,7 +383,7 @@ if uploaded_image is not None:
             # Déterminer le prix en fonction du nombre de couleurs
             price = "7.95" if num_clusters == 4 else "11.95"
 
-            # Générer le conteneur avec label et bouton "Ajouter au panier" pour les exemples
+            # Générer le conteneur avec label et bouton "Ajouter au panier"
             if cloudinary_url:
                 shopify_cart_url = generate_shopify_cart_url(cloudinary_url, num_colors=num_clusters)
                 combined_html = generate_label_and_button(num_clusters, price, shopify_cart_url)
