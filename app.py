@@ -167,8 +167,9 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 # Section 2: Boutons de sélection
 # =========================================
 if uploaded_image is not None:
-    # Suppression de la ligne de séparation grise
-    # st.markdown("<hr>", unsafe_allow_html=True)  # Ligne supprimée
+    # Après le téléversement d'une image, afficher les exemples par défaut
+    if not st.session_state.show_examples and not st.session_state.show_personalization:
+        st.session_state.show_examples = True
 
     # Boutons alignés horizontalement
     col1, col2, col3 = st.columns(3)
