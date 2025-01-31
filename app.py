@@ -121,14 +121,14 @@ css = """
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
         .button-container { margin-bottom: 20px; }
-        .shopify-link { font-size: 16px; font-weight: bold; text-decoration: none; color: #2e86de; }
+        .shopify-link { font-size: 16px; font-weight: bold; text-decoration: none; color: #ff4500; }
         .dimension-text { font-size: 14px; font-weight: bold; color: #555; }
         .add-to-cart-button { margin-top: 10px; }
         .label { 
             font-size: 14px; 
             font-weight: bold; 
             color: #ffffff; 
-            background-color: #2e86de; 
+            background-color: #ff4500; 
             padding: 5px 10px; 
             border-radius: 5px; 
             display: inline-block;
@@ -136,7 +136,7 @@ css = """
         }
         /* Nouveau style pour les boutons */
         div.stButton > button {
-            background-color: #2e86de !important;
+            background-color: #ff4500 !important;
             color: #ffffff !important;
             border: none !important;
             border-radius: 5px !important;
@@ -145,7 +145,7 @@ css = """
             margin: 5px;
         }
         div.stButton > button:hover {
-            background-color: #1e5fa7 !important;
+            background-color: #e03e00 !important;
         }
     </style>
 """
