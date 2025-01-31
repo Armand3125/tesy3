@@ -132,7 +132,7 @@ st.markdown(css, unsafe_allow_html=True)
 # Initialisation des variables de session
 # =========================================
 if "num_selections" not in st.session_state:
-    st.session_state.num_selections = 4  # Valeur par défaut
+    st.session_state.num_selections = None  # Aucun sélection par défaut
 
 if "show_personalization" not in st.session_state:
     st.session_state.show_personalization = False
@@ -146,21 +146,18 @@ if "show_examples" not in st.session_state:
 
 def select_4():
     st.session_state.num_selections = 4
-    st.session_state.show_personalization = False
+    st.session_state.show_personalization = True
     st.session_state.show_examples = False
 
 def select_6():
     st.session_state.num_selections = 6
-    st.session_state.show_personalization = False
+    st.session_state.show_personalization = True
     st.session_state.show_examples = False
 
 def show_examples_callback():
+    st.session_state.num_selections = 4  # Toujours 4 couleurs pour les exemples
     st.session_state.show_examples = True
     st.session_state.show_personalization = False
-
-def show_personalize_callback():
-    st.session_state.show_personalization = True
-    st.session_state.show_examples = False
 
 # =========================================
 # Section 1: Téléchargement de l'image
@@ -168,13 +165,11 @@ def show_personalize_callback():
 uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg", "png"])
 
 # =========================================
-# Sections conditionnelles après upload d'image
+# Section 2: Boutons de sélection
 # =========================================
 if uploaded_image is not None:
-    # =========================================
-    # Section 2: Sélection du nombre de couleurs
-    # =========================================
-    col1, col2 = st.columns([2, 5])
+    st.markdown("<hr>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.button("4 Couleurs : 7.95 €", key="select_4_btn", on_click=select_4)
@@ -182,22 +177,15 @@ if uploaded_image is not None:
     with col2:
         st.button("6 Couleurs : 11.95 €", key="select_6_btn", on_click=select_6)
 
-    # Ajout des nouveaux boutons pour séparer les sections
-    st.markdown("<hr>", unsafe_allow_html=True)
-    col3, col4 = st.columns([2, 5])
-
     with col3:
-        st.button("Voir Exemples", key="show_examples_btn", on_click=show_examples_callback)
-
-    with col4:
-        st.button("Personnaliser", key="show_personalize_btn", on_click=show_personalize_callback)
+        st.button("Exemples", key="show_examples_btn", on_click=show_examples_callback)
 
     num_selections = st.session_state.num_selections
 
     # =========================================
     # Section Personnalisation
     # =========================================
-    if st.session_state.show_personalization:
+    if st.session_state.show_personalization and num_selections in [4, 6]:
         st.header("Personnalisations")
 
         rectangle_width = 80 if num_selections == 4 else 50
@@ -297,19 +285,15 @@ if uploaded_image is not None:
     # =========================================
     # Section Exemples de Recoloration
     # =========================================
-    if st.session_state.show_examples:
+    if st.session_state.show_examples and num_selections == 4:
         st.header("Exemples de Recoloration")
 
         image = Image.open(uploaded_image).convert("RGB")
         resized_image, img_arr, labels, sorted_indices, new_width, new_height = process_image(image, num_clusters=num_selections)
 
-        # Déterminer les palettes et le nombre de clusters
-        if num_selections == 4:
-            palettes = palettes_examples_4
-            num_clusters = 4
-        else:
-            palettes = palettes_examples_6
-            num_clusters = 6
+        # Utilisation uniquement des palettes pour 4 couleurs
+        palettes = palettes_examples_4
+        num_clusters = 4
 
         # Affichage de l'image recolorée pour chaque palette (2 par ligne)
         col_count = 0
