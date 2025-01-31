@@ -344,16 +344,3 @@ if uploaded_image is not None:
                     st.error("Erreur lors de l'upload de l'image.")
 
             col_count += 1
-
-    # =========================================
-    # Section 5: Affichage des conseils d'utilisation
-    # =========================================
-    st.markdown("""
-        ### 📝 Conseils d'utilisation :
-        - Les couleurs les plus compatibles avec l'image apparaissent en premier.
-        - Préférez des images avec un bon contraste et des éléments bien définis.
-        - Une **image carrée** donnera un meilleur résultat.
-        - Il est recommandé d'inclure au moins une **zone de noir ou de blanc** pour assurer un bon contraste.
-        - Utiliser des **familles de couleurs** (ex: blanc, jaune, orange, rouge) peut produire des résultats visuellement intéressants.
-        - **Expérimentez** avec différentes combinaisons pour trouver l'esthétique qui correspond le mieux à votre projet !
-    """, unsafe_allow_html=True)
