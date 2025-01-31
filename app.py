@@ -134,6 +134,19 @@ css = """
             display: inline-block;
             margin-left: 10px;
         }
+        /* Nouveau style pour les boutons */
+        div.stButton > button {
+            background-color: #2e86de !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 5px !important;
+            padding: 8px 16px !important;
+            font-size: 14px !important;
+            margin: 5px;
+        }
+        div.stButton > button:hover {
+            background-color: #1e5fa7 !important;
+        }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -143,10 +156,8 @@ st.markdown(css, unsafe_allow_html=True)
 # =========================================
 if "num_selections" not in st.session_state:
     st.session_state.num_selections = None  # Aucun sélection par défaut
-
 if "show_personalization" not in st.session_state:
     st.session_state.show_personalization = False
-
 if "show_examples" not in st.session_state:
     st.session_state.show_examples = False
 
@@ -169,7 +180,7 @@ def show_examples_callback():
     st.session_state.show_personalization = False
 
 # =========================================
-# Fonction pour Générer les Labels et Boutons
+# Fonction pour Générer le Conteneur avec Label et Bouton
 # =========================================
 
 def generate_label_and_button(num_colors, price, shopify_cart_url):
@@ -178,7 +189,7 @@ def generate_label_and_button(num_colors, price, shopify_cart_url):
     """
     label_html = f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
     add_to_cart_html = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
-    combined_html = f"<div style='display: flex; align-items: center; justify-content: center;'><div>{add_to_cart_html}</div><div>{label_html}</div></div>"
+    combined_html = f"<div style='display: flex; align-items: center; justify-content: center; gap: 10px;'>{add_to_cart_html}{label_html}</div>"
     return combined_html
 
 # =========================================
@@ -199,10 +210,8 @@ if uploaded_image is not None:
 
     with col1:
         st.button("4 Couleurs : 7.95 €", key="select_4_btn", on_click=select_4)
-
     with col2:
         st.button("6 Couleurs : 11.95 €", key="select_6_btn", on_click=select_6)
-
     with col3:
         st.button("Exemples", key="show_examples_btn", on_click=show_examples_callback)
 
@@ -225,8 +234,8 @@ if uploaded_image is not None:
 
         # Conversion de pixels à centimètres (350px = 14cm, soit 25px/cm)
         px_per_cm = 25
-        new_width_cm = round(new_width_pers / px_per_cm, 1)  # Arrondi à 1 décimale (en cm)
-        new_height_cm = round(new_height_pers / px_per_cm, 1)  # Arrondi à 1 décimale (en cm)
+        new_width_cm = round(new_width_pers / px_per_cm, 1)
+        new_height_cm = round(new_height_pers / px_per_cm, 1)
 
         if img_arr_pers.shape[-1] == 3:
             pixels_pers = img_arr_pers.reshape(-1, 3)
@@ -264,7 +273,6 @@ if uploaded_image is not None:
                             unsafe_allow_html=True
                         )
                     st.markdown("</div>", unsafe_allow_html=True)
-
                 with cols_personalization[i * 2 + 1]:
                     selected_color_name = st.radio(
                         "", sorted_ordered_colors_by_cluster_pers[i],
@@ -300,8 +308,7 @@ if uploaded_image is not None:
                 st.error("Erreur lors du téléchargement de l'image. Veuillez réessayer.")
             else:
                 shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
-
-                # Affichage dimensions et bouton "Ajouter au panier" sur la même ligne avec le label
+                # Affichage des dimensions et du conteneur avec label et bouton sur la même ligne
                 col1_cart, col2_cart = st.columns(2)
                 with col1_cart:
                     st.markdown(f"<p class='dimension-text'> {new_width_cm} cm x {new_height_cm} cm</p>", unsafe_allow_html=True)
@@ -316,7 +323,6 @@ if uploaded_image is not None:
         st.header("Exemples de Recoloration")
 
         image = Image.open(uploaded_image).convert("RGB")
-
         # Combiner les palettes de 4 et 6 couleurs
         combined_palettes = palettes_examples_4 + palettes_examples_6
 
@@ -365,7 +371,7 @@ if uploaded_image is not None:
             # Déterminer le prix en fonction du nombre de couleurs
             price = "7.95" if num_clusters == 4 else "11.95"
 
-            # Générer le label et le bouton "Ajouter au panier"
+            # Générer le conteneur avec label et bouton "Ajouter au panier"
             if cloudinary_url:
                 shopify_cart_url = generate_shopify_cart_url(cloudinary_url, num_colors=num_clusters)
                 combined_html = generate_label_and_button(num_clusters, price, shopify_cart_url)
@@ -373,16 +379,10 @@ if uploaded_image is not None:
                 combined_html = "Erreur lors de l'ajout au panier."
 
             with cols_display[col_count % 2]:
-                # Afficher l'image
                 st.image(recolored_image, use_container_width=True, width=350)
-                if cloudinary_url:
-                    # Afficher le label et le bouton sur la même ligne
-                    st.markdown(combined_html, unsafe_allow_html=True)
-                else:
-                    st.error("Erreur lors de l'upload de l'image.")
+                st.markdown(combined_html, unsafe_allow_html=True)
 
             col_count += 1
 
-            # Ajouter un espace après chaque paire d'images
             if col_count % 2 == 0:
                 st.markdown("<br>", unsafe_allow_html=True)
