@@ -124,6 +124,16 @@ css = """
         .shopify-link { font-size: 20px; font-weight: bold; text-decoration: none; color: #2e86de; }
         .dimension-text { font-size: 16px; font-weight: bold; color: #555; }
         .add-to-cart-button { margin-top: 10px; text-align: center; }
+        .label { 
+            font-size: 16px; 
+            font-weight: bold; 
+            color: #ffffff; 
+            background-color: #2e86de; 
+            padding: 5px 10px; 
+            border-radius: 5px; 
+            display: inline-block;
+            margin-bottom: 10px;
+        }
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -157,6 +167,16 @@ def select_6():
 def show_examples_callback():
     st.session_state.show_examples = True
     st.session_state.show_personalization = False
+
+# =========================================
+# Fonction pour Générer les Labels
+# =========================================
+
+def generate_label(num_colors, price):
+    """
+    Génère un label stylisé pour indiquer le nombre de couleurs et le prix.
+    """
+    return f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
 
 # =========================================
 # Section 1: Téléchargement de l'image
@@ -338,6 +358,12 @@ if uploaded_image is not None:
             # Upload to Cloudinary
             cloudinary_url = upload_to_cloudinary(img_buffer)
 
+            # Déterminer le prix en fonction du nombre de couleurs
+            price = "7.95" if num_clusters == 4 else "11.95"
+
+            # Générer le label
+            label_html = generate_label(num_clusters, price)
+
             # Generate Shopify cart URL if upload is successful
             if cloudinary_url:
                 shopify_cart_url = generate_shopify_cart_url(cloudinary_url, num_colors=num_clusters)
@@ -347,6 +373,9 @@ if uploaded_image is not None:
                 add_to_cart_button = "Erreur lors de l'ajout au panier."
 
             with cols_display[col_count % 2]:
+                # Afficher le label
+                st.markdown(label_html, unsafe_allow_html=True)
+                # Afficher l'image
                 st.image(recolored_image, use_container_width=True, width=350)
                 if cloudinary_url:
                     # Centrer le bouton "Ajouter au panier" sous l'image
