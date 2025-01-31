@@ -168,7 +168,10 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 # Section 2: Boutons de sélection
 # =========================================
 if uploaded_image is not None:
-    st.markdown("<hr>", unsafe_allow_html=True)
+    # Suppression de la ligne de séparation grise
+    # st.markdown("<hr>", unsafe_allow_html=True)  # Ligne supprimée
+    
+    # Boutons alignés horizontalement
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -329,3 +332,7 @@ if uploaded_image is not None:
                     st.error("Erreur lors de l'upload de l'image.")
 
             col_count += 1
+
+            # Ajouter un espace après chaque paire d'images
+            if col_count % 2 == 0:
+                st.markdown("<br>", unsafe_allow_html=True)
