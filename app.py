@@ -121,18 +121,18 @@ css = """
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
         .button-container { margin-bottom: 20px; }
-        .shopify-link { font-size: 20px; font-weight: bold; text-decoration: none; color: #2e86de; }
-        .dimension-text { font-size: 16px; font-weight: bold; color: #555; }
-        .add-to-cart-button { margin-top: 10px; text-align: center; }
+        .shopify-link { font-size: 16px; font-weight: bold; text-decoration: none; color: #2e86de; }
+        .dimension-text { font-size: 14px; font-weight: bold; color: #555; }
+        .add-to-cart-button { margin-top: 10px; }
         .label { 
-            font-size: 16px; 
+            font-size: 14px; 
             font-weight: bold; 
             color: #ffffff; 
             background-color: #2e86de; 
             padding: 5px 10px; 
             border-radius: 5px; 
             display: inline-block;
-            margin-bottom: 10px;
+            margin-left: 10px;
         }
     </style>
 """
@@ -169,14 +169,17 @@ def show_examples_callback():
     st.session_state.show_personalization = False
 
 # =========================================
-# Fonction pour Générer les Labels
+# Fonction pour Générer les Labels et Boutons
 # =========================================
 
-def generate_label(num_colors, price):
+def generate_label_and_button(num_colors, price, shopify_cart_url):
     """
-    Génère un label stylisé pour indiquer le nombre de couleurs et le prix.
+    Génère un conteneur avec le label et le bouton "Ajouter au panier" sur la même ligne.
     """
-    return f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
+    label_html = f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
+    add_to_cart_html = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
+    combined_html = f"<div style='display: flex; align-items: center; justify-content: center;'><div>{add_to_cart_html}</div><div>{label_html}</div></div>"
+    return combined_html
 
 # =========================================
 # Section 1: Téléchargement de l'image
@@ -298,12 +301,13 @@ if uploaded_image is not None:
             else:
                 shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
 
-                # Affichage dimensions et bouton "Ajouter au panier" sur une seule ligne
-                col1_cart, col2_cart, col3_cart, col4_cart = st.columns([4, 4, 4, 4])
-                with col2_cart:
+                # Affichage dimensions et bouton "Ajouter au panier" sur la même ligne avec le label
+                col1_cart, col2_cart = st.columns(2)
+                with col1_cart:
                     st.markdown(f"<p class='dimension-text'> {new_width_cm} cm x {new_height_cm} cm</p>", unsafe_allow_html=True)
-                with col3_cart:
-                    st.markdown(f"<a href='{shopify_cart_url_pers}' class='shopify-link' target='_blank'>Ajouter au panier</a>", unsafe_allow_html=True)
+                with col2_cart:
+                    combined_html = generate_label_and_button(num_selections, "7.95" if num_selections == 4 else "11.95", shopify_cart_url_pers)
+                    st.markdown(combined_html, unsafe_allow_html=True)
 
     # =========================================
     # Section Exemples de Recoloration
@@ -361,25 +365,19 @@ if uploaded_image is not None:
             # Déterminer le prix en fonction du nombre de couleurs
             price = "7.95" if num_clusters == 4 else "11.95"
 
-            # Générer le label
-            label_html = generate_label(num_clusters, price)
-
-            # Generate Shopify cart URL if upload is successful
+            # Générer le label et le bouton "Ajouter au panier"
             if cloudinary_url:
                 shopify_cart_url = generate_shopify_cart_url(cloudinary_url, num_colors=num_clusters)
-                add_to_cart_button = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
+                combined_html = generate_label_and_button(num_clusters, price, shopify_cart_url)
             else:
-                shopify_cart_url = None
-                add_to_cart_button = "Erreur lors de l'ajout au panier."
+                combined_html = "Erreur lors de l'ajout au panier."
 
             with cols_display[col_count % 2]:
-                # Afficher le label
-                st.markdown(label_html, unsafe_allow_html=True)
                 # Afficher l'image
                 st.image(recolored_image, use_container_width=True, width=350)
                 if cloudinary_url:
-                    # Centrer le bouton "Ajouter au panier" sous l'image
-                    st.markdown(f"<div class='add-to-cart-button'>{add_to_cart_button}</div>", unsafe_allow_html=True)
+                    # Afficher le label et le bouton sur la même ligne
+                    st.markdown(combined_html, unsafe_allow_html=True)
                 else:
                     st.error("Erreur lors de l'upload de l'image.")
 
