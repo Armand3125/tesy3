@@ -121,7 +121,7 @@ css = """
         .first-box { margin-top: 15px; }
         .percentage-container { margin-bottom: 0; }
         .button-container { margin-bottom: 20px; }
-        /* Liens sans encadré */
+        /* Liens simples sans encadré */
         .shopify-link { 
             font-size: 16px; 
             font-weight: bold; 
@@ -193,7 +193,7 @@ def show_examples_callback():
     st.session_state.show_personalization = False
 
 # =========================================
-# Fonctions pour générer les conteneurs
+# Fonction pour la section Exemples (conteneur horizontal)
 # =========================================
 
 def generate_label_and_button_examples(num_colors, price, shopify_cart_url):
@@ -206,16 +206,6 @@ def generate_label_and_button_examples(num_colors, price, shopify_cart_url):
     combined_html = f"<div style='display: flex; align-items: center; justify-content: center; gap: 10px;'>{label_html}{add_to_cart_html}</div>"
     return combined_html
 
-def generate_label_and_link_vertical(num_colors, price, shopify_cart_url):
-    """
-    Génère un conteneur vertical pour la section Personnalisation,
-    avec le label au-dessus du lien.
-    """
-    label_html = f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
-    add_to_cart_html = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
-    combined_html = f"<div style='display: flex; flex-direction: column; align-items: flex-end; gap: 5px;'>{label_html}{add_to_cart_html}</div>"
-    return combined_html
-
 # =========================================
 # Section 1: Téléchargement de l'image
 # =========================================
@@ -225,6 +215,7 @@ uploaded_image = st.file_uploader("Télécharger une image", type=["jpg", "jpeg"
 # Section 2: Boutons de sélection
 # =========================================
 if uploaded_image is not None:
+    # Dès le téléversement d'une image, afficher par défaut les Exemples
     if not st.session_state.show_examples and not st.session_state.show_personalization:
         st.session_state.show_examples = True
 
@@ -286,7 +277,10 @@ if uploaded_image is not None:
                     for j, color_name in enumerate(sorted_ordered_colors_by_cluster_pers[i]):
                         color_rgb = pal[color_name]
                         margin_class = "first-box" if j == 0 else ""
-                        st.markdown(f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>", unsafe_allow_html=True)
+                        st.markdown(
+                            f"<div class='color-box {margin_class}' style='background-color: rgb{color_rgb}; width: {rectangle_width}px; height: {rectangle_height}px; border-radius: 5px; margin-bottom: 4px;'></div>",
+                            unsafe_allow_html=True
+                        )
                     st.markdown("</div>", unsafe_allow_html=True)
                 with cols_personalization[i * 2 + 1]:
                     selected_color_name = st.radio("", sorted_ordered_colors_by_cluster_pers[i], key=f"radio_{i}_pers", label_visibility="hidden")
@@ -306,12 +300,13 @@ if uploaded_image is not None:
             col1_pers, col2_pers, col3_pers = st.columns([1, 6, 1])
             with col2_pers:
                 st.image(resized_image_pers_final, use_container_width=True)
-                # Créer une ligne avec deux colonnes : à gauche, les dimensions ; à droite, le conteneur vertical (label au-dessus du lien)
-                cols_info = st.columns(2)
+                # Création d'une ligne à 3 colonnes sous l'image
+                cols_info = st.columns([1,1,1])
                 with cols_info[0]:
                     st.markdown(f"<p class='dimension-text'>{new_width_cm} cm x {new_height_cm} cm</p>", unsafe_allow_html=True)
                 with cols_info[1]:
-                    # Préparer l'upload de l'image recolorée
+                    st.markdown(f"<div class='label'>{num_selections} Couleurs - {'7.95' if num_selections == 4 else '11.95'} €</div>", unsafe_allow_html=True)
+                with cols_info[2]:
                     img_buffer_pers = io.BytesIO()
                     new_image_pers.save(img_buffer_pers, format="PNG")
                     img_buffer_pers.seek(0)
@@ -320,8 +315,7 @@ if uploaded_image is not None:
                         st.error("Erreur lors du téléchargement de l'image. Veuillez réessayer.")
                     else:
                         shopify_cart_url_pers = generate_shopify_cart_url(cloudinary_url_pers, num_selections)
-                        # Utiliser la fonction verticale pour afficher le label (encadré) au-dessus du lien
-                        st.markdown(generate_label_and_link_vertical(num_selections, "7.95" if num_selections == 4 else "11.95", shopify_cart_url_pers), unsafe_allow_html=True)
+                        st.markdown(f"<a href='{shopify_cart_url_pers}' class='shopify-link' target='_blank'>Ajouter au panier</a>", unsafe_allow_html=True)
 
     # =========================================
     # Section Exemples de Recoloration
@@ -379,16 +373,3 @@ if uploaded_image is not None:
             col_count += 1
             if col_count % 2 == 0:
                 st.markdown("<br>", unsafe_allow_html=True)
-                
-# =========================================
-# Fonctions pour les conteneurs verticaux (Personnalisation)
-# =========================================
-def generate_label_and_link_vertical(num_colors, price, shopify_cart_url):
-    """
-    Génère un conteneur vertical pour la section Personnalisation,
-    avec le label au-dessus du lien.
-    """
-    label_html = f"<div class='label'>{num_colors} Couleurs - {price} €</div>"
-    add_to_cart_html = f"<a href='{shopify_cart_url}' class='shopify-link' target='_blank'>Ajouter au panier</a>"
-    combined_html = f"<div style='display: flex; flex-direction: column; align-items: flex-end; gap: 5px;'>{label_html}{add_to_cart_html}</div>"
-    return combined_html
